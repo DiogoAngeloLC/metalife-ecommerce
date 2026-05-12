@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-container": "#fcfaff",
+                      "surface-container-high": "#e6e8ea",
+                      "tertiary-container": "#6c738a",
+                      "background": "#f7f9fb",
+                      "outline-variant": "#e5bdbe",
+                      "tertiary": "#535b71",
+                      "surface-dim": "#d8dadc",
+                      "inverse-on-surface": "#eff1f3",
+                      "secondary": "#0051d5",
+                      "on-surface-variant": "#5c3f40",
+                      "on-secondary-fixed": "#00174b",
+                      "on-secondary-container": "#fefcff",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-primary": "#ffb3b6",
+                      "surface-variant": "#e0e3e5",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed": "#ffdada",
+                      "on-error-container": "#93000a",
+                      "secondary-container": "#316bf3",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-container": "#fffaf9",
+                      "surface-tint": "#be0037",
+                      "on-secondary-fixed-variant": "#003ea8",
+                      "on-error": "#ffffff",
+                      "surface-container": "#eceef0",
+                      "primary-container": "#e11d48",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed": "#dae2fd",
+                      "primary": "#b80035",
+                      "error-container": "#ffdad6",
+                      "on-primary-fixed-variant": "#920028",
+                      "surface": "#f7f9fb",
+                      "on-background": "#191c1e",
+                      "on-surface": "#191c1e",
+                      "on-primary-fixed": "#40000c",
+                      "on-tertiary-fixed-variant": "#3f465c",
+                      "surface-bright": "#f7f9fb",
+                      "tertiary-fixed-dim": "#bec6e0",
+                      "surface-container-highest": "#e0e3e5",
+                      "surface-container-low": "#f2f4f6",
+                      "on-primary": "#ffffff",
+                      "outline": "#906f70",
+                      "inverse-surface": "#2d3133",
+                      "primary-fixed-dim": "#ffb3b6",
+                      "secondary-fixed": "#dbe1ff",
+                      "secondary-fixed-dim": "#b4c5ff",
+                      "on-tertiary-fixed": "#131b2e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "md": "16px",
+                      "margin": "20px",
+                      "base": "4px",
+                      "xs": "4px",
+                      "gutter": "16px",
+                      "lg": "24px",
+                      "xl": "48px"
+              },
+              "fontFamily": {
+                      "body-sm": ["Inter"],
+                      "display-price": ["Montserrat"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Montserrat"],
+                      "headline-lg": ["Montserrat"],
+                      "price-tag": ["Montserrat"],
+                      "label-bold": ["Inter"],
+                      "headline-lg-mobile": ["Montserrat"]
+              },
+              "fontSize": {
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "display-price": ["48px", {"lineHeight": "48px", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                      "headline-md": ["20px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "price-tag": ["24px", {"lineHeight": "24px", "fontWeight": "800"}],
+                      "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-lg">
+<!-- TopNavBar -->
+<nav class="bg-surface docked full-width top-0 sticky z-50 border-b-2 border-outline-variant">
+<div class="flex items-center justify-between px-gutter py-md w-full max-w-[1200px] mx-auto gap-lg">
+<div class="flex items-center gap-lg flex-1">
+<a class="font-headline-lg text-headline-lg font-black italic tracking-tighter text-primary-container" href="#">PILATES DEALS</a>
+<div class="hidden md:flex relative flex-1 max-w-md group">
+<input class="w-full pl-10 pr-4 py-2 border border-outline rounded-none focus:ring-1 focus:ring-primary-container focus:border-primary-container bg-surface-container-lowest" placeholder="Buscar equipamentos (ex: Reformer Allegro)" type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-md">
+<a class="text-primary-container border-b-2 border-primary-container font-bold px-2 py-1 font-body-lg" href="#">Shop All</a>
+<a class="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors px-2 py-1 font-body-lg" href="#">Reformers</a>
+<a class="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors px-2 py-1 font-body-lg" href="#">New Arrivals</a>
+<a class="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors px-2 py-1 font-body-lg" href="#">Liquidation</a>
+</div>
+<div class="flex items-center gap-md">
+<button class="font-headline-md uppercase tracking-wide bg-primary-container text-on-primary-container px-4 py-2 active:scale-[0.98] transition-transform">SELL EQUIPMENT</button>
+<button class="font-headline-md uppercase tracking-wide border border-outline text-on-surface-variant px-4 py-2 hover:bg-surface-container-low active:scale-[0.98] transition-transform">SIGN IN</button>
+</div>
+</div>
+</nav>
+<!-- Urgent Top Bar -->
+<div class="bg-primary-container text-on-primary-container py-2 text-center overflow-hidden">
+<p class="font-label-bold text-label-bold uppercase tracking-widest animate-pulse">
+            OFERTAS RELÂMPAGO: ATÉ 40% OFF EM EQUIPAMENTOS RECONDICIONADOS • TERMINA EM 04:59:21
+        </p>
+</div>
+<main class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-[250px_1fr] gap-0">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-full py-lg gap-base bg-surface-container-low border-r border-outline-variant">
+<div class="px-md mb-md">
+<h2 class="font-headline-md text-primary-container">FILTER GEAR</h2>
+<p class="font-label-bold text-label-bold uppercase opacity-60">Precision Equipment</p>
+</div>
+<nav class="flex flex-col flex-1">
+<a class="flex items-center gap-md px-md py-3 bg-primary-container text-on-primary-container font-bold active:translate-x-1" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-bold text-label-bold uppercase">Full Catalog</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-container-high active:translate-x-1 transition-all" href="#">
+<span class="material-symbols-outlined">rebase_edit</span>
+<span class="font-label-bold text-label-bold uppercase">Refurbished</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-container-high active:translate-x-1 transition-all" href="#">
+<span class="material-symbols-outlined">store</span>
+<span class="font-label-bold text-label-bold uppercase">Studio Sets</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-container-high active:translate-x-1 transition-all" href="#">
+<span class="material-symbols-outlined">factory</span>
+<span class="font-label-bold text-label-bold uppercase">Commercial</span>
+</a>
+<a class="flex items-center gap-md px-md py-3 text-on-surface-variant hover:bg-surface-container-high active:translate-x-1 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold uppercase">Parts</span>
+</a>
+</nav>
+<div class="px-md mt-lg border-t border-outline-variant pt-lg flex flex-col gap-sm">
+<a class="flex items-center gap-sm text-on-surface-variant opacity-80 hover:opacity-100" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-bold text-label-bold uppercase">Support</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant opacity-80 hover:opacity-100" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="font-label-bold text-label-bold uppercase">Safety</span>
+</a>
+<button class="mt-md bg-secondary text-on-secondary px-4 py-3 font-label-bold text-label-bold uppercase tracking-widest text-center">
+                    POST LISTING
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<section class="p-gutter">
+<!-- Hero Banner -->
+<div class="relative w-full h-[400px] mb-lg overflow-hidden bg-on-background">
+<img class="absolute inset-0 w-full h-full object-cover opacity-60" data-alt="A professional Pilates studio featuring high-end wood and metal reformers aligned perfectly in a bright, modern industrial space. The scene is illuminated by dramatic overhead spotlights creating a high-contrast cinematic atmosphere with deep shadows and vibrant red accents from the studio's branding. The image captures the precision and strength of professional pilates machinery in a clean, commercial marketplace context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjK5M_AzIMlFHFB_XoXbc3T8h3pnZnrtfwOvFgyI_7xQmlbF32bCEa1uJbk3zf9MvK59njIiQJBUs6c3yPvb6VyztxYYQTfULIjNdiL5ztu3Egu2KYyspX1eDvsA7l_oKBxqPjkupzz76x9Y0MbeuYeqxKqZ-Sip0lQDIPEofxF0J4-hwr8mQ5rf5VwnklhjUEzGRgQTfguSMD9p2NxwjSy7YQSITTSr0miiM4lnx7NIKtGCx-WdO5TDDTmiZUYIWEL4p2SXjv9P0"/>
+<div class="relative z-10 h-full flex flex-col justify-center px-xl bg-gradient-to-r from-on-background/80 to-transparent">
+<div class="inline-block bg-primary-container text-on-primary-container px-3 py-1 font-label-bold text-label-bold uppercase mb-md self-start">
+                        Promoção de Outono
+                    </div>
+<h1 class="font-headline-lg text-white mb-sm leading-tight text-5xl md:text-6xl italic font-black uppercase">
+                        HOT DEALS<br/><span class="text-primary-container">REFORMA PILATES</span>
+<p class="text-surface-bright max-w-md font-body-lg mb-lg">
+                        Equipamentos profissionais semi-novos com certificação de qualidade. O maior marketplace industrial de Pilates do Brasil.
+                    </p>
+<div class="flex gap-md">
+<button class="bg-primary-container text-on-primary-container px-xl py-3 font-headline-md uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all">
+                            VER OFERTAS
+                        </button>
+</div>
+</h1></div>
+</div>
+<!-- Category Quick-Links -->
+<div class="flex flex-wrap gap-sm mb-xl">
+<button class="px-4 py-2 border border-outline text-on-surface-variant font-label-bold text-label-bold uppercase hover:bg-surface-container-high transition-colors">Reformers</button>
+<button class="px-4 py-2 border border-outline text-on-surface-variant font-label-bold text-label-bold uppercase hover:bg-surface-container-high transition-colors">Cadillacs</button>
+<button class="px-4 py-2 border border-outline text-on-surface-variant font-label-bold text-label-bold uppercase hover:bg-surface-container-high transition-colors">Combo Chairs</button>
+<button class="px-4 py-2 border border-outline text-on-surface-variant font-label-bold text-label-bold uppercase hover:bg-surface-container-high transition-colors">Barrels</button>
+<button class="px-4 py-2 border border-outline text-on-surface-variant font-label-bold text-label-bold uppercase hover:bg-surface-container-high transition-colors">Acessórios</button>
+<button class="px-4 py-2 border border-outline text-on-surface-variant font-label-bold text-label-bold uppercase hover:bg-surface-container-high transition-colors">Molas &amp; Peças</button>
+</div>
+<!-- Section Title -->
+<div class="flex items-center justify-between mb-md border-b border-outline-variant pb-2">
+<h3 class="font-headline-md text-on-surface uppercase">EQUIPAMENTOS EM DESTAQUE</h3>
+<span class="text-primary-container font-label-bold text-label-bold uppercase cursor-pointer hover:underline">Ver Todos (1.428)</span>
+</div>
+<!-- 4-Column Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-sm">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant group">
+<div class="relative aspect-[4/3] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A premium classic wood pilates reformer with steel springs and leather straps, photographed in high-key studio lighting on a clean white background. The focus is on the industrial craftsmanship and metallic details, emphasizing durability and precision for a professional marketplace listing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCceIWqyaqd6vYWyPXlQzfyrhHWDD0ZQLT-IkryFnCsuORGT-63jbiw2OY_spK5bgVZIDNleiplvQonSf-KhfUmqQy1_YXlwtnkHW4_bWlttJieudn4VzgyBrd0JZRV1lW6ywtIg43AUqW3q3NGeqBux9YCxXNw2qHiTis0jyLL53K6PDOtO-OiVL-e_uwema46HRILI1e1Hk6CPHIR6Mu0f9Pnlhmru4MRgAiNZg9XFp3NLILrC8qjMdaw0TrbGvwXPkoAMkP5pr4"/>
+<div class="absolute top-2 left-2 bg-primary-container text-white px-2 py-1 font-label-bold text-label-bold uppercase">SALE</div>
+<button class="absolute top-2 right-2 p-2 bg-white/80 hover:bg-white rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant scale-75">favorite</span>
+</button>
+</div>
+<div class="p-md">
+<span class="font-label-bold text-label-bold text-secondary uppercase mb-1 block">BALANCED BODY®</span>
+<h4 class="font-headline-md text-sm text-on-surface line-clamp-2 mb-md h-12">Allegro 2 Reformer com Barra de Pés Tower (Semi-novo)</h4>
+<div class="flex flex-col gap-1 mb-md">
+<span class="text-on-surface-variant text-xs line-through">R$ 24.500,00</span>
+<span class="font-price-tag text-price-tag text-primary-container">R$ 18.990,00</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant mb-md">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-xs uppercase font-label-bold">SÃO PAULO, SP</span>
+</div>
+<button class="w-full bg-on-background text-white py-2 font-label-bold text-label-bold uppercase tracking-widest hover:bg-primary transition-colors">VIEW DEAL</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant group">
+<div class="relative aspect-[4/3] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Modern black metal pilates chair with chrome springs and padded seat, showcased against a neutral architectural background. The image is bright with cool tones, focusing on the high-end industrial design and technical specifications of the exercise equipment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA84OeWrV7toWSCqSNIBd7h08rIBBebiVfJOlSA7JGMfVcbvuRjoCBk1Cgl0NdQXhOODQoy3eUcyjteYcdLUiPUnF4yUZMreB0g7mS2NZrmbH6XP0JGgbJfG0gxmBdg6Y4_SDK1x0-aacpAHpAiTtPTchGXxgnZ2dYNtI3F79LNyc--UcA0mhBtG4r9CPToTUNSCG7xf61XyZv-4uLN9izvSaIlbpcicw7XBr2YA8g5ApytalXLJTt1HEhdnsMlqMOn_ERY8f8GY6M"/>
+<div class="absolute top-2 left-2 bg-secondary text-white px-2 py-1 font-label-bold text-label-bold uppercase">PRICE DROP</div>
+<button class="absolute top-2 right-2 p-2 bg-white/80 hover:bg-white rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant scale-75">favorite</span>
+</button>
+</div>
+<div class="p-md">
+<span class="font-label-bold text-label-bold text-secondary uppercase mb-1 block">STOTT PILATES®</span>
+<h4 class="font-headline-md text-sm text-on-surface line-clamp-2 mb-md h-12">Wunda Chair High-Performance - Recondicionado</h4>
+<div class="flex flex-col gap-1 mb-md">
+<span class="text-on-surface-variant text-xs line-through">R$ 8.200,00</span>
+<span class="font-price-tag text-price-tag text-primary-container">R$ 6.450,00</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant mb-md">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-xs uppercase font-label-bold">CURITIBA, PR</span>
+</div>
+<button class="w-full bg-on-background text-white py-2 font-label-bold text-label-bold uppercase tracking-widest hover:bg-primary transition-colors">VIEW DEAL</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant group">
+<div class="relative aspect-[4/3] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Professional pilates reformer setup in a minimalist studio environment. The light-mode aesthetic features pale wood floors and soft natural sunlight streaming through large windows, creating a premium and trustworthy vibe for high-value commerce." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIrvGWBDjciXGX5LV7NF9aCkiT_FwTfYhAVI5Db5WvxgCYfk1C67vHZqS-lycExlIz2mFh0eB172K8V3a0V3CgkYEEmM-mQhUux7bMVw0PG6WU94Qg3V5QYaMz94yQbY8FfgRkpwcDx57_PJBT1z2Twp9gMdrZSeU8r3qk_CYh14Dfzh8ZC54my0sI7km7T0CqbHxcOXGnIet9IMzUFL7wSUjc4tzQkyYrLlYdLhBFPgTsPPW42yEzkqE8ImEg23RalNV3QZGlCZg"/>
+<div class="absolute top-2 left-2 bg-primary-container text-white px-2 py-1 font-label-bold text-label-bold uppercase">SALE</div>
+<button class="absolute top-2 right-2 p-2 bg-white/80 hover:bg-white rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant scale-75">favorite</span>
+</button>
+</div>
+<div class="p-md">
+<span class="font-label-bold text-label-bold text-secondary uppercase mb-1 block">METALIFE</span>
+<h4 class="font-headline-md text-sm text-on-surface line-clamp-2 mb-md h-12">Combo Reformer Classic com Alças de Couro</h4>
+<div class="flex flex-col gap-1 mb-md">
+<span class="text-on-surface-variant text-xs line-through">R$ 15.800,00</span>
+<span class="font-price-tag text-price-tag text-primary-container">R$ 12.200,00</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant mb-md">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-xs uppercase font-label-bold">RIO DE JANEIRO, RJ</span>
+</div>
+<button class="w-full bg-on-background text-white py-2 font-label-bold text-label-bold uppercase tracking-widest hover:bg-primary transition-colors">VIEW DEAL</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant group">
+<div class="relative aspect-[4/3] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Detail shot of a pilates reformer spring system with high-contrast metallic highlights and red color-coded tension markers. The industrial style emphasizes the technical precision and 'The Deal' aesthetic of a high-end equipment marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABoUAZhNDTdy2zUHknoGS3-Q9zk1FpSwYUg68gU469EdQPw9Dk1kvPMZkiBmymx2FZjfVfV0Hk7-3DDkmhBmU_6s4NR0Mong9yDHG8-swgXL6yGP7hfDovxAhBoosuGcGgPC35tt6rR_LRu2JhGuuvpS8TAyP-1TPN2pGxaB06kPuEB-wv7OimvhF5dDI1UnnSiYiE6mPgj0P4_Myesuu0iXf04T5UzYDb-WYzM9C-S_cscXhOs8xHd-EqHqAp5pQ3TYsKyjV6fNI"/>
+<div class="absolute top-2 left-2 bg-primary-container text-white px-2 py-1 font-label-bold text-label-bold uppercase">URGENT</div>
+<button class="absolute top-2 right-2 p-2 bg-white/80 hover:bg-white rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant scale-75">favorite</span>
+</button>
+</div>
+<div class="p-md">
+<span class="font-label-bold text-label-bold text-secondary uppercase mb-1 block">BASI SYSTEMS®</span>
+<h4 class="font-headline-md text-sm text-on-surface line-clamp-2 mb-md h-12">Cadillac Profissional Full - Estrutura em Aço Inoxidável</h4>
+<div class="flex flex-col gap-1 mb-md">
+<span class="text-on-surface-variant text-xs line-through">R$ 32.000,00</span>
+<span class="font-price-tag text-price-tag text-primary-container">R$ 25.900,00</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant mb-md">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-xs uppercase font-label-bold">BELO HORIZONTE, MG</span>
+</div>
+<button class="w-full bg-on-background text-white py-2 font-label-bold text-label-bold uppercase tracking-widest hover:bg-primary transition-colors">VIEW DEAL</button>
+</div>
+</div>
+</div>
+<!-- Trust Badge Section -->
+<div class="mt-xl grid grid-cols-1 md:grid-cols-3 gap-md bg-surface-container-high p-lg">
+<div class="flex gap-md items-center">
+<span class="material-symbols-outlined text-primary-container text-4xl" data-weight="fill">verified</span>
+<div>
+<h5 class="font-label-bold text-label-bold uppercase">COMPRA PROTEGIDA</h5>
+<p class="text-xs opacity-70">Pagamento seguro via plataforma com garantia de entrega.</p>
+</div>
+</div>
+<div class="flex gap-md items-center">
+<span class="material-symbols-outlined text-primary-container text-4xl" data-weight="fill">local_shipping</span>
+<div>
+<h5 class="font-label-bold text-label-bold uppercase">FRETE INDUSTRIAL</h5>
+<p class="text-xs opacity-70">Transportadoras especializadas em carga pesada e sensível.</p>
+</div>
+</div>
+<div class="flex gap-md items-center">
+<span class="material-symbols-outlined text-primary-container text-4xl" data-weight="fill">precision_manufacturing</span>
+<div>
+<h5 class="font-label-bold text-label-bold uppercase">EQUIPAMENTOS CERTIFICADOS</h5>
+<p class="text-xs opacity-70">Vendedores verificados e laudos técnicos de conservação.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-inverse-surface w-full py-xl px-gutter border-t-4 border-primary-container">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-xl max-w-[1200px] mx-auto">
+<div class="flex flex-col gap-md">
+<h2 class="font-headline-md text-surface-bright italic">PILATES DEALS</h2>
+<p class="font-body-sm text-inverse-on-surface opacity-80">
+                    O primeiro marketplace de equipamentos de Pilates da América Latina especializado em transações industriais e liquidações de estúdios.
+                </p>
+<div class="flex gap-sm">
+<span class="material-symbols-outlined text-surface-bright">social_leaderboard</span>
+<span class="material-symbols-outlined text-surface-bright">public</span>
+<span class="material-symbols-outlined text-surface-bright">alternate_email</span>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<h3 class="font-label-bold text-label-bold uppercase text-primary-fixed-dim">COMPRADORES</h3>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Buyer Protection</a>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Shipping Rates</a>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Guia de Inspeção</a>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Calculadora de Frete</a>
+</div>
+<div class="flex flex-col gap-sm">
+<h3 class="font-label-bold text-label-bold uppercase text-primary-fixed-dim">VENDEDORES</h3>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Bulk Liquidation</a>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Venda Direta</a>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Taxas e Comissões</a>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Suporte ao Lojista</a>
+</div>
+<div class="flex flex-col gap-sm">
+<h3 class="font-label-bold text-label-bold uppercase text-primary-fixed-dim">INSTITUCIONAL</h3>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Terms of Sale</a>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Privacy Policy</a>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Carreiras</a>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Contato</a>
+</div>
+</div>
+<div class="max-w-[1200px] mx-auto mt-xl pt-lg border-t border-surface-variant/20">
+<p class="font-label-bold text-[10px] text-surface-variant uppercase text-center md:text-left">
+                © 2024 PILATES DEALS INDUSTRIAL MARKETPLACE. ALL RIGHTS RESERVED. CNPJ: 00.000.000/0001-00. SÃO PAULO, BRASIL.
+            </p>
+</div>
+</footer>
+<!-- FAB for Mobile (suppressed based on logic but available for task consistency) -->
+<button class="md:hidden fixed bottom-6 right-6 bg-primary-container text-on-primary-container w-14 h-14 rounded-full shadow-lg flex items-center justify-center z-50">
+<span class="material-symbols-outlined">add</span>
+</button>
+</body></html>

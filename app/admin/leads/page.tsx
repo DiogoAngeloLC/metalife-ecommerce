@@ -1,10 +1,10 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 import { AdminLeadsContent } from "@/components/admin/admin-leads-content";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminLeadsPage() {
-  const supabase = createClient();
+  const supabase = createServiceClient();
 
   const { data: leads } = await supabase
     .from("leads")

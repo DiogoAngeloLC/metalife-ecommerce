@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#fcfaff",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-container": "#6c738a",
+                        "background": "#f7f9fb",
+                        "outline-variant": "#e5bdbe",
+                        "tertiary": "#535b71",
+                        "surface-dim": "#d8dadc",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary": "#0051d5",
+                        "on-surface-variant": "#5c3f40",
+                        "on-secondary-fixed": "#00174b",
+                        "on-secondary-container": "#fefcff",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#ffb3b6",
+                        "surface-variant": "#e0e3e5",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#ffdada",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#316bf3",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#fffaf9",
+                        "surface-tint": "#be0037",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "primary-container": "#e11d48",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#dae2fd",
+                        "primary": "#b80035",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#920028",
+                        "surface": "#f7f9fb",
+                        "on-background": "#191c1e",
+                        "on-surface": "#191c1e",
+                        "on-primary-fixed": "#40000c",
+                        "on-tertiary-fixed-variant": "#3f465c",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-fixed-dim": "#bec6e0",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary": "#ffffff",
+                        "outline": "#906f70",
+                        "inverse-surface": "#2d3133",
+                        "primary-fixed-dim": "#ffb3b6",
+                        "secondary-fixed": "#dbe1ff",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-fixed": "#131b2e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "md": "16px",
+                        "margin": "20px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "gutter": "16px",
+                        "lg": "24px",
+                        "xl": "48px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "display-price": ["Montserrat"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "price-tag": ["Montserrat"],
+                        "label-bold": ["Inter"],
+                        "headline-lg-mobile": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-price": ["48px", {"lineHeight": "48px", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "headline-md": ["20px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "price-tag": ["24px", {"lineHeight": "24px", "fontWeight": "800"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .form-input-focus:focus {
+            outline: none;
+            border-color: #be0037;
+            box-shadow: 0 0 0 1px #be0037;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-lg">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-on-background border-b-2 border-outline-variant dark:border-outline docked full-width top-0 sticky z-50">
+<div class="flex items-center justify-between px-gutter py-md w-full max-w-[1200px] mx-auto">
+<div class="flex items-center gap-xl">
+<span class="font-headline-lg text-headline-lg font-black italic tracking-tighter text-primary-container dark:text-primary-fixed uppercase">PILATES DEALS</span>
+<nav class="hidden md:flex gap-lg">
+<a class="text-on-surface-variant dark:text-surface-variant font-medium font-body-lg hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors duration-150 py-1 px-2" href="#">Shop All</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium font-body-lg hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors duration-150 py-1 px-2" href="#">Reformers</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium font-body-lg hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors duration-150 py-1 px-2" href="#">New Arrivals</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium font-body-lg hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors duration-150 py-1 px-2" href="#">Liquidation</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="bg-primary-container text-on-primary-container font-headline-md uppercase tracking-wide px-md py-sm active:scale-[0.98] transition-transform text-primary-container dark:text-primary-fixed border-b-2 border-primary-container font-bold">SELL EQUIPMENT</button>
+<button class="text-on-surface-variant dark:text-surface-variant font-headline-md uppercase tracking-wide px-md py-sm hover:bg-surface-container-low transition-colors duration-150">SIGN IN</button>
+</div>
+</div>
+</header>
+<main class="max-w-[1200px] mx-auto px-gutter py-lg">
+<!-- Multi-Step Indicator -->
+<div class="mb-xl">
+<div class="flex items-center justify-between max-w-2xl mx-auto relative">
+<!-- Progress Line -->
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-surface-container-highest -translate-y-1/2 z-0"></div>
+<div class="absolute top-1/2 left-0 w-1/3 h-[2px] bg-primary-container -translate-y-1/2 z-0"></div>
+<!-- Step 1 -->
+<div class="relative z-10 flex flex-col items-center gap-xs">
+<div class="w-10 h-10 bg-primary-container text-on-primary rounded-none flex items-center justify-center font-bold border-2 border-primary-container">01</div>
+<span class="font-label-bold text-label-bold uppercase text-primary">Detalhes</span>
+</div>
+<!-- Step 2 -->
+<div class="relative z-10 flex flex-col items-center gap-xs">
+<div class="w-10 h-10 bg-surface-container-lowest text-on-surface-variant rounded-none flex items-center justify-center font-bold border-2 border-surface-container-highest">02</div>
+<span class="font-label-bold text-label-bold uppercase text-on-surface-variant">Revisão</span>
+</div>
+<!-- Step 3 -->
+<div class="relative z-10 flex flex-col items-center gap-xs">
+<div class="w-10 h-10 bg-surface-container-lowest text-on-surface-variant rounded-none flex items-center justify-center font-bold border-2 border-surface-container-highest">03</div>
+<span class="font-label-bold text-label-bold uppercase text-on-surface-variant">Publicar</span>
+</div>
+</div>
+</div>
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Left Column: Form Inputs -->
+<div class="lg:col-span-7 flex flex-col gap-lg">
+<div class="bg-surface-container-lowest border border-outline-variant p-md">
+<h1 class="font-headline-lg text-headline-lg uppercase mb-md tracking-tighter">CRIAR ANÚNCIO INDUSTRIAL</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg">Insira os dados técnicos do equipamento. Seja direto e preciso.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Product Title -->
+<div class="md:col-span-2">
+<label class="font-label-bold text-label-bold uppercase block mb-xs">Título do Equipamento</label>
+<input class="w-full border border-surface-container-highest px-sm py-sm font-body-lg form-input-focus rounded-none" placeholder="Ex: Reformer Balanced Body Studio" type="text"/>
+</div>
+<!-- Price & Condition -->
+<div>
+<label class="font-label-bold text-label-bold uppercase block mb-xs">Preço de Venda (R$)</label>
+<div class="relative">
+<span class="absolute left-sm top-1/2 -translate-y-1/2 font-bold text-primary">R$</span>
+<input class="w-full border border-surface-container-highest pl-10 pr-sm py-sm font-display-price text-headline-md form-input-focus rounded-none" placeholder="0,00" type="number"/>
+</div>
+</div>
+<div>
+<label class="font-label-bold text-label-bold uppercase block mb-xs">Condição de Uso</label>
+<select class="w-full border border-surface-container-highest px-sm py-sm font-body-lg form-input-focus rounded-none bg-white">
+<option>Novo</option>
+<option>Seminovo (Grade A)</option>
+<option>Usado (Grade B)</option>
+<option>Recondicionado</option>
+<option>Para Peças</option>
+</select>
+</div>
+<!-- Specs Grid -->
+<div class="md:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-md mt-md bg-surface-container-low p-sm">
+<div>
+<label class="font-label-bold text-label-bold uppercase block mb-xs text-xs opacity-70">Marca</label>
+<input class="w-full border border-surface-container-highest px-sm py-xs font-body-sm form-input-focus rounded-none" placeholder="Fabricante" type="text"/>
+</div>
+<div>
+<label class="font-label-bold text-label-bold uppercase block mb-xs text-xs opacity-70">Ano</label>
+<input class="w-full border border-surface-container-highest px-sm py-xs font-body-sm form-input-focus rounded-none" placeholder="AAAA" type="text"/>
+</div>
+<div>
+<label class="font-label-bold text-label-bold uppercase block mb-xs text-xs opacity-70">Localização</label>
+<input class="w-full border border-surface-container-highest px-sm py-xs font-body-sm form-input-focus rounded-none" placeholder="Cidade/UF" type="text"/>
+</div>
+</div>
+<!-- Description -->
+<div class="md:col-span-2">
+<label class="font-label-bold text-label-bold uppercase block mb-xs">Especificações Técnicas &amp; Detalhes</label>
+<textarea class="w-full border border-surface-container-highest px-sm py-sm font-body-sm form-input-focus rounded-none resize-none" placeholder="Descreva molas, estofamento, acessórios inclusos e histórico de manutenção..." rows="4"></textarea>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Media Upload -->
+<div class="lg:col-span-5 flex flex-col gap-lg">
+<div class="bg-surface-container-lowest border-2 border-dashed border-outline-variant p-lg flex flex-col items-center justify-center min-h-[400px] text-center group hover:bg-surface-container-low transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[64px] text-primary-container mb-md">cloud_upload</span>
+<h3 class="font-headline-md text-headline-md uppercase mb-sm">UPLOAD DE FOTOS</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg px-xl">Arraste as fotos aqui ou clique para selecionar. Use fotos reais do equipamento em alta resolução.</p>
+<div class="grid grid-cols-4 gap-sm w-full max-w-sm">
+<div class="aspect-square bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant">add_a_photo</span>
+</div>
+<div class="aspect-square bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant">add_a_photo</span>
+</div>
+<div class="aspect-square bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant">add_a_photo</span>
+</div>
+<div class="aspect-square bg-surface-container-high flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant">add_a_photo</span>
+</div>
+</div>
+<div class="mt-lg bg-primary-container/10 px-md py-sm text-primary font-label-bold text-label-bold uppercase">
+                        MÍNIMO 4 FOTOS PARA DESTAQUE
+                    </div>
+</div>
+<!-- Guidance/Trust Box -->
+<div class="bg-inverse-surface text-inverse-on-surface p-md">
+<div class="flex items-start gap-md">
+<span class="material-symbols-outlined text-primary-fixed-dim">verified_user</span>
+<div>
+<h4 class="font-label-bold text-label-bold uppercase text-primary-fixed-dim">PROTEÇÃO AO VENDEDOR</h4>
+<p class="font-body-sm text-body-sm opacity-80">Seu anúncio passará por nossa curadoria industrial em até 24h para garantir a integridade do marketplace.</p>
+</div>
+</div>
+</div>
+<!-- Main CTA -->
+<button class="w-full bg-primary-container text-on-primary-container font-headline-lg uppercase py-lg tracking-widest hover:bg-primary transition-colors active:scale-[0.99] border-b-4 border-on-primary-fixed-variant">
+                    PUBLISH LISTING NOW
+                </button>
+<p class="text-center font-label-bold text-label-bold uppercase text-on-surface-variant opacity-60">Ao publicar, você aceita os Termos de Venda Industrial.</p>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="bg-inverse-surface dark:bg-surface-container-lowest border-t-4 border-primary-container w-full py-xl px-gutter mt-xl">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-xl max-w-[1200px] mx-auto">
+<div class="flex flex-col gap-md">
+<span class="font-headline-md text-surface-bright uppercase">PILATES DEALS</span>
+<p class="font-body-sm text-body-sm text-surface-variant opacity-80">A maior plataforma industrial de revenda de equipamentos de Pilates da América Latina.</p>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-label-bold text-label-bold uppercase text-surface-bright">Mercado</h4>
+<nav class="flex flex-col gap-xs">
+<a class="text-surface-variant opacity-80 font-body-sm hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Buyer Protection</a>
+<a class="text-surface-variant opacity-80 font-body-sm hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Shipping Rates</a>
+</nav>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-label-bold text-label-bold uppercase text-surface-bright">Empresa</h4>
+<nav class="flex flex-col gap-xs">
+<a class="text-surface-variant opacity-80 font-body-sm hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Bulk Liquidation</a>
+<a class="text-surface-variant opacity-80 font-body-sm hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Terms of Sale</a>
+</nav>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="font-label-bold text-label-bold uppercase text-surface-bright">Newsletter</h4>
+<div class="flex border border-surface-variant/30">
+<input class="bg-transparent border-none px-sm py-xs text-white w-full text-body-sm focus:ring-0" placeholder="Seu e-mail" type="email"/>
+<button class="bg-primary-container px-sm text-white material-symbols-outlined">send</button>
+</div>
+</div>
+</div>
+<div class="max-w-[1200px] mx-auto mt-xl pt-lg border-t border-surface-variant/20">
+<p class="font-body-sm text-body-sm text-surface-variant opacity-80">© 2024 PILATES DEALS INDUSTRIAL MARKETPLACE. ALL RIGHTS RESERVED.</p>
+</div>
+</footer>
+</body></html>

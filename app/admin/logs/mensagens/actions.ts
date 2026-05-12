@@ -1,13 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { dispatchMessage } from "@/lib/messages/dispatch";
 
 export async function retryMessageAction(logId: string) {
   await requireAdmin();
-  const supabase = createClient();
+  const supabase = createServiceClient();
 
   const { data: original, error } = await supabase
     .from("whatsapp_messages_log")

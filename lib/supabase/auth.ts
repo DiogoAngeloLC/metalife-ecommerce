@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "./server";
+import { createClient, createServiceClient } from "./server";
 import type { Database } from "./types";
 
 type Vendor = Database["public"]["Tables"]["vendors"]["Row"];
@@ -43,7 +43,7 @@ export async function requireVendor() {
 export async function isCurrentUserAdmin(): Promise<boolean> {
   const user = await getCurrentUser();
   if (!user) return false;
-  const supabase = createClient();
+  const supabase = createServiceClient();
   const { data } = await supabase
     .from("app_admins")
     .select("user_id")
@@ -55,7 +55,7 @@ export async function isCurrentUserAdmin(): Promise<boolean> {
 export async function requireAdmin() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
-  const supabase = createClient();
+  const supabase = createServiceClient();
   const { data: admin } = await supabase
     .from("app_admins")
     .select("user_id")

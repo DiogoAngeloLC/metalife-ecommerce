@@ -1,17 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { dispatchMessage, siteUrl } from "@/lib/messages/dispatch";
 import { buildListingApproved, buildListingRejected } from "@/lib/messages/templates";
 
 export async function approveListingAction(listingId: string) {
-  await requireAdmin();
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await requireAdmin();
+  const supabase = createServiceClient();
 
   const { error } = await supabase
     .from("listings")
@@ -19,7 +16,7 @@ export async function approveListingAction(listingId: string) {
       status: "active",
       published_at: new Date().toISOString(),
       reviewed_at: new Date().toISOString(),
-      reviewed_by: user!.id,
+      reviewed_by: user.id,
       rejection_reason: null,
     })
     .eq("id", listingId);
@@ -59,20 +56,17 @@ export async function approveListingAction(listingId: string) {
 }
 
 export async function rejectListingAction(listingId: string, reason: string) {
-  await requireAdmin();
+  const user = await requireAdmin();
   if (!reason.trim()) throw new Error("Motivo é obrigatório.");
 
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const supabase = createServiceClient();
 
   const { error } = await supabase
     .from("listings")
     .update({
       status: "rejected",
       reviewed_at: new Date().toISOString(),
-      reviewed_by: user!.id,
+      reviewed_by: user.id,
       rejection_reason: reason.trim(),
     })
     .eq("id", listingId);
@@ -113,7 +107,7 @@ export async function rejectListingAction(listingId: string, reason: string) {
 
 export async function unpublishListingAction(listingId: string) {
   await requireAdmin();
-  const supabase = createClient();
+  const supabase = createServiceClient();
 
   const { error } = await supabase
     .from("listings")
@@ -129,7 +123,7 @@ export async function unpublishListingAction(listingId: string) {
 
 export async function deleteListingAction(listingId: string) {
   await requireAdmin();
-  const supabase = createClient();
+  const supabase = createServiceClient();
 
   const { error } = await supabase.from("listings").delete().eq("id", listingId);
   if (error) throw new Error(error.message);

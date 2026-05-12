@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#fcfaff",
+                    "surface-container-high": "#e6e8ea",
+                    "tertiary-container": "#6c738a",
+                    "background": "#f7f9fb",
+                    "outline-variant": "#e5bdbe",
+                    "tertiary": "#535b71",
+                    "surface-dim": "#d8dadc",
+                    "inverse-on-surface": "#eff1f3",
+                    "secondary": "#0051d5",
+                    "on-surface-variant": "#5c3f40",
+                    "on-secondary-fixed": "#00174b",
+                    "on-secondary-container": "#fefcff",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#ffb3b6",
+                    "surface-container": "#eceef0",
+                    "primary-container": "#e11d48",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed": "#dae2fd",
+                    "primary": "#b80035",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed-variant": "#920028",
+                    "surface": "#f7f9fb",
+                    "on-background": "#191c1e",
+                    "on-surface": "#191c1e",
+                    "on-primary-fixed": "#40000c",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "surface-bright": "#f7f9fb",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-container-low": "#f2f4f6",
+                    "on-primary": "#ffffff",
+                    "outline": "#906f70",
+                    "inverse-surface": "#2d3133",
+                    "primary-fixed-dim": "#ffb3b6",
+                    "secondary-fixed": "#dbe1ff",
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "on-tertiary-fixed": "#131b2e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "md": "16px",
+                    "margin": "20px",
+                    "base": "4px",
+                    "xs": "4px",
+                    "gutter": "16px",
+                    "lg": "24px",
+                    "xl": "48px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "display-price": ["Montserrat"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Montserrat"],
+                    "headline-lg": ["Montserrat"],
+                    "price-tag": ["Montserrat"],
+                    "label-bold": ["Inter"],
+                    "headline-lg-mobile": ["Montserrat"]
+            },
+            "fontSize": {
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-price": ["48px", {"lineHeight": "48px", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "headline-md": ["20px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "price-tag": ["24px", {"lineHeight": "24px", "fontWeight": "800"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active { background-color: #e11d48; color: white; font-weight: 700; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-lg">
+<!-- TopNavBar -->
+<header class="bg-surface docked full-width top-0 sticky z-50 border-b-2 border-outline-variant">
+<div class="flex items-center justify-between px-gutter py-md w-full max-w-[1200px] mx-auto">
+<div class="flex items-center gap-xl">
+<span class="font-headline-lg text-headline-lg font-black italic tracking-tighter text-primary-container">PILATES DEALS</span>
+<nav class="hidden md:flex gap-lg">
+<a class="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors duration-150 py-base px-sm" href="#">Shop All</a>
+<a class="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors duration-150 py-base px-sm" href="#">Reformers</a>
+<a class="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors duration-150 py-base px-sm" href="#">New Arrivals</a>
+<a class="text-on-surface-variant font-medium hover:bg-surface-container-low transition-colors duration-150 py-base px-sm" href="#">Liquidation</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="font-headline-md uppercase tracking-wide bg-primary-container text-on-primary-container px-lg py-sm active:scale-[0.98] transition-transform">SELL EQUIPMENT</button>
+<button class="font-headline-md uppercase tracking-wide text-on-surface-variant px-md py-sm">SIGN IN</button>
+</div>
+</div>
+</header>
+<div class="flex max-w-[1200px] mx-auto">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-[calc(100vh-80px)] w-64 border-r border-outline-variant bg-surface-container-low py-lg gap-base sticky top-[80px]">
+<div class="px-md mb-md">
+<h2 class="font-headline-md text-primary-container uppercase">FILTER GEAR</h2>
+<p class="text-label-bold font-label-bold opacity-70">Precision Equipment</p>
+</div>
+<nav class="flex-grow flex flex-col gap-base">
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-100 active:translate-x-1" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-bold text-label-bold uppercase">Full Catalog</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm bg-primary-container text-on-primary-container font-bold rounded-none active:translate-x-1" href="#">
+<span class="material-symbols-outlined">rebase_edit</span>
+<span class="font-label-bold text-label-bold uppercase">My Sales</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-100 active:translate-x-1" href="#">
+<span class="material-symbols-outlined">store</span>
+<span class="font-label-bold text-label-bold uppercase">Studio Sets</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-100 active:translate-x-1" href="#">
+<span class="material-symbols-outlined">factory</span>
+<span class="font-label-bold text-label-bold uppercase">Commercial</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:bg-surface-container-high transition-all duration-100 active:translate-x-1" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold text-label-bold uppercase">Parts</span>
+</a>
+</nav>
+<div class="px-md mt-auto pt-lg border-t border-outline-variant flex flex-col gap-sm">
+<a class="flex items-center gap-sm text-on-surface-variant opacity-70 hover:opacity-100" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-bold text-label-bold uppercase">Support</span>
+</a>
+<a class="flex items-center gap-sm text-on-surface-variant opacity-70 hover:opacity-100" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="font-label-bold text-label-bold uppercase">Safety</span>
+</a>
+<button class="mt-md bg-inverse-surface text-inverse-on-surface py-sm font-label-bold uppercase">POST LISTING</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-grow p-gutter md:p-lg">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl gap-md">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-background">Painel do Vendedor</h1>
+<p class="text-body-lg text-tertiary">Gerencie seus anúncios e acompanhe seu desempenho industrial.</p>
+</div>
+<button class="bg-primary-container text-on-primary-container px-lg py-md font-headline-md uppercase tracking-wide flex items-center gap-sm hover:brightness-90 transition-all active:scale-95">
+<span class="material-symbols-outlined">add_circle</span>
+                    + NOVO ANÚNCIO
+                </button>
+</div>
+<!-- Performance Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md mb-xl">
+<div class="bg-surface-container-lowest border border-outline-variant p-lg flex flex-col gap-xs">
+<span class="text-label-bold font-label-bold text-tertiary uppercase">Total de Vendas</span>
+<span class="font-display-price text-display-price text-primary">R$ 42.850</span>
+<div class="flex items-center gap-xs text-secondary">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+<span class="text-label-bold font-label-bold">+12% este mês</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-lg flex flex-col gap-xs">
+<span class="text-label-bold font-label-bold text-tertiary uppercase">Leads Totais</span>
+<span class="font-display-price text-display-price text-on-background">184</span>
+<span class="text-body-sm text-tertiary">Interessados aguardando resposta</span>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-lg flex flex-col gap-xs">
+<span class="text-label-bold font-label-bold text-tertiary uppercase">Anúncios Ativos</span>
+<span class="font-display-price text-display-price text-secondary">12</span>
+<span class="text-body-sm text-tertiary">De 15 vagas disponíveis</span>
+</div>
+</div>
+<!-- Listings Table -->
+<div class="bg-surface-container-lowest border border-outline-variant overflow-hidden">
+<div class="p-md border-b border-outline-variant bg-surface-container-low">
+<h3 class="font-headline-md uppercase">Meus Anúncios</h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant">
+<th class="p-md text-label-bold font-label-bold text-tertiary uppercase">Item</th>
+<th class="p-md text-label-bold font-label-bold text-tertiary uppercase">Preço</th>
+<th class="p-md text-label-bold font-label-bold text-tertiary uppercase">Status</th>
+<th class="p-md text-label-bold font-label-bold text-tertiary uppercase">Visualizações</th>
+<th class="p-md text-label-bold font-label-bold text-tertiary uppercase text-right">Ação</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Listing 1 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-md">
+<div class="flex items-center gap-md">
+<div class="w-16 h-16 bg-surface-container-highest border border-outline-variant overflow-hidden">
+<img alt="Reformer" class="w-full h-full object-cover" data-alt="A professional Balanced Body Pilates Reformer standing in a high-end, minimalist industrial studio. The lighting is crisp and bright, emphasizing the sleek metallic and wooden textures. The composition is a sharp product shot against a clean, light gray background, conveying a sense of premium quality and industrial durability. The color palette is neutral with subtle steel accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC7JmUtii2zpwSDyTW_-u6DgyXCyNqlq8Lvns5b4h3EHVPESGvGXtK8wCEFMkaDB-9YkWyDiFWBiHekM526D9PVsUZDZj93cD_Gck_yR1yjPZNQDSfXpcKmlVtH3MdXAotxPCtTajYi84ek5WDNzSJWFgIRLM0If8456tuukiTVdavCjYrqyoHGpqUkSF1NjD-0GEsN4eHOdPT2LJ_adeLYPCHXXwX9R1TKdU7r9xFYKN81aRnEUpcOEcLTlG-gNVTtKY7TRzh_DA"/>
+</div>
+<div>
+<p class="font-headline-md text-[16px]">Balanced Body Allegro 2</p>
+<p class="text-label-bold text-tertiary">Publicado em: 12 Out 2023</p>
+</div>
+</div>
+</td>
+<td class="p-md font-price-tag text-[18px]">R$ 14.500</td>
+<td class="p-md">
+<span class="bg-secondary-fixed text-on-secondary-fixed px-sm py-xs text-label-bold uppercase">Ativo</span>
+</td>
+<td class="p-md">
+<div class="flex items-center gap-xs text-tertiary">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span class="font-body-sm">1.240</span>
+</div>
+</td>
+<td class="p-md text-right">
+<button class="bg-primary-container text-on-primary-container px-md py-sm font-label-bold uppercase hover:bg-primary transition-all active:scale-95">IMPULSIONAR</button>
+</td>
+</tr>
+<!-- Listing 2 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-md">
+<div class="flex items-center gap-md">
+<div class="w-16 h-16 bg-surface-container-highest border border-outline-variant overflow-hidden">
+<img alt="Wunda Chair" class="w-full h-full object-cover" data-alt="A vintage style Pilates Wunda Chair made of polished dark wood and black upholstery, positioned in a modern industrial marketplace setting. The shot is high-contrast with dramatic yet clean lighting that highlights the grain of the wood. The background is a minimalist, professional studio environment in light mode. The image is a sharp, technical showcase of commercial-grade fitness equipment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-qTmMI6dSdHEyT4r6LWfmY70ycglIM4L2K1l2r5FF_ElJblNtrjsYH0nFEDZTyryEArtFm89u34ODMfzs7MpnRrXkFXzgVX7w6H8-j8H92m3BuGLgAlN6juzKkHl0s4bAW-1P5tcIlVbZWvl2tmeHpetOMXumQl6AInQQvA1UZgeciimAFHwW5pJxv2PtAOXOWEjO1_ID_uZ00U7x4ByHmxxh2B0QaGsk0gAzX3ptvA_aBJ8MIGZpXFdIhmWAN-DbJivppNaXjfk"/>
+</div>
+<div>
+<p class="font-headline-md text-[16px]">Wunda Chair Professional</p>
+<p class="text-label-bold text-tertiary">Publicado em: 05 Out 2023</p>
+</div>
+</div>
+</td>
+<td class="p-md font-price-tag text-[18px]">R$ 4.200</td>
+<td class="p-md">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-sm py-xs text-label-bold uppercase">Pendente</span>
+</td>
+<td class="p-md">
+<div class="flex items-center gap-xs text-tertiary">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span class="font-body-sm">450</span>
+</div>
+</td>
+<td class="p-md text-right">
+<button class="bg-primary-container text-on-primary-container px-md py-sm font-label-bold uppercase hover:bg-primary transition-all active:scale-95">IMPULSIONAR</button>
+</td>
+</tr>
+<!-- Listing 3 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="p-md">
+<div class="flex items-center gap-md">
+<div class="w-16 h-16 bg-surface-container-highest border border-outline-variant overflow-hidden grayscale opacity-50">
+<img alt="Cadillac" class="w-full h-full object-cover" data-alt="A large-scale Pilates Cadillac Trapeze Table, featuring a heavy-duty chrome frame and plush black cushioning. The setting is a clean, warehouse-style marketplace with bright overhead lighting. The composition is focused and architectural, emphasizing the industrial scale of the equipment. The style is sharp and commercial, using a palette of steel, black, and bright whites to denote professional fitness apparatus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpKO85FpoPGM_IkAofjP0L-aFXZpRdAryE9PwrJUZvWRrDikpe-ezT3KC_xTVMemmTM5Mw05b331nGer8Ko8PefTG_Wb2uRVQCU5iBkLEbH9QBBZe6BLYjHKyZo_Jkd2XKshBAQQnvvbNpAw6RPwK9vxVT6n6WSHkGCn-E3wHXWIgj9vDAzfttfVrB9johIUyFXN3AEMKgs-qej5-aIY9nbEIMLXMEkuAbtdI7xXeQ_Uy4UBmBNvUxudDgxfeabsUmPYOBFO4iQyQ"/>
+</div>
+<div>
+<p class="font-headline-md text-[16px] text-tertiary">Cadillac Trapeze Table</p>
+<p class="text-label-bold text-tertiary">Publicado em: 20 Set 2023</p>
+</div>
+</div>
+</td>
+<td class="p-md font-price-tag text-[18px] text-tertiary">R$ 18.900</td>
+<td class="p-md">
+<span class="bg-surface-container-highest text-on-surface-variant px-sm py-xs text-label-bold uppercase">Vendido</span>
+</td>
+<td class="p-md">
+<div class="flex items-center gap-xs text-tertiary opacity-50">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span class="font-body-sm">3.890</span>
+</div>
+</td>
+<td class="p-md text-right">
+<button class="border border-outline text-tertiary px-md py-sm font-label-bold uppercase cursor-not-allowed">RELISTAR</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-md bg-surface-container-low flex justify-between items-center">
+<span class="text-body-sm text-tertiary">Mostrando 3 de 12 anúncios</span>
+<div class="flex gap-xs">
+<button class="w-8 h-8 border border-outline-variant flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-8 h-8 bg-primary-container text-on-primary-container flex items-center justify-center font-bold">1</button>
+<button class="w-8 h-8 border border-outline-variant flex items-center justify-center hover:bg-surface-container-high transition-colors">2</button>
+<button class="w-8 h-8 border border-outline-variant flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-inverse-surface border-t-4 border-primary-container mt-xl">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-xl max-w-[1200px] mx-auto py-xl px-gutter">
+<div class="flex flex-col gap-md">
+<span class="font-headline-md text-surface-bright">PILATES DEALS</span>
+<p class="text-body-sm text-surface-variant opacity-80 uppercase font-label-bold">Industrial Marketplace</p>
+<div class="flex gap-md mt-md">
+<span class="material-symbols-outlined text-surface-bright cursor-pointer hover:text-primary-fixed">public</span>
+<span class="material-symbols-outlined text-surface-bright cursor-pointer hover:text-primary-fixed">share</span>
+<span class="material-symbols-outlined text-surface-bright cursor-pointer hover:text-primary-fixed">verified</span>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="text-surface-bright font-label-bold uppercase border-b border-surface-variant pb-xs mb-sm">Compradores</h4>
+<a class="text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity font-body-sm" href="#">Buyer Protection</a>
+<a class="text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity font-body-sm" href="#">Shipping Rates</a>
+<a class="text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity font-body-sm" href="#">Terms of Sale</a>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="text-surface-bright font-label-bold uppercase border-b border-surface-variant pb-xs mb-sm">Vendedores</h4>
+<a class="text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity font-body-sm" href="#">Bulk Liquidation</a>
+<a class="text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity font-body-sm" href="#">Sell Equipment</a>
+<a class="text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity font-body-sm" href="#">Listing Fees</a>
+</div>
+<div class="flex flex-col gap-sm">
+<h4 class="text-surface-bright font-label-bold uppercase border-b border-surface-variant pb-xs mb-sm">Suporte</h4>
+<p class="text-surface-variant opacity-80 font-body-sm">Atendimento Seg-Sex 08:00 - 18:00</p>
+<button class="bg-surface-container-highest text-on-surface py-sm font-label-bold uppercase mt-sm">Fale Conosco</button>
+</div>
+</div>
+<div class="max-w-[1200px] mx-auto py-md px-gutter border-t border-surface-variant border-opacity-20">
+<p class="font-body-sm text-surface-variant opacity-80 text-center md:text-left">© 2024 PILATES DEALS INDUSTRIAL MARKETPLACE. ALL RIGHTS RESERVED.</p>
+</div>
+</footer>
+</body></html>

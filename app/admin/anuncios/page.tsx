@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 import { AdminListingsContent } from "@/components/admin/admin-listings-content";
 import type { Database } from "@/lib/supabase/types";
 
@@ -11,7 +11,7 @@ export default async function AdminListingsPage({
 }: {
   searchParams: { status?: string; q?: string };
 }) {
-  const supabase = createClient();
+  const supabase = createServiceClient();
   const statusFilter = searchParams.status as Status | undefined;
   const query = searchParams.q ?? "";
 

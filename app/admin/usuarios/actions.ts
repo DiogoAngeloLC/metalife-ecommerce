@@ -1,12 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/supabase/auth";
 
 export async function makeAdminAction(userId: string) {
   await requireAdmin();
-  const supabase = createClient();
+  const supabase = createServiceClient();
 
   const { error } = await supabase
     .from("app_admins")
@@ -18,13 +18,10 @@ export async function makeAdminAction(userId: string) {
 }
 
 export async function removeAdminAction(userId: string) {
-  await requireAdmin();
-  const supabase = createClient();
-  const {
-    data: { user: current },
-  } = await supabase.auth.getUser();
+  const current = await requireAdmin();
+  const supabase = createServiceClient();
 
-  if (userId === current!.id) {
+  if (userId === current.id) {
     throw new Error("Você não pode remover seu próprio acesso de admin.");
   }
 

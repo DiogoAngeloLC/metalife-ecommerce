@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-pattern {
+            background-color: #f7f9fb;
+            background-image: radial-gradient(#e5bdbe 0.5px, transparent 0.5px);
+            background-size: 10px 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#fcfaff",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-container": "#6c738a",
+                        "background": "#f7f9fb",
+                        "outline-variant": "#e5bdbe",
+                        "tertiary": "#535b71",
+                        "surface-dim": "#d8dadc",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary": "#0051d5",
+                        "on-surface-variant": "#5c3f40",
+                        "on-secondary-fixed": "#00174b",
+                        "on-secondary-container": "#fefcff",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#ffb3b6",
+                        "surface-container": "#eceef0",
+                        "primary-container": "#e11d48",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#dae2fd",
+                        "primary": "#b80035",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#920028",
+                        "surface": "#f7f9fb",
+                        "on-background": "#191c1e",
+                        "on-surface": "#191c1e",
+                        "on-primary-fixed": "#40000c",
+                        "on-tertiary-fixed-variant": "#3f465c",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-fixed-dim": "#bec6e0",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary": "#ffffff",
+                        "outline": "#906f70",
+                        "inverse-surface": "#2d3133",
+                        "primary-fixed-dim": "#ffb3b6",
+                        "secondary-fixed": "#dbe1ff",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-fixed": "#131b2e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "md": "16px",
+                        "margin": "20px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "gutter": "16px",
+                        "lg": "24px",
+                        "xl": "48px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "display-price": ["Montserrat"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "headline-lg": ["Montserrat"],
+                        "price-tag": ["Montserrat"],
+                        "label-bold": ["Inter"],
+                        "headline-lg-mobile": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-price": ["48px", {"lineHeight": "48px", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "headline-md": ["20px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "price-tag": ["24px", {"lineHeight": "24px", "fontWeight": "800"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-lg antialiased">
+<!-- Header / TopNavBar Placeholder (As defined in JSON) -->
+<header class="bg-surface dark:bg-on-background border-b-2 border-outline-variant sticky top-0 z-50">
+<div class="flex items-center justify-between px-gutter py-md w-full max-w-[1200px] mx-auto">
+<h1 class="font-headline-lg text-headline-lg font-black italic tracking-tighter text-primary-container">PILATES DEALS</h1>
+<div class="hidden md:flex gap-lg items-center">
+<span class="text-on-surface-variant font-medium font-body-lg hover:text-primary-container cursor-pointer transition-colors">Shop All</span>
+<span class="text-on-surface-variant font-medium font-body-lg hover:text-primary-container cursor-pointer transition-colors">Reformers</span>
+<span class="text-on-surface-variant font-medium font-body-lg hover:text-primary-container cursor-pointer transition-colors">New Arrivals</span>
+<span class="text-on-surface-variant font-medium font-body-lg hover:text-primary-container cursor-pointer transition-colors">Liquidation</span>
+</div>
+<div class="flex gap-md">
+<button class="font-headline-md uppercase tracking-wide bg-primary-container text-on-primary-container px-md py-sm hover:brightness-90 transition-all">SELL EQUIPMENT</button>
+</div>
+</div>
+</header>
+<!-- Main Content Background (Simulated Detail Page) -->
+<main class="min-h-screen bg-pattern flex items-center justify-center p-gutter">
+<!-- Contact Modal Container -->
+<div class="w-full max-w-[500px] bg-surface-container-lowest border border-outline-variant relative overflow-hidden shadow-2xl">
+<!-- Progress Bar -->
+<div class="h-2 w-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-primary-container w-[75%]"></div>
+</div>
+<!-- Modal Header -->
+<div class="p-lg border-b border-outline-variant bg-surface-container-low flex justify-between items-start">
+<div>
+<h2 class="font-headline-md text-headline-md uppercase text-on-surface mb-xs">REVEAL SELLER CONTACT</h2>
+<p class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest">Apenas 1 passo restante para garantir esta oferta</p>
+</div>
+<button class="text-on-surface-variant hover:text-primary-container">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Form Content -->
+<div class="p-lg space-y-lg">
+<!-- Urgent Badge -->
+<div class="bg-primary-container text-on-primary-container p-sm flex items-center gap-sm">
+<span class="material-symbols-outlined" data-weight="fill">timer</span>
+<span class="font-label-bold text-label-bold uppercase">ALTA DEMANDA: 14 PESSOAS INTERESSADAS HOJE</span>
+</div>
+<!-- Fields -->
+<form class="space-y-md">
+<div>
+<label class="block font-label-bold text-label-bold uppercase mb-xs text-on-surface-variant">Nome Completo</label>
+<input class="w-full border border-outline-variant p-md focus:outline-none focus:border-primary-container rounded-none font-body-lg" placeholder="Seu nome" type="text"/>
+</div>
+<div>
+<label class="block font-label-bold text-label-bold uppercase mb-xs text-on-surface-variant">WhatsApp</label>
+<div class="flex">
+<span class="inline-flex items-center px-md border border-r-0 border-outline-variant bg-surface-container-high font-body-lg">+55</span>
+<input class="w-full border border-outline-variant p-md focus:outline-none focus:border-primary-container rounded-none font-body-lg" placeholder="(00) 00000-0000" type="tel"/>
+</div>
+</div>
+<div>
+<label class="block font-label-bold text-label-bold uppercase mb-xs text-on-surface-variant">E-mail</label>
+<input class="w-full border border-outline-variant p-md focus:outline-none focus:border-primary-container rounded-none font-body-lg" placeholder="email@exemplo.com" type="email"/>
+</div>
+<!-- CTA Button -->
+<button class="w-full bg-primary-container text-on-primary-container font-headline-md text-headline-md uppercase py-lg tracking-widest hover:bg-primary transition-all active:scale-[0.98]" type="button">
+                        GET WHATSAPP LINK
+                    </button>
+</form>
+<p class="font-body-sm text-body-sm text-center text-on-surface-variant opacity-60">
+                    Ao clicar em revelar, você concorda com nossos termos de proteção ao comprador.
+                </p>
+</div>
+</div>
+<!-- Success Overlay (Hidden for Visual Demo, but Styled) -->
+<div class="hidden fixed inset-0 z-[60] bg-on-background/80 flex items-center justify-center p-gutter">
+<div class="w-full max-w-[450px] bg-surface-container-lowest border-4 border-primary-container p-xl text-center space-y-lg shadow-2xl">
+<div class="flex justify-center">
+<div class="w-xl h-xl bg-secondary-container text-on-secondary-container rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-[48px]" data-weight="fill">check_circle</span>
+</div>
+</div>
+<h3 class="font-headline-lg text-headline-lg uppercase tracking-tight text-primary-container">CONTACT REVEALED!</h3>
+<div class="bg-surface-container-low p-lg border border-outline-variant">
+<p class="font-label-bold text-label-bold uppercase mb-base text-on-surface-variant">Vendedor: Ricardo M.</p>
+<p class="font-price-tag text-price-tag text-secondary">+55 11 98765-4321</p>
+</div>
+<button class="w-full bg-[#25D366] text-white font-headline-md text-headline-md uppercase py-lg flex items-center justify-center gap-md hover:brightness-90 transition-all">
+<svg class="w-8 h-8 fill-current" viewbox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.417-.003 6.557-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.305 1.652zm6.599-3.835c1.516.893 3.135 1.364 4.795 1.365 5.148 0 9.337-4.189 9.34-9.339.001-2.495-.972-4.841-2.739-6.609-1.767-1.769-4.115-2.742-6.611-2.742-5.148 0-9.337 4.189-9.34 9.339-.001 1.893.562 3.736 1.629 5.333l-1.068 3.9 4.004-1.05z"></path></svg>
+                    FALAR NO WHATSAPP
+                </button>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Mencione que viu o anúncio no <strong>PILATES DEALS</strong> para condições especiais.
+                </p>
+</div>
+</div>
+</main>
+<!-- Footer Cluster (As defined in JSON) -->
+<footer class="bg-inverse-surface dark:bg-surface-container-lowest border-t-4 border-primary-container">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-xl max-w-[1200px] mx-auto py-xl px-gutter">
+<div>
+<h4 class="font-headline-md text-surface-bright mb-md">PILATES DEALS</h4>
+<p class="font-body-sm text-surface-variant opacity-80 mb-md">The industrial marketplace for high-performance pilates hardware.</p>
+</div>
+<div class="flex flex-col gap-sm">
+<span class="font-label-bold text-label-bold uppercase text-surface-bright">Marketplace</span>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Buyer Protection</a>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Shipping Rates</a>
+</div>
+<div class="flex flex-col gap-sm">
+<span class="font-label-bold text-label-bold uppercase text-surface-bright">Business</span>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Bulk Liquidation</a>
+<a class="font-body-sm text-surface-variant opacity-80 hover:text-primary-fixed hover:opacity-100 transition-opacity" href="#">Terms of Sale</a>
+</div>
+<div>
+<p class="font-label-bold text-label-bold uppercase text-surface-bright mb-sm">Connect</p>
+<div class="flex gap-md">
+<span class="material-symbols-outlined text-surface-variant">share</span>
+<span class="material-symbols-outlined text-surface-variant">mail</span>
+</div>
+</div>
+</div>
+<div class="max-w-[1200px] mx-auto px-gutter pb-xl border-t border-outline-variant pt-md">
+<p class="font-body-sm text-body-sm text-surface-variant opacity-60">© 2024 PILATES DEALS INDUSTRIAL MARKETPLACE. ALL RIGHTS RESERVED.</p>
+</div>
+</footer>
+</body></html>
