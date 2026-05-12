@@ -20,6 +20,7 @@ export type Database = {
           city: string | null;
           state: string | null;
           onboarding_completed: boolean;
+          is_verified: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -30,6 +31,7 @@ export type Database = {
           city?: string | null;
           state?: string | null;
           onboarding_completed?: boolean;
+          is_verified?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -40,6 +42,7 @@ export type Database = {
           city?: string | null;
           state?: string | null;
           onboarding_completed?: boolean;
+          is_verified?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -68,6 +71,7 @@ export type Database = {
           rejection_reason: string | null;
           reviewed_at: string | null;
           reviewed_by: string | null;
+          is_featured: boolean;
         };
         Insert: {
           id?: string;
@@ -91,6 +95,7 @@ export type Database = {
           rejection_reason?: string | null;
           reviewed_at?: string | null;
           reviewed_by?: string | null;
+          is_featured?: boolean;
         };
         Update: {
           id?: string;
@@ -114,6 +119,7 @@ export type Database = {
           rejection_reason?: string | null;
           reviewed_at?: string | null;
           reviewed_by?: string | null;
+          is_featured?: boolean;
         };
         Relationships: [
           {

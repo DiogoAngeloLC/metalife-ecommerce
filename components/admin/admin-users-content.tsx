@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Shield, ShieldOff, MapPin } from "lucide-react";
-import { makeAdminAction, removeAdminAction } from "@/app/admin/usuarios/actions";
+import { Shield, ShieldOff, ShieldCheck, MapPin } from "lucide-react";
+import { makeAdminAction, removeAdminAction, toggleVerifiedAction } from "@/app/admin/usuarios/actions";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function AdminUsersContent({ vendors }: { vendors: any[] }) {
@@ -37,11 +37,22 @@ export function AdminUsersContent({ vendors }: { vendors: any[] }) {
     }
   };
 
+  const handleToggleVerified = (vendor: any) => {
+    const next = !vendor.is_verified;
+    startTransition(async () => {
+      try {
+        await toggleVerifiedAction(vendor.id, next);
+      } catch (err) {
+        alert(err instanceof Error ? err.message : "Erro");
+      }
+    });
+  };
+
   return (
-    <div className="p-8 md:p-12">
-      <div className="mb-8">
-        <div className="text-xs uppercase tracking-[0.25em] text-[var(--text-muted)] mb-2">Pessoas</div>
-        <h1 className="font-display text-4xl md:text-5xl">Usuários</h1>
+    <div className="p-6 md:p-10">
+      <div className="mb-6">
+        <div className="text-label-bold text-[var(--text-muted)] mb-2">PESSOAS</div>
+        <h1 className="font-display text-3xl md:text-4xl font-bold uppercase text-[var(--ink)]">Usuários</h1>
       </div>
 
       <div className="flex items-center gap-2 mb-6">
@@ -53,10 +64,10 @@ export function AdminUsersContent({ vendors }: { vendors: any[] }) {
           <button
             key={t.key}
             onClick={() => setFilter(t.key)}
-            className={`text-sm px-4 py-1.5 rounded-full transition ${
+            className={`text-label-bold px-4 py-1.5 transition border ${
               filter === t.key
-                ? "bg-[var(--ink)] text-white"
-                : "text-[var(--ink-soft)] hover:bg-[var(--bone)]"
+                ? "bg-[var(--ink)] text-white border-[var(--ink)]"
+                : "text-[var(--ink-soft)] border-[var(--line)] hover:bg-[var(--bg-section)]"
             }`}
           >
             {t.label}
@@ -65,22 +76,27 @@ export function AdminUsersContent({ vendors }: { vendors: any[] }) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="bg-[var(--bg-card)] border border-dashed border-[var(--line)] rounded-2xl p-12 text-center">
+        <div className="border border-dashed border-[var(--line)] p-12 text-center">
           <p className="text-[var(--text-muted)]">Nenhum usuário.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {filtered.map((v: any) => (
-            <div key={v.id} className="bg-[var(--bg-card)] border border-[var(--line)] rounded-2xl p-5 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-[var(--bone)] flex items-center justify-center font-display text-lg text-[var(--ink-soft)]">
+            <div key={v.id} className="bg-white border border-[var(--line)] p-5 flex items-center gap-4 hover:border-[var(--action)] transition">
+              <div className="w-12 h-12 bg-[var(--bg-section)] flex items-center justify-center font-display text-lg font-bold text-[var(--ink-soft)]">
                 {(v.name || "?").charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <h3 className="font-display text-lg">{v.name || "Sem nome"}</h3>
+                  <h3 className="font-display text-lg font-bold">{v.name || "Sem nome"}</h3>
                   {v.is_admin && (
-                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[var(--terra)] text-white font-medium flex items-center gap-1">
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-[var(--action)] text-white font-bold flex items-center gap-1">
                       <Shield className="w-2.5 h-2.5" /> Admin
+                    </span>
+                  )}
+                  {v.is_verified && (
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-[var(--trust-light)] text-[var(--trust)] font-bold flex items-center gap-1 border border-[var(--trust)]">
+                      <ShieldCheck className="w-2.5 h-2.5" /> Verificado
                     </span>
                   )}
                 </div>
@@ -95,25 +111,39 @@ export function AdminUsersContent({ vendors }: { vendors: any[] }) {
                   <span><strong>{v.listings_count}</strong> {v.listings_count === 1 ? "anúncio" : "anúncios"}</span>
                 </div>
               </div>
-              <button
-                onClick={() => toggleAdmin(v)}
-                disabled={isPending}
-                className={`text-xs px-3 py-1.5 rounded-full transition flex items-center gap-1 ${
-                  v.is_admin
-                    ? "text-red-700 hover:bg-red-50"
-                    : "bg-[var(--ink)] text-white hover:opacity-90"
-                } disabled:opacity-50`}
-              >
-                {v.is_admin ? (
-                  <>
-                    <ShieldOff className="w-3 h-3" /> Remover admin
-                  </>
-                ) : (
-                  <>
-                    <Shield className="w-3 h-3" /> Tornar admin
-                  </>
-                )}
-              </button>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => handleToggleVerified(v)}
+                  disabled={isPending}
+                  className={`text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 flex items-center gap-1 transition border disabled:opacity-50 ${
+                    v.is_verified
+                      ? "bg-[var(--trust)] text-white border-[var(--trust)]"
+                      : "bg-white text-[var(--ink-soft)] border-[var(--line)] hover:border-[var(--trust)]"
+                  }`}
+                >
+                  <ShieldCheck className="w-3 h-3" />
+                  {v.is_verified ? "Verificado" : "Verificar"}
+                </button>
+                <button
+                  onClick={() => toggleAdmin(v)}
+                  disabled={isPending}
+                  className={`text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 transition flex items-center gap-1 border disabled:opacity-50 ${
+                    v.is_admin
+                      ? "text-[var(--danger)] border-[var(--danger)] hover:bg-red-50"
+                      : "bg-[var(--ink)] text-white border-[var(--ink)] hover:opacity-90"
+                  }`}
+                >
+                  {v.is_admin ? (
+                    <>
+                      <ShieldOff className="w-3 h-3" /> Remover admin
+                    </>
+                  ) : (
+                    <>
+                      <Shield className="w-3 h-3" /> Tornar admin
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           ))}
         </div>

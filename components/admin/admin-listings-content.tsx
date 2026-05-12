@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Check, X, Pause, Trash2, MapPin, Search, ExternalLink } from "lucide-react";
+import { Check, X, Pause, Trash2, MapPin, Search, ExternalLink, Star } from "lucide-react";
 import { getListingImageUrl } from "@/lib/storage";
 import { formatBRL } from "@/lib/format";
 import { conditionLabel } from "@/lib/listings";
@@ -12,6 +12,7 @@ import {
   rejectListingAction,
   unpublishListingAction,
   deleteListingAction,
+  toggleFeaturedAction,
 } from "@/app/admin/anuncios/actions";
 
 const STATUS_TABS = [
@@ -22,13 +23,13 @@ const STATUS_TABS = [
   { key: "paused", label: "Pausados" },
 ];
 
-const STATUS_BADGE: Record<string, { label: string; bg: string; text: string }> = {
-  pending_review: { label: "Em análise", bg: "bg-[var(--terra)]/15", text: "text-[var(--terra)]" },
-  active: { label: "Ativo", bg: "bg-[var(--sage)]/20", text: "text-[var(--sage)]" },
-  rejected: { label: "Recusado", bg: "bg-red-100", text: "text-red-700" },
-  paused: { label: "Pausado", bg: "bg-[var(--bone)]", text: "text-[var(--text-muted)]" },
-  draft: { label: "Rascunho", bg: "bg-[var(--bone)]", text: "text-[var(--text-muted)]" },
-  sold: { label: "Vendido", bg: "bg-[var(--ink)]/10", text: "text-[var(--ink-soft)]" },
+const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
+  pending_review: { label: "Em análise", cls: "bg-amber-50 text-amber-700 border-amber-300" },
+  active: { label: "Ativo", cls: "bg-[var(--success-bg)] text-[var(--success)] border-[var(--success)]" },
+  rejected: { label: "Recusado", cls: "bg-red-50 text-[var(--danger)] border-[var(--danger)]" },
+  paused: { label: "Pausado", cls: "bg-[var(--bg-section)] text-[var(--text-muted)] border-[var(--line)]" },
+  draft: { label: "Rascunho", cls: "bg-[var(--bg-section)] text-[var(--text-muted)] border-[var(--line)]" },
+  sold: { label: "Vendido", cls: "bg-[var(--bg-section)] text-[var(--ink-soft)] border-[var(--line)]" },
 };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -82,15 +83,21 @@ export function AdminListingsContent({
     });
   };
 
+  const handleToggleFeatured = (id: string, current: boolean) => {
+    startTransition(async () => {
+      await toggleFeaturedAction(id, !current);
+    });
+  };
+
   return (
-    <div className="p-8 md:p-12">
-      <div className="mb-8">
-        <div className="text-xs uppercase tracking-[0.25em] text-[var(--text-muted)] mb-2">Curadoria</div>
-        <h1 className="font-display text-4xl md:text-5xl">Anúncios</h1>
+    <div className="p-6 md:p-10">
+      <div className="mb-6">
+        <div className="text-label-bold text-[var(--text-muted)] mb-2">CURADORIA</div>
+        <h1 className="font-display text-3xl md:text-4xl font-bold uppercase text-[var(--ink)]">Anúncios</h1>
       </div>
 
       <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center mb-6">
-        <div className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-card)] border border-[var(--line)] rounded-full">
+        <div className="flex items-center gap-2 px-4 py-2 bg-white border border-[var(--line)]">
           <Search className="w-4 h-4 text-[var(--text-muted)]" />
           <input
             value={searchValue}
@@ -106,10 +113,10 @@ export function AdminListingsContent({
             <button
               key={t.key}
               onClick={() => setFilter(t.key)}
-              className={`whitespace-nowrap text-sm px-4 py-1.5 rounded-full transition ${
+              className={`whitespace-nowrap text-label-bold px-4 py-1.5 transition border ${
                 activeStatus === t.key
-                  ? "bg-[var(--ink)] text-white"
-                  : "text-[var(--ink-soft)] hover:bg-[var(--bone)]"
+                  ? "bg-[var(--ink)] text-white border-[var(--ink)]"
+                  : "text-[var(--ink-soft)] border-[var(--line)] hover:bg-[var(--bg-section)]"
               }`}
             >
               {t.label}
@@ -119,41 +126,47 @@ export function AdminListingsContent({
       </div>
 
       {listings.length === 0 ? (
-        <div className="bg-[var(--bg-card)] border border-dashed border-[var(--line)] rounded-2xl p-12 text-center">
+        <div className="border border-dashed border-[var(--line)] p-12 text-center">
           <p className="text-[var(--text-muted)]">Nenhum anúncio encontrado.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {listings.map((l: any) => {
             const firstImage = l.listing_images?.sort((a: any, b: any) => a.position - b.position)[0]?.storage_path;
             const badge = STATUS_BADGE[l.status] ?? STATUS_BADGE["draft"];
+            const isFeatured = l.is_featured ?? false;
             return (
-              <div key={l.id} className="bg-[var(--bg-card)] border border-[var(--line)] rounded-2xl p-4 md:p-5 flex flex-col md:flex-row gap-4">
-                <div className="w-full md:w-28 aspect-video md:aspect-square rounded-xl overflow-hidden flex-shrink-0 bg-[var(--bone)]">
+              <div key={l.id} className="bg-white border border-[var(--line)] p-4 md:p-5 flex flex-col md:flex-row gap-4 hover:border-[var(--action)] transition">
+                <div className="w-full md:w-28 aspect-video md:aspect-square overflow-hidden flex-shrink-0 bg-[var(--bg-section)]">
                   {firstImage ? (
                     <img src={getListingImageUrl(firstImage)} alt={l.title} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full bg-[var(--bone)]" />
+                    <div className="w-full h-full bg-[var(--bg-section)]" />
                   )}
                 </div>
 
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full font-medium ${badge.bg} ${badge.text}`}>
+                    <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 font-bold border ${badge.cls}`}>
                       {badge.label}
                     </span>
+                    {isFeatured && (
+                      <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 font-bold bg-[var(--action)] text-white">
+                        Destaque
+                      </span>
+                    )}
                     <span className="text-xs text-[var(--text-muted)]">
                       {l.brand ? `${l.brand} · ` : ""}{l.equipment_type} · {conditionLabel(l.condition)}
                     </span>
                   </div>
-                  <h3 className="font-display text-lg leading-tight">{l.title}</h3>
+                  <h3 className="font-display text-lg font-bold leading-tight">{l.title}</h3>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1.5 text-xs text-[var(--ink-soft)]">
                     <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{l.city}, {l.state}</span>
                     {l.vendors?.name && <span>Vendedor: <strong>{l.vendors.name}</strong></span>}
-                    {l.has_fixed_price && l.price && <span className="text-[var(--terra)] font-medium">{formatBRL(l.price)}</span>}
+                    {l.has_fixed_price && l.price && <span className="text-[var(--action)] font-bold">{formatBRL(l.price)}</span>}
                   </div>
                   {l.status === "rejected" && l.rejection_reason && (
-                    <div className="mt-2 text-xs text-red-700">
+                    <div className="mt-2 text-xs text-[var(--danger)]">
                       <strong>Motivo:</strong> {l.rejection_reason}
                     </div>
                   )}
@@ -164,7 +177,7 @@ export function AdminListingsContent({
                     <Link
                       href={`/${l.slug}`}
                       target="_blank"
-                      className="text-xs px-3 py-1.5 rounded-full bg-[var(--bg)] border border-[var(--line)] hover:border-[var(--terra)] flex items-center gap-1 transition"
+                      className="text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 bg-white border border-[var(--line)] hover:border-[var(--action)] flex items-center gap-1 transition"
                     >
                       <ExternalLink className="w-3 h-3" />
                       Ver
@@ -176,14 +189,14 @@ export function AdminListingsContent({
                       <button
                         onClick={() => handleApprove(l.id)}
                         disabled={isPending}
-                        className="text-xs px-3 py-1.5 rounded-full bg-[var(--sage)] text-white hover:opacity-90 flex items-center gap-1 transition disabled:opacity-50"
+                        className="text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 bg-[var(--success)] text-white hover:opacity-90 flex items-center gap-1 transition disabled:opacity-50"
                       >
                         <Check className="w-3 h-3" /> Aprovar
                       </button>
                       <button
                         onClick={() => setRejectModal({ id: l.id, title: l.title })}
                         disabled={isPending}
-                        className="text-xs px-3 py-1.5 rounded-full bg-red-100 text-red-700 hover:bg-red-200 flex items-center gap-1 transition disabled:opacity-50"
+                        className="text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 bg-red-50 text-[var(--danger)] border border-[var(--danger)] hover:bg-red-100 flex items-center gap-1 transition disabled:opacity-50"
                       >
                         <X className="w-3 h-3" /> Recusar
                       </button>
@@ -191,19 +204,32 @@ export function AdminListingsContent({
                   )}
 
                   {l.status === "active" && (
-                    <button
-                      onClick={() => handleUnpublish(l.id)}
-                      disabled={isPending}
-                      className="text-xs px-3 py-1.5 rounded-full bg-[var(--bone)] text-[var(--ink-soft)] hover:bg-[var(--line)] flex items-center gap-1 transition disabled:opacity-50"
-                    >
-                      <Pause className="w-3 h-3" /> Despublicar
-                    </button>
+                    <>
+                      <button
+                        onClick={() => handleToggleFeatured(l.id, isFeatured)}
+                        disabled={isPending}
+                        className={`text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 flex items-center gap-1 transition disabled:opacity-50 border ${
+                          isFeatured
+                            ? "bg-[var(--action)] text-white border-[var(--action)]"
+                            : "bg-white text-[var(--ink-soft)] border-[var(--line)] hover:border-[var(--action)]"
+                        }`}
+                      >
+                        <Star className="w-3 h-3" /> {isFeatured ? "Remover destaque" : "Destacar"}
+                      </button>
+                      <button
+                        onClick={() => handleUnpublish(l.id)}
+                        disabled={isPending}
+                        className="text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 bg-[var(--bg-section)] text-[var(--ink-soft)] border border-[var(--line)] hover:bg-[var(--line)] flex items-center gap-1 transition disabled:opacity-50"
+                      >
+                        <Pause className="w-3 h-3" /> Despublicar
+                      </button>
+                    </>
                   )}
 
                   <button
                     onClick={() => handleDelete(l.id)}
                     disabled={isPending}
-                    className="text-xs px-3 py-1.5 rounded-full text-red-700 hover:bg-red-50 flex items-center gap-1 transition disabled:opacity-50"
+                    className="text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 text-[var(--danger)] hover:bg-red-50 flex items-center gap-1 transition disabled:opacity-50"
                   >
                     <Trash2 className="w-3 h-3" /> Excluir
                   </button>
@@ -250,20 +276,20 @@ function RejectModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-[var(--bg-card)] rounded-3xl max-w-md w-full p-8">
-        <div className="text-xs uppercase tracking-[0.25em] text-red-700 mb-2">Recusar anúncio</div>
-        <h2 className="font-display text-2xl mb-2">{title}</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+      <div className="bg-white border border-[var(--line)] max-w-md w-full p-8">
+        <div className="text-label-bold text-[var(--danger)] mb-2">RECUSAR ANÚNCIO</div>
+        <h2 className="font-display text-2xl font-bold uppercase mb-2">{title}</h2>
         <p className="text-sm text-[var(--text-muted)] mb-6">
           O vendedor receberá uma notificação com o motivo informado abaixo e poderá editar e re-submeter.
         </p>
-        <label className="text-xs uppercase tracking-wider text-[var(--text-muted)] block mb-2">Motivo</label>
+        <label className="text-label-bold text-[var(--text-muted)] block mb-2">Motivo</label>
         <textarea
           value={reason}
           onChange={(e) => setReason(e.target.value)}
           rows={4}
           placeholder="Ex: As fotos não mostram o equipamento com clareza. Por favor, reenvie com fotos mais nítidas."
-          className="w-full bg-transparent border border-[var(--line)] focus:border-[var(--terra)] rounded-xl outline-none p-3 text-sm resize-none transition"
+          className="w-full border border-[var(--line)] focus:border-[var(--action)] outline-none p-3 text-sm resize-none transition"
         />
         <div className="flex justify-end gap-3 mt-6">
           <button onClick={onClose} className="text-sm px-4 py-2 text-[var(--text-muted)] hover:text-[var(--ink)]">
@@ -272,7 +298,7 @@ function RejectModal({
           <button
             onClick={handleSubmit}
             disabled={busy || !reason.trim()}
-            className="text-sm bg-red-700 text-white px-5 py-2 rounded-full hover:bg-red-800 transition disabled:opacity-50"
+            className="text-label-bold bg-[var(--danger)] text-white px-5 py-2 hover:opacity-90 transition disabled:opacity-50"
           >
             {busy ? "Recusando…" : "Confirmar recusa"}
           </button>

@@ -38,5 +38,26 @@ export default async function ListingPage({ params }: Props) {
 
   if (!listing) notFound();
 
-  return <ListingDetailView listing={listing as ListingWithImages} />;
+  // Fetch vendor info + recent leads count in parallel
+  const [{ data: vendor }, { count: recentLeadsCount }] = await Promise.all([
+    supabase
+      .from("vendors")
+      .select("name, is_verified")
+      .eq("id", listing.vendor_id)
+      .single(),
+    supabase
+      .from("leads")
+      .select("*", { count: "exact", head: true })
+      .eq("listing_id", listing.id)
+      .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()),
+  ]);
+
+  return (
+    <ListingDetailView
+      listing={listing as ListingWithImages & { is_featured?: boolean }}
+      vendorName={vendor?.name}
+      vendorVerified={vendor?.is_verified ?? false}
+      recentLeadsCount={recentLeadsCount ?? 0}
+    />
+  );
 }

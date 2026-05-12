@@ -1,4 +1,4 @@
-﻿@import "tw-animate-css";
+@import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @tailwind base;
 @tailwind components;
@@ -16,8 +16,19 @@
     scrollbar-width: none;
   }
   .font-display {
-    font-family: var(--font-fraunces), ui-serif, Georgia, serif;
-    font-optical-sizing: auto;
+    font-family: var(--font-montserrat), system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+  .font-display-tight {
+    font-family: var(--font-montserrat), system-ui, sans-serif;
+    letter-spacing: -0.04em;
+  }
+  .text-label-bold {
+    font-family: var(--font-inter), system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
   @keyframes fade-up {
     from {
@@ -47,9 +58,8 @@
   }
 }
 
-/* Reforma MVP — tokens forçados (sem colidir com variáveis semânticas do shadcn) */
 [data-slot="dialog-backdrop"] {
-  background-color: rgb(27 24 22 / 0.6) !important;
+  background-color: rgb(15 23 42 / 0.6) !important;
   backdrop-filter: blur(4px);
 }
 
@@ -59,16 +69,46 @@
     --font-sans: var(--font-sans);
   }
   :root {
-    --bg: #f4efe6;
-    --bg-card: #fbf8f2;
-    --ink: #1b1816;
-    --ink-soft: #4a4541;
-    --text-muted: #8b847c;
-    --terra: #b85c3f;
-    --terra-dark: #9d4d33;
-    --sage: #7a8b6f;
-    --bone: #e8dfd0;
-    --line: #d9cfbe;
+    /* Surface */
+    --bg: #f7f9fb;
+    --bg-elevated: #ffffff;
+    --bg-section: #f1f5f9;
+    --bg-dark: #0f172a;
+
+    /* Ink */
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --text-muted: #64748b;
+    --on-dark: #f8fafc;
+    --on-dark-soft: #cbd5e1;
+
+    /* Action (red — primary CTAs, prices, urgency) */
+    --action: #e11d48;
+    --action-dark: #be123c;
+    --action-darker: #9f1239;
+    --action-light: #fecdd3;
+    --action-bg: #fef2f4;
+
+    /* Trust (blue — verified, technical badges, secondary actions) */
+    --trust: #2563eb;
+    --trust-dark: #1d4ed8;
+    --trust-light: #dbeafe;
+    --trust-bg: #eff6ff;
+
+    /* States */
+    --success: #16a34a;
+    --success-bg: #f0fdf4;
+    --warning: #d97706;
+    --warning-bg: #fffbeb;
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+
+    /* Lines */
+    --line: #e2e8f0;
+    --line-strong: #cbd5e1;
+    --line-soft: #f1f5f9;
+
+    /* shadcn compat */
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
@@ -92,7 +132,7 @@
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
+    --radius: 0.25rem;
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
@@ -142,9 +182,9 @@
     @apply antialiased;
     background: var(--bg);
     color: var(--ink);
-    font-family: var(--font-manrope), system-ui, sans-serif;
+    font-family: var(--font-inter), system-ui, sans-serif;
   }
   html {
-    font-family: var(--font-manrope), system-ui, sans-serif;
+    font-family: var(--font-inter), system-ui, sans-serif;
   }
 }

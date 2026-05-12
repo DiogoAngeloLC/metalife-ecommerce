@@ -19,22 +19,18 @@ export default async function CadastroPage({
     <div className="min-h-screen bg-[var(--bg)] flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
         <Link href="/" className="flex items-center justify-center gap-3 mb-12 group">
-          <div className="w-12 h-12 rounded-full bg-[var(--ink)] flex items-center justify-center">
-            <span className="font-display text-white text-sm italic">CP</span>
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-display text-2xl tracking-tight">Classificado Pilates</span>
-            <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-muted)] mt-0.5">
-              Marketplace · Equipamentos
-            </span>
-          </div>
+          <span className="font-display text-2xl font-black italic uppercase text-[var(--action)]">
+            CLASSIFICADO PILATES
+          </span>
         </Link>
 
-        <div className="text-center mb-10">
-          <div className="text-xs uppercase tracking-[0.25em] text-[var(--terra)] mb-3">
-            Nova conta
+        <div className="text-center mb-8">
+          <div className="text-label-bold text-[var(--action)] mb-3">
+            NOVA CONTA
           </div>
-          <h1 className="font-display text-4xl leading-tight mb-3">Crie sua conta</h1>
+          <h1 className="font-display text-3xl font-bold uppercase leading-tight mb-3 text-[var(--ink)]">
+            Crie sua conta
+          </h1>
           <p className="text-[var(--text-muted)] text-sm">
             Preencha os dados abaixo para começar a anunciar.
           </p>
@@ -43,7 +39,7 @@ export default async function CadastroPage({
         <SignupForm next={searchParams.next} />
 
         {searchParams.error && (
-          <p className="mt-6 text-sm text-red-700 text-center">
+          <p className="mt-6 text-sm text-[var(--danger)] text-center">
             Não foi possível criar a conta. Tente novamente.
           </p>
         )}

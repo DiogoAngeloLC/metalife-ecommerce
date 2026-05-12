@@ -30,7 +30,6 @@ export function ConnectionContent({
   const [isPending, startTransition] = useTransition();
   const qrFetchedRef = useRef(false);
 
-  // Polling do status a cada 3s
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
@@ -46,7 +45,6 @@ export function ConnectionContent({
     return () => clearInterval(interval);
   }, []);
 
-  // Auto-fetch QR quando desconectado
   useEffect(() => {
     if ((state === "close" || state === "connecting") && !qrFetchedRef.current) {
       qrFetchedRef.current = true;
@@ -75,39 +73,37 @@ export function ConnectionContent({
   };
 
   return (
-    <div className="p-8 md:p-12 max-w-3xl">
-      <div className="mb-8">
-        <div className="text-xs uppercase tracking-[0.25em] text-[var(--text-muted)] mb-2">
-          WhatsApp Evolution
-        </div>
-        <h1 className="font-display text-4xl md:text-5xl">Conexão</h1>
+    <div className="p-6 md:p-10 max-w-3xl">
+      <div className="mb-6">
+        <div className="text-label-bold text-[var(--text-muted)] mb-2">WHATSAPP EVOLUTION</div>
+        <h1 className="font-display text-3xl md:text-4xl font-bold uppercase text-[var(--ink)]">Conexão</h1>
       </div>
 
       {/* Status */}
-      <div className="bg-[var(--bg-card)] border border-[var(--line)] rounded-3xl p-8 mb-6">
+      <div className="bg-white border border-[var(--line)] p-8 mb-6">
         <div className="flex items-center gap-5">
           <div
-            className={`w-16 h-16 rounded-full flex items-center justify-center ${
+            className={`w-16 h-16 flex items-center justify-center ${
               state === "open"
-                ? "bg-[var(--sage)]/15"
+                ? "bg-[var(--success-bg)]"
                 : state === "connecting"
-                ? "bg-[var(--terra)]/15"
-                : "bg-red-100"
+                ? "bg-amber-50"
+                : "bg-red-50"
             }`}
           >
             {state === "open" ? (
-              <Wifi className="w-7 h-7 text-[var(--sage)]" />
+              <Wifi className="w-7 h-7 text-[var(--success)]" />
             ) : state === "connecting" ? (
-              <RefreshCw className="w-7 h-7 text-[var(--terra)] animate-spin" />
+              <RefreshCw className="w-7 h-7 text-amber-600 animate-spin" />
             ) : (
-              <WifiOff className="w-7 h-7 text-red-700" />
+              <WifiOff className="w-7 h-7 text-[var(--danger)]" />
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs uppercase tracking-wider text-[var(--text-muted)] mb-1">
-              Status da instância
+            <div className="text-label-bold text-[var(--text-muted)] mb-1">
+              STATUS DA INSTÂNCIA
             </div>
-            <div className="font-display text-2xl">
+            <div className="font-display text-2xl font-bold uppercase">
               {state === "open"
                 ? "Conectado"
                 : state === "connecting"
@@ -128,7 +124,7 @@ export function ConnectionContent({
             <button
               onClick={disconnect}
               disabled={isPending}
-              className="text-sm px-4 py-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200 transition flex items-center gap-2 disabled:opacity-50"
+              className="text-label-bold px-4 py-2 bg-red-50 text-[var(--danger)] border border-[var(--danger)] hover:bg-red-100 transition flex items-center gap-2 disabled:opacity-50"
             >
               <Power className="w-4 h-4" />
               Desconectar
@@ -139,14 +135,14 @@ export function ConnectionContent({
 
       {/* QR Code */}
       {state !== "open" && (
-        <div className="bg-[var(--bg-card)] border border-[var(--line)] rounded-3xl p-8 text-center">
-          <h2 className="font-display text-2xl mb-2">Escanear QR Code</h2>
+        <div className="bg-white border border-[var(--line)] p-8 text-center">
+          <h2 className="font-display text-2xl font-bold uppercase mb-2">Escanear QR Code</h2>
           <p className="text-sm text-[var(--ink-soft)] mb-6 max-w-md mx-auto">
             No WhatsApp do celular dedicado: <strong>Mais opções</strong> →{" "}
             <strong>Aparelhos conectados</strong> → <strong>Conectar um aparelho</strong>.
           </p>
 
-          <div className="inline-block bg-white p-6 rounded-2xl">
+          <div className="inline-block bg-white p-6 border border-[var(--line)]">
             {qrcode ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={qrcode} alt="QR Code" className="w-64 h-64" />
@@ -160,7 +156,7 @@ export function ConnectionContent({
           {pairingCode && (
             <div className="mt-5 text-sm">
               <span className="text-[var(--text-muted)]">Ou use o código:</span>{" "}
-              <strong className="font-display text-xl tracking-widest text-[var(--terra)]">
+              <strong className="font-display text-xl tracking-widest text-[var(--action)]">
                 {pairingCode}
               </strong>
             </div>
@@ -169,7 +165,7 @@ export function ConnectionContent({
           <button
             onClick={fetchQR}
             disabled={isPending}
-            className="mt-6 text-sm px-4 py-2 rounded-full bg-[var(--ink)] text-white hover:opacity-90 transition flex items-center gap-2 mx-auto disabled:opacity-50"
+            className="mt-6 text-label-bold px-4 py-2 bg-[var(--ink)] text-white hover:opacity-90 transition flex items-center gap-2 mx-auto disabled:opacity-50"
           >
             <RefreshCw className={`w-3 h-3 ${isPending ? "animate-spin" : ""}`} />
             Gerar novo QR
@@ -178,7 +174,7 @@ export function ConnectionContent({
       )}
 
       {errorMsg && (
-        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800 flex items-start gap-2">
+        <div className="mt-4 p-4 bg-red-50 border border-[var(--danger)] text-sm text-[var(--danger)] flex items-start gap-2">
           <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <span>{errorMsg}</span>
         </div>

@@ -70,7 +70,7 @@ export function MessagesLogContent({
 
       {/* Filtros */}
       <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center mb-6">
-        <div className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-card)] border border-[var(--line)] rounded-full">
+        <div className="flex items-center gap-2 px-4 py-2 bg-white border border-[var(--line)] ">
           <Search className="w-4 h-4 text-[var(--text-muted)]" />
           <input
             value={searchValue}
@@ -89,8 +89,8 @@ export function MessagesLogContent({
                 <button
                   key={t.key}
                   onClick={() => updateParam("status", t.key === "all" ? null : t.key)}
-                  className={`whitespace-nowrap text-sm px-4 py-1.5 rounded-full transition ${
-                    isActive ? "bg-[var(--ink)] text-white" : "text-[var(--ink-soft)] hover:bg-[var(--bone)]"
+                  className={`whitespace-nowrap text-sm px-4 py-1.5  transition ${
+                    isActive ? "bg-[var(--ink)] text-white" : "text-[var(--ink-soft)] hover:bg-[var(--bg-section)]"
                   }`}
                 >
                   {t.label}
@@ -102,14 +102,14 @@ export function MessagesLogContent({
       </div>
 
       {messages.length === 0 ? (
-        <div className="bg-[var(--bg-card)] border border-dashed border-[var(--line)] rounded-2xl p-12 text-center">
+        <div className="bg-white border border-dashed border-[var(--line)]  p-12 text-center">
           <p className="text-[var(--text-muted)]">Nenhuma mensagem encontrada.</p>
         </div>
       ) : (
-        <div className="bg-[var(--bg-card)] border border-[var(--line)] rounded-2xl overflow-hidden">
+        <div className="bg-white border border-[var(--line)]  overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[var(--bone)]/50 border-b border-[var(--line)]">
+              <thead className="bg-[var(--bg-section)] border-b border-[var(--line)]">
                 <tr className="text-left">
                   <th className="p-3 text-xs uppercase tracking-wider text-[var(--text-muted)] font-medium">Data</th>
                   <th className="p-3 text-xs uppercase tracking-wider text-[var(--text-muted)] font-medium">Tipo</th>
@@ -141,7 +141,7 @@ export function MessagesLogContent({
                         <Link
                           href={`/${m.listings.slug}`}
                           target="_blank"
-                          className="hover:text-[var(--terra)] flex items-center gap-1"
+                          className="hover:text-[var(--action)] flex items-center gap-1"
                         >
                           {m.listings.title}
                           <ExternalLink className="w-3 h-3" />
@@ -157,7 +157,7 @@ export function MessagesLogContent({
                         <button
                           onClick={() => handleRetry(m.id)}
                           disabled={isPending}
-                          className="text-xs px-3 py-1.5 rounded-full bg-[var(--ink)] text-white hover:opacity-90 transition flex items-center gap-1 disabled:opacity-50"
+                          className="text-xs px-3 py-1.5  bg-[var(--ink)] text-white hover:opacity-90 transition flex items-center gap-1 disabled:opacity-50"
                         >
                           <RefreshCw className="w-3 h-3" /> Reenviar
                         </button>
@@ -177,9 +177,9 @@ export function MessagesLogContent({
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
     queued: { label: "Na fila", icon: <Clock className="w-3 h-3" />, color: "text-[var(--text-muted)]" },
-    sent: { label: "Enviado", icon: <Send className="w-3 h-3" />, color: "text-[var(--terra)]" },
-    delivered: { label: "Entregue", icon: <CheckCircle2 className="w-3 h-3" />, color: "text-[var(--sage)]" },
-    read: { label: "Lido", icon: <Eye className="w-3 h-3" />, color: "text-[var(--sage)]" },
+    sent: { label: "Enviado", icon: <Send className="w-3 h-3" />, color: "text-[var(--action)]" },
+    delivered: { label: "Entregue", icon: <CheckCircle2 className="w-3 h-3" />, color: "text-[var(--success)]" },
+    read: { label: "Lido", icon: <Eye className="w-3 h-3" />, color: "text-[var(--success)]" },
     failed: { label: "Falha", icon: <AlertCircle className="w-3 h-3" />, color: "text-red-700" },
   };
   const item = map[status] ?? map.queued;

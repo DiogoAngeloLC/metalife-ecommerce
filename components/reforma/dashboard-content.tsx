@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import type { Database } from "@/lib/supabase/types";
 import { EquipmentVisual } from "./equipment-visual";
 import { getListingImageUrl } from "@/lib/storage";
+import { listingAccent } from "@/lib/listings";
 
 type Vendor = Database["public"]["Tables"]["vendors"]["Row"];
 type Listing = Database["public"]["Tables"]["listings"]["Row"] & {
@@ -36,9 +37,9 @@ export function DashboardContent({
   const greetingName = vendor.name?.split(" ")[0] ?? "anunciante";
 
   return (
-    <div className="max-w-7xl mx-auto px-5 md:px-8 py-10 md:py-14">
+    <div className="max-w-[1200px] mx-auto px-4 py-8 md:py-12">
       {showToast && (
-        <div className="fixed top-24 right-6 z-50 bg-[var(--sage)] text-white rounded-2xl px-5 py-3 shadow-lg flex items-center gap-2 anim-in">
+        <div className="fixed top-24 right-6 z-50 bg-[var(--success)] text-white px-5 py-3 shadow-lg flex items-center gap-2 text-label-bold">
           <Sparkles className="w-4 h-4" />
           Anúncio enviado para análise!
         </div>
@@ -47,69 +48,72 @@ export function DashboardContent({
       {incomplete && (
         <Link
           href="/perfil"
-          className="block mb-8 bg-[var(--terra)]/8 border border-[var(--terra)]/30 rounded-2xl p-5 hover:bg-[var(--terra)]/12 transition group"
+          className="block mb-8 bg-[var(--action)]/5 border border-[var(--action)] p-5 hover:bg-[var(--action)]/10 transition group"
         >
           <div className="flex items-center justify-between gap-4">
             <div>
-              <div className="text-xs uppercase tracking-wider text-[var(--terra)] mb-1">
-                Complete seu perfil
+              <div className="text-label-bold text-[var(--action)] mb-1">
+                COMPLETE SEU PERFIL
               </div>
-              <div className="font-display text-lg">
+              <div className="text-base text-[var(--ink)]">
                 Adicione seu WhatsApp para receber leads dos compradores.
               </div>
             </div>
-            <span className="text-[var(--terra)] text-sm group-hover:translate-x-1 transition">
+            <span className="text-[var(--action)] text-label-bold group-hover:translate-x-1 transition">
               Completar →
             </span>
           </div>
         </Link>
       )}
 
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
-          <div className="text-xs uppercase tracking-[0.25em] text-[var(--text-muted)] mb-2">
-            Painel do anunciante
+          <div className="text-label-bold text-[var(--text-muted)] mb-2">
+            PAINEL DO ANUNCIANTE
           </div>
-          <h1 className="font-display text-4xl md:text-5xl capitalize">Olá, {greetingName}</h1>
+          <h1 className="font-display text-3xl md:text-4xl font-bold uppercase text-[var(--ink)]">
+            Olá, {greetingName}
+          </h1>
           {vendor.city && vendor.state && (
-            <p className="text-[var(--text-muted)] mt-2">
+            <p className="text-sm text-[var(--text-muted)] mt-1 flex items-center gap-1">
+              <MapPin className="w-3 h-3" />
               {vendor.city}, {vendor.state}
             </p>
           )}
         </div>
         <Link
           href="/dashboard/novo"
-          className="bg-[var(--ink)] text-white rounded-full px-6 py-3 flex items-center gap-2 hover:opacity-90 transition self-start"
+          className="bg-[var(--action)] text-white px-6 py-3 flex items-center gap-2 hover:bg-[var(--action-dark)] transition text-label-bold uppercase tracking-wider self-start"
         >
           <Plus className="w-4 h-4" />
           Novo anúncio
         </Link>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-12 max-w-3xl">
-        <StatCard label="Anúncios ativos" value={stats.activeCount.toString()} color="sage" />
-        <StatCard label="Em análise" value={stats.pendingCount.toString()} color="ink" />
-        <StatCard label="Leads recebidos" value={stats.leadsCount.toString()} color="terra" />
+      <div className="grid grid-cols-3 gap-4 mb-10 max-w-3xl">
+        <StatCard label="Anúncios ativos" value={stats.activeCount.toString()} variant="action" />
+        <StatCard label="Em análise" value={stats.pendingCount.toString()} variant="trust" />
+        <StatCard label="Leads recebidos" value={stats.leadsCount.toString()} variant="ink" />
       </div>
 
-      <div className="mb-6">
-        <h2 className="font-display text-2xl">Meus anúncios</h2>
+      <div className="mb-4 border-b border-[var(--line)] pb-2">
+        <h2 className="font-display text-xl font-bold uppercase">Meus anúncios</h2>
       </div>
 
       {listings.length === 0 ? (
-        <div className="bg-[var(--bg-card)] border border-dashed border-[var(--line)] rounded-2xl p-12 text-center">
-          <div className="font-display text-2xl mb-2">Você ainda não tem anúncios</div>
-          <p className="text-[var(--text-muted)] mb-6">Crie seu primeiro anúncio em menos de 2 minutos.</p>
+        <div className="border border-dashed border-[var(--line)] p-12 text-center">
+          <div className="font-display text-xl uppercase mb-2">Você ainda não tem anúncios</div>
+          <p className="text-sm text-[var(--text-muted)] mb-6">Crie seu primeiro anúncio em menos de 2 minutos.</p>
           <Link
             href="/dashboard/novo"
-            className="inline-flex items-center gap-2 bg-[var(--ink)] text-white rounded-full px-6 py-3 hover:opacity-90 transition"
+            className="inline-flex items-center gap-2 bg-[var(--action)] text-white px-6 py-3 hover:bg-[var(--action-dark)] transition text-label-bold uppercase tracking-wider"
           >
             <Plus className="w-4 h-4" />
             Criar anúncio
           </Link>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {listings.map((l) => (
             <ListingRow key={l.id} listing={l} />
           ))}
@@ -119,12 +123,12 @@ export function DashboardContent({
   );
 }
 
-function StatCard({ label, value, color }: { label: string; value: string; color: "sage" | "terra" | "ink" }) {
-  const colorMap = { sage: "var(--sage)", terra: "var(--terra)", ink: "var(--ink-soft)" };
+function StatCard({ label, value, variant }: { label: string; value: string; variant: "action" | "trust" | "ink" }) {
+  const colorMap = { action: "var(--action)", trust: "var(--trust)", ink: "var(--ink-soft)" };
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--line)] rounded-2xl p-5">
-      <div className="text-xs uppercase tracking-wider text-[var(--text-muted)] mb-3">{label}</div>
-      <div className="font-display text-3xl md:text-4xl" style={{ color: colorMap[color] }}>
+    <div className="bg-white border border-[var(--line)] p-5">
+      <div className="text-label-bold text-[var(--text-muted)] mb-3">{label}</div>
+      <div className="font-display text-3xl md:text-4xl font-extrabold" style={{ color: colorMap[variant] }}>
         {value}
       </div>
     </div>
@@ -134,10 +138,11 @@ function StatCard({ label, value, color }: { label: string; value: string; color
 function ListingRow({ listing }: { listing: Listing }) {
   const firstImage = listing.listing_images
     ?.sort((a, b) => a.position - b.position)[0]?.storage_path;
+  const accent = listingAccent(listing.id);
 
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--line)] rounded-2xl p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-4">
-      <div className="w-full md:w-24 aspect-video md:aspect-square rounded-xl overflow-hidden flex-shrink-0 bg-[var(--bone)]">
+    <div className="bg-white border border-[var(--line)] p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-4 hover:border-[var(--action)] transition">
+      <div className="w-full md:w-24 aspect-video md:aspect-square overflow-hidden flex-shrink-0 bg-[var(--bg-section)]">
         {firstImage ? (
           <img
             src={getListingImageUrl(firstImage)}
@@ -145,30 +150,30 @@ function ListingRow({ listing }: { listing: Listing }) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <EquipmentVisual equipment={listing.equipment_type} accent="sage" className="w-full h-full" />
+          <EquipmentVisual equipment={listing.equipment_type} accent={accent} className="w-full h-full" />
         )}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           {listing.status === "active" ? (
-            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[var(--sage)]/20 text-[var(--sage)] font-medium">
+            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-[var(--success-bg)] text-[var(--success)] font-bold border border-[var(--success)]">
               Ativo
             </span>
           ) : listing.status === "pending_review" ? (
-            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-medium flex items-center gap-1">
+            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-amber-50 text-amber-700 font-bold border border-amber-300 flex items-center gap-1">
               <Clock className="w-3 h-3" />
               Em análise
             </span>
           ) : listing.status === "rejected" ? (
-            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-medium">
+            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-red-50 text-[var(--danger)] font-bold border border-[var(--danger)]">
               Rejeitado
             </span>
           ) : listing.status === "draft" ? (
-            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[var(--bone)] text-[var(--text-muted)] font-medium">
+            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-[var(--bg-section)] text-[var(--text-muted)] font-bold border border-[var(--line)]">
               Rascunho
             </span>
           ) : (
-            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[var(--bone)] text-[var(--text-muted)] font-medium">
+            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-[var(--bg-section)] text-[var(--text-muted)] font-bold border border-[var(--line)]">
               {listing.status}
             </span>
           )}
@@ -177,9 +182,9 @@ function ListingRow({ listing }: { listing: Listing }) {
             {listing.equipment_type}
           </span>
         </div>
-        <h3 className="font-display text-lg leading-tight truncate">{listing.title}</h3>
+        <h3 className="font-display text-lg font-bold leading-tight truncate">{listing.title}</h3>
         {listing.status === "rejected" && listing.rejection_reason && (
-          <p className="text-xs text-red-600 mt-1">Motivo: {listing.rejection_reason}</p>
+          <p className="text-xs text-[var(--danger)] mt-1">Motivo: {listing.rejection_reason}</p>
         )}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1.5 text-xs text-[var(--ink-soft)]">
           <span className="flex items-center gap-1">

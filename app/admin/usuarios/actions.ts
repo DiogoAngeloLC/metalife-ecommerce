@@ -34,3 +34,17 @@ export async function removeAdminAction(userId: string) {
 
   revalidatePath("/admin/usuarios");
 }
+
+export async function toggleVerifiedAction(vendorId: string, verified: boolean) {
+  await requireAdmin();
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from("vendors")
+    .update({ is_verified: verified })
+    .eq("id", vendorId);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/usuarios");
+}

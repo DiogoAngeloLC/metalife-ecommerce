@@ -21,14 +21,14 @@ export function AdminSidebar() {
     item.exact ? pathname === item.href : pathname.startsWith(item.href);
 
   return (
-    <aside className="w-64 min-h-screen bg-[var(--ink)] text-white flex flex-col flex-shrink-0">
+    <aside className="w-64 min-h-screen bg-[var(--bg-dark)] text-white flex flex-col flex-shrink-0">
       <div className="p-6 border-b border-white/10">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-full bg-[var(--terra)] flex items-center justify-center">
-            <span className="font-display text-white text-base italic">CP</span>
-          </div>
+          <span className="font-display text-lg font-black italic uppercase text-[var(--action)]">
+            CP
+          </span>
           <div className="flex flex-col leading-none">
-            <span className="font-display text-lg tracking-tight">Classificado</span>
+            <span className="font-display text-base font-bold uppercase tracking-tight">Classificado</span>
             <span className="text-[10px] uppercase tracking-[0.2em] text-white/40 mt-0.5">Admin</span>
           </div>
         </Link>
@@ -42,10 +42,10 @@ export function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition text-sm ${
+              className={`flex items-center gap-3 px-3 py-2.5 transition text-sm font-medium ${
                 active
-                  ? "bg-white/10 text-white"
-                  : "text-white/60 hover:bg-white/5 hover:text-white"
+                  ? "bg-white/10 text-white border-l-2 border-[var(--action)]"
+                  : "text-white/60 hover:bg-white/5 hover:text-white border-l-2 border-transparent"
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -58,7 +58,7 @@ export function AdminSidebar() {
       <div className="p-3 border-t border-white/10 space-y-1">
         <Link
           href="/dashboard"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:bg-white/5 hover:text-white transition"
+          className="flex items-center gap-3 px-3 py-2.5 text-sm text-white/60 hover:bg-white/5 hover:text-white transition"
         >
           <ArrowUpRight className="w-4 h-4" />
           Atuar como vendedor
@@ -66,7 +66,7 @@ export function AdminSidebar() {
         <form action="/auth/sign-out" method="POST">
           <button
             type="submit"
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:bg-white/5 hover:text-white transition"
+            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-white/60 hover:bg-white/5 hover:text-white transition"
           >
             <LogOut className="w-4 h-4" />
             Sair

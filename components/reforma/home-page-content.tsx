@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { MapPin, Search } from "lucide-react";
+import { MapPin, Search, ShieldCheck, Truck, Award } from "lucide-react";
 import {
   EQUIPMENT_FILTERS,
   filterListings,
@@ -14,29 +14,11 @@ import { getListingImageUrl } from "@/lib/storage";
 import { EquipmentVisual } from "@/components/reforma/equipment-visual";
 import { SiteFooter } from "@/components/reforma/site-footer";
 
-const steps = [
-  {
-    n: "01",
-    t: "Anuncie seu equipamento",
-    d: "Cadastre fotos, descrição, cidade e valor. Seu telefone fica oculto.",
-  },
-  {
-    n: "02",
-    t: "Compradores demonstram interesse",
-    d: "Quem quer saber valores deixa nome, WhatsApp e e-mail.",
-  },
-  {
-    n: "03",
-    t: "Contato direto via WhatsApp",
-    d: "O comprador recebe seus dados no WhatsApp e fala diretamente com você.",
-  },
-];
-
 export function HomePageContent({
   listings,
   stats,
 }: {
-  listings: ListingWithImages[];
+  listings: (ListingWithImages & { is_featured?: boolean; recentLeadsCount?: number })[];
   stats: { listings: number; cities: number; vendors: number };
 }) {
   const [filter, setFilter] = useState<string>("todos");
@@ -50,48 +32,52 @@ export function HomePageContent({
   return (
     <div>
       {/* HERO */}
-      <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-7xl px-5 pb-12 pt-16 md:px-8 md:pb-20 md:pt-24">
-          <div className="grid items-end gap-8 md:grid-cols-12">
-            <div className="anim-in md:col-span-8">
-              <div className="mb-6 inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-[var(--terra)]">
-                <span className="h-px w-8 bg-[var(--terra)]" />
-                Equipamentos para estúdios
-              </div>
-              <h1 className="font-display text-balance text-5xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl">
-                O ponto de{" "}
-                <em className="italic text-[var(--terra)]">encontro</em> entre
-                <br />
-                estúdios de Pilates.
-              </h1>
-              <p className="mt-8 max-w-xl text-lg leading-relaxed text-[var(--ink-soft)]">
-                Reformers, Cadillacs, Wall Units, Chairs. Equipamentos
-                profissionais usados e seminovos, direto de quem cuida — para
-                quem precisa.
-              </p>
+      <section className="relative bg-[var(--bg-dark)] overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-dark)]/90 to-transparent z-[1]" />
+        <div className="relative z-10 mx-auto max-w-[1200px] px-4 py-16 md:py-24">
+          <div className="max-w-2xl">
+            <div className="inline-block bg-[var(--action)] text-white px-3 py-1 text-label-bold uppercase mb-4">
+              Marketplace Profissional
             </div>
-            <div
-              className="anim-in hidden md:col-span-4 md:block"
-              style={{ animationDelay: "0.15s" }}
-            >
-              <div className="rounded-3xl border border-[var(--line)] bg-[var(--bg-card)] p-8">
-                <div className="grid grid-cols-3 gap-6 text-center">
-                  <Stat label="Anúncios" value={stats.listings} />
-                  <Stat label="Cidades" value={stats.cities} />
-                  <Stat label="Estúdios" value={stats.vendors} />
-                </div>
+            <h1 className="font-display text-4xl font-black italic uppercase leading-tight text-white md:text-6xl">
+              Equipamentos profissionais{" "}
+              <span className="text-[var(--action)]">semi-novos</span> com curadoria de qualidade
+            </h1>
+            <p className="mt-6 max-w-md text-base text-[var(--on-dark-soft)]">
+              O maior marketplace de Pilates do Brasil. Reformers, Cadillacs, Chairs e acessórios direto de estúdios profissionais.
+            </p>
+            <div className="mt-8 flex gap-3">
+              <Link
+                href="#equipamentos"
+                className="bg-[var(--action)] px-8 py-3 font-display text-sm font-bold uppercase tracking-widest text-white transition hover:bg-[var(--action-dark)] active:scale-95"
+              >
+                Ver ofertas
+              </Link>
+            </div>
+            <div className="mt-8 flex gap-8">
+              <div>
+                <div className="font-display text-3xl font-extrabold text-[var(--action)]">{stats.listings}</div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--on-dark-soft)]">Anúncios</div>
+              </div>
+              <div>
+                <div className="font-display text-3xl font-extrabold text-white">{stats.cities}</div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--on-dark-soft)]">Cidades</div>
+              </div>
+              <div>
+                <div className="font-display text-3xl font-extrabold text-white">{stats.vendors}</div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--on-dark-soft)]">Estúdios</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FILTROS */}
+      {/* CATEGORY CHIPS + SEARCH */}
       <section
         id="filtros"
-        className="sticky top-[81px] z-20 border-y border-[var(--line)] bg-[var(--bg-card)]"
+        className="sticky top-[57px] z-20 border-b border-[var(--line)] bg-white"
       >
-        <div className="mx-auto flex max-w-7xl items-center gap-3 overflow-x-auto px-5 py-4 scrollbar-hide md:px-8">
+        <div className="mx-auto flex max-w-[1200px] items-center gap-3 overflow-x-auto px-4 py-3 scrollbar-hide">
           <div className="mr-2 flex flex-shrink-0 items-center gap-2 border-r border-[var(--line)] pr-4">
             <Search className="h-4 w-4 flex-shrink-0 text-[var(--text-muted)]" />
             <input
@@ -106,10 +92,10 @@ export function HomePageContent({
               key={t}
               type="button"
               onClick={() => setFilter(t)}
-              className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm capitalize transition ${
+              className={`whitespace-nowrap border px-4 py-1.5 text-label-bold uppercase transition ${
                 filter === t
-                  ? "bg-[var(--ink)] text-white"
-                  : "text-[var(--ink-soft)] hover:bg-[var(--bone)]"
+                  ? "border-[var(--action)] bg-[var(--action)] text-white"
+                  : "border-[var(--line)] text-[var(--ink-soft)] hover:bg-[var(--bg-section)]"
               }`}
             >
               {t}
@@ -119,79 +105,54 @@ export function HomePageContent({
       </section>
 
       {/* GRID */}
-      <section className="mx-auto max-w-7xl px-5 py-12 md:px-8 md:py-16">
-        <div className="mb-10 flex items-end justify-between">
-          <div>
-            <div className="mb-2 text-xs uppercase tracking-[0.25em] text-[var(--text-muted)]">
-              Em destaque
-            </div>
-            <h2 className="font-display text-3xl md:text-4xl">
-              Anúncios recentes
-            </h2>
-          </div>
-          <div className="hidden text-sm text-[var(--text-muted)] md:block">
-            {visible.length} {visible.length === 1 ? "anúncio" : "anúncios"}
-          </div>
+      <section id="equipamentos" className="mx-auto max-w-[1200px] px-4 py-8 md:py-12">
+        <div className="mb-6 flex items-center justify-between border-b border-[var(--line)] pb-2">
+          <h3 className="font-display text-xl font-bold uppercase">
+            Equipamentos em destaque
+          </h3>
+          <span className="text-label-bold text-[var(--action)] cursor-pointer hover:underline">
+            Ver todos ({visible.length})
+          </span>
         </div>
 
         {visible.length === 0 ? (
-          <div className="text-center py-20 border border-dashed border-[var(--line)] rounded-3xl">
-            <div className="font-display text-2xl mb-2">
+          <div className="border border-dashed border-[var(--line)] p-12 text-center">
+            <div className="font-display text-xl uppercase mb-2">
               {listings.length === 0 ? "Em breve, novos anúncios" : "Nenhum resultado"}
             </div>
-            <p className="text-[var(--text-muted)] text-sm">
+            <p className="text-sm text-[var(--text-muted)]">
               {listings.length === 0
                 ? "Estamos começando agora. Volte em breve."
                 : "Tente buscar com outros termos."}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3">
-            {visible.map((l, i) => (
-              <ListingCard key={l.id} listing={l} index={i} />
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            {visible.map((l) => (
+              <ListingCard key={l.id} listing={l} />
             ))}
           </div>
         )}
       </section>
 
-      {/* COMO FUNCIONA */}
-      <section
-        id="como-funciona"
-        className="border-t border-[var(--line)] bg-[var(--bg-card)]"
-      >
-        <div className="mx-auto max-w-7xl px-5 py-16 md:px-8 md:py-24">
-          <div className="mb-12 grid gap-12 md:grid-cols-12">
-            <div className="md:col-span-5">
-              <div className="mb-4 text-xs uppercase tracking-[0.25em] text-[var(--terra)]">
-                Como funciona
-              </div>
-              <h2 className="font-display text-4xl leading-tight md:text-5xl">
-                Seu contato fica <em className="italic">protegido</em> até você
-                decidir.
-              </h2>
-            </div>
-            <div className="md:col-span-7 md:pt-4">
-              <p className="text-lg leading-relaxed text-[var(--ink-soft)]">
-                Nenhum dado de contato aparece publicamente. Compradores
-                interessados deixam o WhatsApp deles e recebem seus dados em
-                mãos. Você recebe leads qualificados, sem spam, sem ligação
-                fria.
-              </p>
-            </div>
-          </div>
-          <div className="grid gap-px overflow-hidden rounded-2xl bg-[var(--line)] md:grid-cols-3">
-            {steps.map((s) => (
-              <div key={s.n} className="bg-[var(--bg-card)] p-8">
-                <div className="font-display mb-4 text-5xl text-[var(--terra)] opacity-30">
-                  {s.n}
-                </div>
-                <h3 className="font-display mb-2 text-xl">{s.t}</h3>
-                <p className="text-sm leading-relaxed text-[var(--ink-soft)]">
-                  {s.d}
-                </p>
-              </div>
-            ))}
-          </div>
+      {/* TRUST BADGES */}
+      <section className="bg-[var(--bg-section)] border-y border-[var(--line)]">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 px-4 py-8 md:grid-cols-3">
+          <TrustBadge
+            icon={<ShieldCheck className="h-8 w-8 text-[var(--action)]" />}
+            title="Compra protegida"
+            desc="Vendedores verificados e curadoria antes da publicação."
+          />
+          <TrustBadge
+            icon={<Truck className="h-8 w-8 text-[var(--action)]" />}
+            title="Frete especializado"
+            desc="Transportadoras parceiras para carga pesada e sensível."
+          />
+          <TrustBadge
+            icon={<Award className="h-8 w-8 text-[var(--action)]" />}
+            title="Equipamentos certificados"
+            desc="Todos os anúncios passam por curadoria de qualidade."
+          />
         </div>
       </section>
 
@@ -200,80 +161,85 @@ export function HomePageContent({
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+function TrustBadge({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <div>
-      <div className="font-display text-3xl text-[var(--terra)]">{value}</div>
-      <div className="mt-1 text-xs uppercase tracking-wider text-[var(--text-muted)]">
-        {label}
+    <div className="flex items-start gap-4 p-4">
+      {icon}
+      <div>
+        <h5 className="text-label-bold text-[var(--ink)]">{title}</h5>
+        <p className="text-xs text-[var(--ink-soft)] opacity-70 mt-1">{desc}</p>
       </div>
     </div>
   );
 }
 
-function ListingCard({ listing, index }: { listing: ListingWithImages; index: number }) {
+function ListingCard({ listing }: { listing: ListingWithImages & { is_featured?: boolean; recentLeadsCount?: number } }) {
   const sortedImages = [...listing.listing_images].sort((a, b) => a.position - b.position);
   const firstImage = sortedImages[0]?.storage_path;
   const accent = listingAccent(listing.id);
+  const isUrgent = (listing.recentLeadsCount ?? 0) >= 3;
 
   return (
     <Link
       href={`/${listing.slug}`}
-      className="group anim-in block cursor-pointer"
-      style={{ animationDelay: `${index * 0.05}s` }}
+      className="group border border-[var(--line)] bg-white transition-colors hover:border-[var(--action)]"
     >
-      <div className="aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-[var(--bone)]">
+      {/* Image */}
+      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bg-section)]">
         {firstImage ? (
           <img
             src={getListingImageUrl(firstImage)}
             alt={listing.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
           <EquipmentVisual
             equipment={listing.equipment_type}
             accent={accent}
-            className="w-full h-full transition-transform duration-500 group-hover:scale-[1.01]"
+            className="w-full h-full"
           />
         )}
-      </div>
-      <div className="mb-1 flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <div className="mb-1 text-xs uppercase tracking-wider text-[var(--text-muted)]">
-            {listing.brand ? `${listing.brand} · ` : ""}
-            {listing.condition === "novo"
-              ? "Novo"
-              : listing.condition === "seminovo"
-              ? "Seminovo"
-              : listing.condition === "usado_bom"
-              ? "Usado · Bom estado"
-              : "Usado · Estado regular"}
+        {listing.is_featured && (
+          <div className="absolute top-2 left-2 bg-[var(--action)] text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider">
+            Destaque
           </div>
-          <h3 className="font-display text-xl leading-tight">
-            {listing.title}
-          </h3>
-        </div>
+        )}
+        {!listing.is_featured && isUrgent && (
+          <div className="absolute top-2 left-2 bg-[var(--action)] text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider">
+            Urgente
+          </div>
+        )}
       </div>
-      <div className="mt-3 flex items-center justify-between border-t border-[var(--line)] pt-3">
-        <div className="flex items-center gap-1.5 text-sm text-[var(--ink-soft)]">
-          <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
-          {listing.city}, {listing.state}
-        </div>
-        <div className="text-right">
+
+      {/* Info */}
+      <div className="p-4">
+        {listing.brand && (
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--trust)] block mb-1">
+            {listing.brand}
+          </span>
+        )}
+        <h4 className="font-display text-sm font-bold text-[var(--ink)] line-clamp-2 h-10 leading-tight">
+          {listing.title}
+        </h4>
+        <div className="mt-3">
           {listing.has_fixed_price && listing.price ? (
-            <div className="font-display text-lg text-[var(--terra)]">
+            <span className="font-display text-2xl font-extrabold text-[var(--action)]">
               {formatBRL(listing.price)}
-              {listing.is_negotiable && (
-                <span className="mt-0 block text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
-                  negociável
-                </span>
-              )}
-            </div>
+            </span>
           ) : (
-            <div className="text-sm font-medium text-[var(--terra)]">
+            <span className="font-display text-lg font-bold text-[var(--action)]">
               A combinar
-            </div>
+            </span>
           )}
+        </div>
+        <div className="mt-2 flex items-center gap-1 text-[var(--text-muted)]">
+          <MapPin className="h-3 w-3" />
+          <span className="text-[10px] font-bold uppercase tracking-wider">
+            {listing.city}, {listing.state}
+          </span>
+        </div>
+        <div className="mt-3 w-full bg-[var(--ink)] py-2 text-center text-[10px] font-bold uppercase tracking-widest text-white transition-colors group-hover:bg-[var(--action)]">
+          Ver oferta
         </div>
       </div>
     </Link>

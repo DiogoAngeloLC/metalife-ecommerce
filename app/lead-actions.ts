@@ -27,7 +27,10 @@ export type SubmitLeadInput = z.input<typeof Schema>;
 
 export async function submitLeadAction(
   input: SubmitLeadInput
-): Promise<{ success: true } | { success: false; error: string }> {
+): Promise<
+  | { success: true; vendor?: { name: string; whatsapp: string } }
+  | { success: false; error: string }
+> {
   try {
     const parsed = Schema.parse(input);
 
@@ -85,7 +88,9 @@ export async function submitLeadAction(
       return { success: false, error: `Erro ao registrar: ${insertErr?.message ?? "unknown"}` };
     }
 
-    // Dispatch WhatsApp (fire-and-forget — não bloqueia retorno)
+    // Fetch full listing + vendor for dispatch and response
+    let vendorResult: { name: string; whatsapp: string } | undefined;
+
     try {
       const { data: full } = await supabase
         .from("listings")
@@ -105,6 +110,10 @@ export async function submitLeadAction(
           ? listingImagePublicUrl(firstImage.storage_path)
           : undefined;
         const vendor = full.vendors as { name: string | null; whatsapp: string | null };
+
+        if (vendor.name && vendor.whatsapp) {
+          vendorResult = { name: vendor.name, whatsapp: vendor.whatsapp };
+        }
 
         // Mensagem para o comprador
         void dispatchMessage({
@@ -153,7 +162,7 @@ export async function submitLeadAction(
       console.error("Lead dispatch error:", err);
     }
 
-    return { success: true };
+    return { success: true, vendor: vendorResult };
   } catch (err) {
     if (err instanceof z.ZodError) {
       return { success: false, error: err.errors[0]?.message ?? "Dados inválidos" };

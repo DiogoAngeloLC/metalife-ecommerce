@@ -6,8 +6,8 @@ import { ExternalLink, Phone, Mail } from "lucide-react";
 
 const STATUS_LABEL: Record<string, { label: string; color: string }> = {
   pending: { label: "Pendente", color: "text-[var(--text-muted)]" },
-  validated: { label: "Validado", color: "text-[var(--sage)]" },
-  sent: { label: "Enviado", color: "text-[var(--sage)]" },
+  validated: { label: "Validado", color: "text-[var(--success)]" },
+  sent: { label: "Enviado", color: "text-[var(--success)]" },
   failed: { label: "Falha", color: "text-red-700" },
 };
 
@@ -49,7 +49,7 @@ export function AdminLeadsContent({ leads }: { leads: any[] }) {
         </div>
         <button
           onClick={exportCSV}
-          className="self-start text-sm bg-[var(--ink)] text-white px-5 py-2.5 rounded-full hover:opacity-90 transition"
+          className="self-start text-sm bg-[var(--ink)] text-white px-5 py-2.5  hover:opacity-90 transition"
         >
           Exportar CSV
         </button>
@@ -65,10 +65,10 @@ export function AdminLeadsContent({ leads }: { leads: any[] }) {
           <button
             key={t.key}
             onClick={() => setFilter(t.key)}
-            className={`whitespace-nowrap text-sm px-4 py-1.5 rounded-full transition ${
+            className={`whitespace-nowrap text-sm px-4 py-1.5  transition ${
               filter === t.key
                 ? "bg-[var(--ink)] text-white"
-                : "text-[var(--ink-soft)] hover:bg-[var(--bone)]"
+                : "text-[var(--ink-soft)] hover:bg-[var(--bg-section)]"
             }`}
           >
             {t.label}
@@ -77,14 +77,14 @@ export function AdminLeadsContent({ leads }: { leads: any[] }) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="bg-[var(--bg-card)] border border-dashed border-[var(--line)] rounded-2xl p-12 text-center">
+        <div className="bg-white border border-dashed border-[var(--line)]  p-12 text-center">
           <p className="text-[var(--text-muted)]">Nenhum lead.</p>
         </div>
       ) : (
-        <div className="bg-[var(--bg-card)] border border-[var(--line)] rounded-2xl overflow-hidden">
+        <div className="bg-white border border-[var(--line)]  overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[var(--bone)]/50 border-b border-[var(--line)]">
+              <thead className="bg-[var(--bg-section)] border-b border-[var(--line)]">
                 <tr className="text-left">
                   <th className="p-4 text-xs uppercase tracking-wider text-[var(--text-muted)] font-medium">Data</th>
                   <th className="p-4 text-xs uppercase tracking-wider text-[var(--text-muted)] font-medium">Comprador</th>
@@ -110,7 +110,7 @@ export function AdminLeadsContent({ leads }: { leads: any[] }) {
                       </td>
                       <td className="p-4">
                         {l.listings ? (
-                          <Link href={`/${l.listings.slug}`} target="_blank" className="flex items-center gap-1 hover:text-[var(--terra)] transition">
+                          <Link href={`/${l.listings.slug}`} target="_blank" className="flex items-center gap-1 hover:text-[var(--action)] transition">
                             {l.listings.title}
                             <ExternalLink className="w-3 h-3" />
                           </Link>

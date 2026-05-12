@@ -23,28 +23,28 @@ export default async function AdminOverviewPage() {
   ]);
 
   const stats = [
-    { label: "Aguardando aprovação", value: pendingCount ?? 0, accent: "terra" as const, href: "/admin/anuncios?status=pending_review" },
-    { label: "Anúncios ativos", value: activeCount ?? 0, accent: "sage" as const, href: "/admin/anuncios?status=active" },
-    { label: "Total de anúncios", value: totalListings ?? 0, accent: "muted" as const },
-    { label: "Vendedores cadastrados", value: totalVendors ?? 0, accent: "muted" as const, href: "/admin/usuarios" },
-    { label: "Leads (total)", value: totalLeads ?? 0, accent: "muted" as const, href: "/admin/leads" },
-    { label: "Leads (últimas 24h)", value: leadsToday ?? 0, accent: "sage" as const },
+    { label: "Aguardando aprovação", value: pendingCount ?? 0, variant: "action" as const, href: "/admin/anuncios?status=pending_review" },
+    { label: "Anúncios ativos", value: activeCount ?? 0, variant: "success" as const, href: "/admin/anuncios?status=active" },
+    { label: "Total de anúncios", value: totalListings ?? 0, variant: "muted" as const },
+    { label: "Vendedores cadastrados", value: totalVendors ?? 0, variant: "muted" as const, href: "/admin/usuarios" },
+    { label: "Leads (total)", value: totalLeads ?? 0, variant: "muted" as const, href: "/admin/leads" },
+    { label: "Leads (últimas 24h)", value: leadsToday ?? 0, variant: "trust" as const },
   ];
 
   return (
-    <div className="p-8 md:p-12">
-      <div className="mb-10">
-        <div className="text-xs uppercase tracking-[0.25em] text-[var(--text-muted)] mb-2">Painel administrativo</div>
-        <h1 className="font-display text-4xl md:text-5xl">Visão geral</h1>
+    <div className="p-6 md:p-10">
+      <div className="mb-8">
+        <div className="text-label-bold text-[var(--text-muted)] mb-2">PAINEL ADMINISTRATIVO</div>
+        <h1 className="font-display text-3xl md:text-4xl font-bold uppercase text-[var(--ink)]">Visão geral</h1>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((s) => {
-          const colorMap = { terra: "var(--terra)", sage: "var(--sage)", muted: "var(--ink)" };
+          const colorMap = { action: "var(--action)", success: "var(--success)", trust: "var(--trust)", muted: "var(--ink)" };
           const card = (
-            <div className="bg-[var(--bg-card)] border border-[var(--line)] rounded-2xl p-6 transition hover:border-[var(--text-muted)]">
-              <div className="text-xs uppercase tracking-wider text-[var(--text-muted)] mb-3">{s.label}</div>
-              <div className="font-display text-4xl md:text-5xl" style={{ color: colorMap[s.accent] }}>
+            <div className="bg-white border border-[var(--line)] p-6 transition hover:border-[var(--action)]">
+              <div className="text-label-bold text-[var(--text-muted)] mb-3">{s.label}</div>
+              <div className="font-display text-4xl md:text-5xl font-extrabold" style={{ color: colorMap[s.variant] }}>
                 {s.value}
               </div>
             </div>

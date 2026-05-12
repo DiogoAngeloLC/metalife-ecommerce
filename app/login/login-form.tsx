@@ -62,14 +62,14 @@ export function LoginForm({ next }: { next?: string }) {
 
   if (sent) {
     return (
-      <div className="bg-[var(--bg-card)] border border-[var(--line)] rounded-3xl p-8 text-center">
-        <div className="w-14 h-14 mx-auto mb-5 rounded-full bg-[var(--sage)]/15 flex items-center justify-center">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" strokeWidth="1.8">
+      <div className="border border-[var(--line)] bg-white p-8 text-center">
+        <div className="w-14 h-14 mx-auto mb-5 bg-[var(--success-bg)] border border-[var(--success)] flex items-center justify-center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="1.8">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
             <polyline points="22,6 12,13 2,6" />
           </svg>
         </div>
-        <div className="font-display text-2xl mb-3">Confira seu email</div>
+        <div className="font-display text-2xl font-bold uppercase mb-3">Confira seu email</div>
         <p className="text-sm text-[var(--text-muted)] leading-relaxed">
           Enviamos um link de acesso para
           <br />
@@ -82,7 +82,7 @@ export function LoginForm({ next }: { next?: string }) {
               setSent(false);
               setEmail("");
             }}
-            className="underline hover:text-[var(--terra)]"
+            className="underline hover:text-[var(--action)]"
           >
             tente outro email
           </button>
@@ -95,14 +95,14 @@ export function LoginForm({ next }: { next?: string }) {
   return (
     <div className="space-y-6">
       {/* Toggle mode */}
-      <div className="flex bg-[var(--bone)] rounded-full p-1">
+      <div className="flex border border-[var(--line)]">
         <button
           type="button"
           onClick={() => { setMode("magic"); setErrorMsg(null); }}
-          className={`flex-1 text-sm py-2 rounded-full transition font-medium ${
+          className={`flex-1 text-label-bold py-2.5 transition ${
             mode === "magic"
-              ? "bg-[var(--ink)] text-white shadow-sm"
-              : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+              ? "bg-[var(--ink)] text-white"
+              : "text-[var(--ink-soft)] hover:text-[var(--ink)] bg-white"
           }`}
         >
           Link mágico
@@ -110,10 +110,10 @@ export function LoginForm({ next }: { next?: string }) {
         <button
           type="button"
           onClick={() => { setMode("password"); setErrorMsg(null); }}
-          className={`flex-1 text-sm py-2 rounded-full transition font-medium ${
+          className={`flex-1 text-label-bold py-2.5 transition ${
             mode === "password"
-              ? "bg-[var(--ink)] text-white shadow-sm"
-              : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+              ? "bg-[var(--ink)] text-white"
+              : "text-[var(--ink-soft)] hover:text-[var(--ink)] bg-white"
           }`}
         >
           Senha
@@ -122,7 +122,7 @@ export function LoginForm({ next }: { next?: string }) {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="email" className="text-xs uppercase tracking-wider text-[var(--text-muted)] block mb-2">
+          <label htmlFor="email" className="text-label-bold text-[var(--text-muted)] block mb-2">
             E-mail
           </label>
           <input
@@ -133,13 +133,13 @@ export function LoginForm({ next }: { next?: string }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="voce@email.com"
-            className="w-full bg-transparent border-b border-[var(--line)] focus:border-[var(--terra)] outline-none py-2.5 text-[15px] transition"
+            className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white"
           />
         </div>
 
         {mode === "password" && (
           <div>
-            <label htmlFor="password" className="text-xs uppercase tracking-wider text-[var(--text-muted)] block mb-2">
+            <label htmlFor="password" className="text-label-bold text-[var(--text-muted)] block mb-2">
               Senha
             </label>
             <input
@@ -149,17 +149,17 @@ export function LoginForm({ next }: { next?: string }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Sua senha"
-              className="w-full bg-transparent border-b border-[var(--line)] focus:border-[var(--terra)] outline-none py-2.5 text-[15px] transition"
+              className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white"
             />
           </div>
         )}
 
-        {errorMsg && <p className="text-sm text-red-700">{errorMsg}</p>}
+        {errorMsg && <p className="text-sm text-[var(--danger)]">{errorMsg}</p>}
 
         <button
           type="submit"
           disabled={submitting || !email || (mode === "password" && !password)}
-          className="w-full bg-[var(--ink)] text-white rounded-full py-3.5 font-medium hover:opacity-90 transition disabled:opacity-30 disabled:cursor-not-allowed"
+          className="w-full bg-[var(--action)] text-white py-4 font-display font-bold uppercase tracking-wider hover:bg-[var(--action-dark)] transition disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {submitting
             ? mode === "magic"
@@ -176,7 +176,7 @@ export function LoginForm({ next }: { next?: string }) {
           Não tem conta?{" "}
           <Link
             href={`/cadastro${next ? `?next=${encodeURIComponent(next)}` : ""}`}
-            className="underline hover:text-[var(--terra)]"
+            className="underline hover:text-[var(--action)]"
           >
             Criar conta
           </Link>

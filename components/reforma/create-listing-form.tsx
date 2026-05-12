@@ -14,7 +14,6 @@ import type { Database } from "@/lib/supabase/types";
 
 type Vendor = Database["public"]["Tables"]["vendors"]["Row"];
 
-// Schema sem `id` e `imagePaths` (preenchidos no submit)
 const FormSchema = z.object({
   title: z.string().min(3, "Mínimo 3 caracteres").max(120),
   equipment_type: z.string().min(2, "Informe o tipo de equipamento"),
@@ -79,7 +78,6 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
       const supabase = createClient();
       const listingId = crypto.randomUUID();
 
-      // Upload das imagens
       const imagePaths: string[] = [];
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
@@ -94,7 +92,6 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
         imagePaths.push(path);
       }
 
-      // Criar listing
       await createListingAction({
         id: listingId,
         title: data.title,
@@ -123,29 +120,31 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-5 md:px-8 py-10 md:py-14">
+    <div className="max-w-3xl mx-auto px-4 py-8 md:py-12">
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-2 text-sm text-[var(--ink-soft)] hover:text-[var(--ink)] mb-6 transition"
+        className="inline-flex items-center gap-2 text-label-bold text-[var(--ink-soft)] hover:text-[var(--action)] mb-6 transition"
       >
         <ArrowLeft className="w-4 h-4" />
         Voltar ao painel
       </Link>
 
-      <div className="text-xs uppercase tracking-[0.25em] text-[var(--terra)] mb-3">Novo anúncio</div>
-      <h1 className="font-display text-4xl md:text-5xl leading-tight mb-2">Conte sobre seu equipamento.</h1>
-      <p className="text-[var(--text-muted)] mb-10">Quanto mais detalhe, mais qualificado o comprador chega.</p>
+      <div className="text-label-bold text-[var(--action)] mb-3">NOVO ANÚNCIO</div>
+      <h1 className="font-display text-3xl md:text-4xl font-bold uppercase leading-tight mb-2 text-[var(--ink)]">
+        Conte sobre seu equipamento.
+      </h1>
+      <p className="text-sm text-[var(--text-muted)] mb-8">Quanto mais detalhe, mais qualificado o comprador chega.</p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         {/* FOTOS */}
         <section>
-          <h2 className="font-display text-xl mb-1">Fotos</h2>
-          <p className="text-sm text-[var(--text-muted)] mb-4">
+          <h2 className="font-display text-lg font-bold uppercase mb-1">Fotos</h2>
+          <p className="text-xs text-[var(--text-muted)] mb-4">
             Adicione até {MAX_IMAGES} fotos. A primeira será a principal.
           </p>
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-4 gap-2">
             {previews.length < MAX_IMAGES && (
-              <label className="aspect-square rounded-xl border-2 border-dashed border-[var(--line)] hover:border-[var(--terra)] transition flex flex-col items-center justify-center cursor-pointer group">
+              <label className="aspect-square border-2 border-dashed border-[var(--line)] hover:border-[var(--action)] transition flex flex-col items-center justify-center cursor-pointer group">
                 <input
                   type="file"
                   multiple
@@ -153,30 +152,30 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
                   className="hidden"
                   onChange={(e) => onFiles(e.target.files)}
                 />
-                <Upload className="w-6 h-6 text-[var(--text-muted)] group-hover:text-[var(--terra)] mb-1.5 transition" />
-                <span className="text-xs text-[var(--text-muted)] group-hover:text-[var(--terra)] transition">Adicionar</span>
+                <Upload className="w-6 h-6 text-[var(--text-muted)] group-hover:text-[var(--action)] mb-1.5 transition" />
+                <span className="text-[10px] font-bold uppercase text-[var(--text-muted)] group-hover:text-[var(--action)] transition">Adicionar</span>
               </label>
             )}
             {previews.map((src, i) => (
-              <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
+              <div key={i} className="relative aspect-square overflow-hidden group border border-[var(--line)]">
                 <img src={src} alt="" className="w-full h-full object-cover" />
                 <button
                   type="button"
                   onClick={() => removeFile(i)}
-                  className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
+                  className="absolute top-1.5 right-1.5 w-7 h-7 bg-black/60 text-white opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
                   aria-label="Remover"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
                 {i === 0 && (
-                  <div className="absolute bottom-1.5 left-1.5 text-[10px] uppercase tracking-wider bg-[var(--terra)] text-white px-2 py-0.5 rounded">
+                  <div className="absolute bottom-1.5 left-1.5 text-[10px] uppercase tracking-wider bg-[var(--action)] text-white px-2 py-0.5 font-bold">
                     Capa
                   </div>
                 )}
               </div>
             ))}
             {Array.from({ length: Math.max(0, MAX_IMAGES - previews.length - 1) }).slice(0, 3 - previews.length).map((_, i) => (
-              <div key={`ph-${i}`} className="aspect-square rounded-xl bg-[var(--bone)] flex items-center justify-center">
+              <div key={`ph-${i}`} className="aspect-square bg-[var(--bg-section)] flex items-center justify-center border border-[var(--line)]">
                 <Camera className="w-5 h-5 text-[var(--text-muted)]" />
               </div>
             ))}
@@ -185,13 +184,13 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
 
         {/* INFO */}
         <section className="space-y-5">
-          <h2 className="font-display text-xl">Informações</h2>
+          <h2 className="font-display text-lg font-bold uppercase">Informações</h2>
 
           <Field label="Título do anúncio" error={errors.title?.message}>
             <input
               {...register("title")}
               placeholder="Ex: Reformer Arktus Clássico seminovo"
-              className="input"
+              className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white"
             />
           </Field>
 
@@ -200,7 +199,7 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
               <input
                 {...register("equipment_type")}
                 placeholder="Reformer, Cadillac, Wall Unit…"
-                className="input"
+                className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white"
               />
             </Field>
 
@@ -208,12 +207,12 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
               <input
                 {...register("brand")}
                 placeholder="Arktus, Metalife, Polestar…"
-                className="input"
+                className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white"
               />
             </Field>
 
             <Field label="Estado de conservação" error={errors.condition?.message}>
-              <select {...register("condition")} className="input cursor-pointer">
+              <select {...register("condition")} className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white cursor-pointer">
                 <option value="novo">Novo</option>
                 <option value="seminovo">Seminovo</option>
                 <option value="usado_bom">Usado · Bom estado</option>
@@ -222,7 +221,7 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
             </Field>
 
             <Field label="Ano" error={errors.year?.message}>
-              <input {...register("year")} type="number" placeholder="2022" className="input" />
+              <input {...register("year")} type="number" placeholder="2022" className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white" />
             </Field>
           </div>
 
@@ -231,18 +230,18 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
               {...register("description")}
               rows={4}
               placeholder="Conte detalhes: manutenção, acessórios inclusos, motivo da venda…"
-              className="input resize-none"
+              className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white resize-none"
             />
           </Field>
         </section>
 
         {/* LOCALIZAÇÃO */}
         <section className="space-y-5">
-          <h2 className="font-display text-xl">Onde está o equipamento</h2>
+          <h2 className="font-display text-lg font-bold uppercase">Onde está o equipamento</h2>
           <div className="grid md:grid-cols-3 gap-5">
             <div className="md:col-span-2">
               <Field label="Cidade" error={errors.city?.message}>
-                <input {...register("city")} placeholder="São Paulo" className="input" />
+                <input {...register("city")} placeholder="São Paulo" className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white" />
               </Field>
             </div>
             <Field label="UF" error={errors.state?.message}>
@@ -250,7 +249,7 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
                 {...register("state")}
                 placeholder="SP"
                 maxLength={2}
-                className="input uppercase"
+                className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white uppercase"
               />
             </Field>
           </div>
@@ -258,19 +257,19 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
 
         {/* PREÇO */}
         <section className="space-y-5">
-          <h2 className="font-display text-xl">Valor</h2>
+          <h2 className="font-display text-lg font-bold uppercase">Valor</h2>
           <div className="flex gap-3">
             <label className="flex-1 cursor-pointer">
               <input type="radio" value="true" {...register("has_fixed_price")} className="peer sr-only" />
-              <div className="p-4 border border-[var(--line)] rounded-2xl peer-checked:border-[var(--terra)] peer-checked:bg-[var(--terra)]/5 transition">
-                <div className="font-medium mb-1">Valor fixo</div>
+              <div className="p-4 border border-[var(--line)] peer-checked:border-[var(--action)] peer-checked:bg-[var(--action)]/5 transition">
+                <div className="font-display font-bold text-sm uppercase mb-1">Valor fixo</div>
                 <div className="text-xs text-[var(--text-muted)]">Defino o preço do anúncio</div>
               </div>
             </label>
             <label className="flex-1 cursor-pointer">
               <input type="radio" value="false" {...register("has_fixed_price")} className="peer sr-only" />
-              <div className="p-4 border border-[var(--line)] rounded-2xl peer-checked:border-[var(--terra)] peer-checked:bg-[var(--terra)]/5 transition">
-                <div className="font-medium mb-1">A combinar</div>
+              <div className="p-4 border border-[var(--line)] peer-checked:border-[var(--action)] peer-checked:bg-[var(--action)]/5 transition">
+                <div className="font-display font-bold text-sm uppercase mb-1">A combinar</div>
                 <div className="text-xs text-[var(--text-muted)]">Negocio direto com interessado</div>
               </div>
             </label>
@@ -284,7 +283,7 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
                   type="number"
                   step="0.01"
                   placeholder="18500"
-                  className="input"
+                  className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white"
                 />
               </Field>
               <div className="flex items-end">
@@ -292,7 +291,7 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
                   <input
                     type="checkbox"
                     {...register("is_negotiable")}
-                    className="w-4 h-4 rounded accent-[var(--terra)]"
+                    className="w-4 h-4 accent-[var(--action)]"
                   />
                   <span className="text-sm">Aceito propostas / negociável</span>
                 </label>
@@ -302,7 +301,7 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
         </section>
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800">
+          <div className="p-4 bg-red-50 border border-[var(--danger)] text-sm text-[var(--danger)]">
             {error}
           </div>
         )}
@@ -311,7 +310,7 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
           <button
             type="submit"
             disabled={busy}
-            className="bg-[var(--ink)] text-white rounded-full px-8 py-3 hover:opacity-90 transition flex items-center justify-center gap-2 font-medium disabled:opacity-40"
+            className="bg-[var(--action)] text-white px-8 py-4 hover:bg-[var(--action-dark)] transition flex items-center justify-center gap-2 font-display font-bold uppercase tracking-wider disabled:opacity-40"
           >
             {busy ? (
               <>Publicando…</>
@@ -324,21 +323,6 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
           </button>
         </div>
       </form>
-
-      <style jsx>{`
-        :global(.input) {
-          width: 100%;
-          background: transparent;
-          border-bottom: 1px solid var(--line);
-          outline: none;
-          padding: 0.5rem 0;
-          font-size: 15px;
-          transition: border-color 0.2s;
-        }
-        :global(.input:focus) {
-          border-color: var(--terra);
-        }
-      `}</style>
     </div>
   );
 }
@@ -354,9 +338,9 @@ function Field({
 }) {
   return (
     <div>
-      <label className="text-xs uppercase tracking-wider text-[var(--text-muted)] block mb-2">{label}</label>
+      <label className="text-label-bold text-[var(--text-muted)] block mb-2">{label}</label>
       {children}
-      {error && <p className="text-xs text-red-700 mt-1">{error}</p>}
+      {error && <p className="text-xs text-[var(--danger)] mt-1">{error}</p>}
     </div>
   );
 }

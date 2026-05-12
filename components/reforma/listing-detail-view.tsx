@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Clock, MapPin, Shield } from "lucide-react";
+import { ChevronRight, Clock, ShieldCheck, Package, MessageSquare } from "lucide-react";
 import type { ListingWithImages } from "@/lib/listings";
 import { conditionLabel, daysSince, listingAccent } from "@/lib/listings";
 import { getListingImageUrl } from "@/lib/storage";
@@ -10,7 +10,17 @@ import { formatBRL } from "@/lib/format";
 import { EquipmentVisual } from "@/components/reforma/equipment-visual";
 import { ContactLeadDialog } from "@/components/reforma/contact-lead-dialog";
 
-export function ListingDetailView({ listing }: { listing: ListingWithImages }) {
+export function ListingDetailView({
+  listing,
+  vendorName,
+  vendorVerified,
+  recentLeadsCount,
+}: {
+  listing: ListingWithImages & { is_featured?: boolean };
+  vendorName?: string | null;
+  vendorVerified?: boolean;
+  recentLeadsCount?: number;
+}) {
   const [contactOpen, setContactOpen] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
 
@@ -19,19 +29,20 @@ export function ListingDetailView({ listing }: { listing: ListingWithImages }) {
   const days = daysSince(listing.published_at);
 
   return (
-    <div className="anim-in mx-auto max-w-7xl px-5 py-8 md:px-8 md:py-12">
-      <Link
-        href="/"
-        className="mb-6 inline-flex items-center gap-2 text-sm text-[var(--ink-soft)] transition hover:text-[var(--ink)]"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Voltar aos anúncios
-      </Link>
+    <div className="mx-auto max-w-[1200px] px-4 py-6 md:py-8">
+      {/* Breadcrumb */}
+      <nav className="mb-4 flex items-center gap-1 text-label-bold text-[var(--text-muted)]">
+        <Link href="/" className="hover:text-[var(--ink)]">Home</Link>
+        <ChevronRight className="h-3 w-3" />
+        <Link href="/" className="hover:text-[var(--ink)]">{listing.equipment_type}</Link>
+        <ChevronRight className="h-3 w-3" />
+        <span className="text-[var(--ink)] truncate max-w-[200px]">{listing.title}</span>
+      </nav>
 
-      <div className="grid gap-8 md:grid-cols-12 md:gap-12">
-        {/* GALERIA */}
-        <div className="md:col-span-7">
-          <div className="mb-3 aspect-[4/3] overflow-hidden rounded-3xl bg-[var(--bone)]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        {/* GALLERY — 8 cols */}
+        <div className="lg:col-span-8 flex flex-col gap-2">
+          <div className="relative border border-[var(--line)] aspect-[4/3] overflow-hidden bg-[var(--bg-section)]">
             {images[activeIdx] ? (
               <img
                 src={getListingImageUrl(images[activeIdx].storage_path)}
@@ -45,18 +56,23 @@ export function ListingDetailView({ listing }: { listing: ListingWithImages }) {
                 className="h-full w-full"
               />
             )}
+            {listing.is_featured && (
+              <div className="absolute top-4 left-4 bg-[var(--action)] text-white px-2 py-1 text-label-bold uppercase">
+                Destaque
+              </div>
+            )}
           </div>
           {images.length > 1 && (
-            <div className="grid grid-cols-5 gap-2">
-              {images.slice(0, 5).map((img, i) => (
+            <div className="grid grid-cols-4 gap-2">
+              {images.slice(0, 4).map((img, i) => (
                 <button
                   key={img.storage_path}
                   type="button"
                   onClick={() => setActiveIdx(i)}
-                  className={`aspect-square overflow-hidden rounded-xl border-2 transition ${
+                  className={`aspect-square overflow-hidden border-2 transition ${
                     activeIdx === i
-                      ? "border-[var(--terra)]"
-                      : "border-transparent opacity-60 hover:opacity-100"
+                      ? "border-[var(--action)]"
+                      : "border-[var(--line)] opacity-70 hover:opacity-100"
                   }`}
                 >
                   <img
@@ -70,97 +86,144 @@ export function ListingDetailView({ listing }: { listing: ListingWithImages }) {
           )}
         </div>
 
-        {/* INFO */}
-        <div className="md:col-span-5">
-          <div className="mb-3 text-xs uppercase tracking-[0.25em] text-[var(--text-muted)]">
-            {listing.brand ? `${listing.brand} · ` : ""}
-            {listing.equipment_type}
-          </div>
-          <h1 className="font-display mb-4 text-4xl leading-tight tracking-tight md:text-5xl">
-            {listing.title}
-          </h1>
-
-          <div className="mb-6 flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-[var(--bone)] px-3 py-1 text-xs text-[var(--ink-soft)]">
-              {conditionLabel(listing.condition)}
-            </span>
-            {listing.year && (
-              <span className="rounded-full bg-[var(--bone)] px-3 py-1 text-xs text-[var(--ink-soft)]">
-                Ano {listing.year}
-              </span>
-            )}
-            <span className="flex items-center gap-1.5 rounded-full bg-[var(--bone)] px-3 py-1 text-xs text-[var(--ink-soft)]">
-              <MapPin className="h-3 w-3" />
-              {listing.city}, {listing.state}
-            </span>
-          </div>
-
-          <div className="my-6 border-y border-[var(--line)] py-6">
-            {listing.has_fixed_price && listing.price ? (
-              <>
-                <div className="mb-1 text-xs uppercase tracking-wider text-[var(--text-muted)]">
-                  Valor anunciado
-                </div>
-                <div className="font-display text-5xl text-[var(--terra)]">
-                  {formatBRL(listing.price)}
-                </div>
-                {listing.is_negotiable && (
-                  <div className="mt-1 text-sm text-[var(--ink-soft)]">
-                    Negociável diretamente com o vendedor
-                  </div>
+        {/* INFO — 4 cols */}
+        <div className="lg:col-span-4 flex flex-col gap-4 lg:sticky lg:top-[100px] lg:self-start">
+          <div className="border border-[var(--line)] bg-white p-6 flex flex-col gap-4">
+            <div>
+              <h1 className="font-display text-2xl font-bold uppercase leading-tight text-[var(--ink)] md:text-3xl">
+                {listing.title}
+              </h1>
+              <div className="mt-2 flex items-center gap-2 flex-wrap">
+                {vendorVerified && (
+                  <span className="flex items-center gap-1 text-label-bold text-[var(--trust)]">
+                    <ShieldCheck className="h-4 w-4" />
+                    Vendedor verificado
+                  </span>
                 )}
-              </>
-            ) : (
-              <>
-                <div className="mb-1 text-xs uppercase tracking-wider text-[var(--text-muted)]">
-                  Valor
+                <span className="text-label-bold text-[var(--text-muted)]">
+                  {listing.city}, {listing.state}
+                </span>
+              </div>
+            </div>
+
+            {/* Price */}
+            <div className="border-y border-[var(--line)] py-4">
+              {listing.has_fixed_price && listing.price ? (
+                <>
+                  <div className="font-display text-5xl font-extrabold tracking-tight text-[var(--action)]" style={{ letterSpacing: "-0.04em" }}>
+                    {formatBRL(listing.price)}
+                  </div>
+                  {listing.is_negotiable && (
+                    <div className="mt-1 text-sm text-[var(--ink-soft)]">Negociável</div>
+                  )}
+                </>
+              ) : (
+                <div className="font-display text-4xl font-extrabold text-[var(--action)]">A combinar</div>
+              )}
+              {(recentLeadsCount ?? 0) >= 3 && (
+                <div className="mt-2 text-label-bold text-[var(--danger)] flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  {recentLeadsCount} pessoas interessadas hoje
                 </div>
-                <div className="font-display text-4xl text-[var(--terra)]">
-                  A combinar
-                </div>
-                <div className="mt-1 text-sm text-[var(--ink-soft)]">
-                  Entre em contato para conhecer os valores
-                </div>
-              </>
-            )}
+              )}
+            </div>
+
+            {/* CTAs */}
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={() => setContactOpen(true)}
+                className="w-full bg-[var(--action)] py-4 font-display text-base font-extrabold uppercase tracking-widest text-white transition hover:bg-[var(--action-dark)] active:scale-[0.98]"
+              >
+                Ver contato
+              </button>
+              <button
+                type="button"
+                disabled
+                className="w-full border border-[var(--line)] py-4 font-display text-base font-bold uppercase tracking-wide text-[var(--ink)] transition hover:bg-[var(--bg-section)]"
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  Mensagem
+                </span>
+              </button>
+            </div>
+
+            {/* Details table */}
+            <div className="flex flex-col gap-2 pt-2 text-sm">
+              <DetailRow label="Condição" value={conditionLabel(listing.condition)} />
+              {listing.year && <DetailRow label="Ano" value={String(listing.year)} />}
+              <DetailRow label="Publicado" value={days === 0 ? "Hoje" : `Há ${days} ${days === 1 ? "dia" : "dias"}`} />
+              <DetailRow label="ID" value={`#${listing.id.slice(0, 8).toUpperCase()}`} />
+            </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setContactOpen(true)}
-            className="group flex w-full items-center justify-center gap-3 rounded-full bg-[var(--ink)] py-4 text-base font-medium text-white transition hover:bg-[var(--terra-dark)]"
-          >
-            Saber valores e contato
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </button>
-          <div className="mt-4 flex items-center gap-2 text-xs text-[var(--text-muted)]">
-            <Shield className="h-3.5 w-3.5 flex-shrink-0" />
-            Você recebe os dados no seu WhatsApp em segundos.
-          </div>
-
-          {listing.description && (
-            <div className="mt-8">
-              <h3 className="font-display mb-3 text-xl">Sobre o equipamento</h3>
-              <p className="text-[15px] leading-relaxed text-[var(--ink-soft)] whitespace-pre-line">
-                {listing.description}
-              </p>
+          {/* Seller card */}
+          {vendorName && (
+            <div className="border border-[var(--line)] bg-[var(--bg-section)] p-4 flex items-center gap-3">
+              <div className="w-10 h-10 bg-[var(--trust-light)] flex items-center justify-center font-bold text-[var(--trust)] text-sm">
+                {vendorName.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <div className="text-label-bold text-[var(--ink)]">{vendorName}</div>
+                <div className="text-xs text-[var(--text-muted)]">Vendedor</div>
+              </div>
             </div>
           )}
 
-          <div className="mt-8 flex items-center gap-6 border-t border-[var(--line)] pt-6 text-sm text-[var(--text-muted)]">
-            <div className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              {days === 0 ? "Publicado hoje" : `Publicado há ${days} ${days === 1 ? "dia" : "dias"}`}
+          {/* Shipping calculator placeholder */}
+          <div className="border border-[var(--line)] bg-[var(--bg-section)] p-4">
+            <h3 className="font-display text-sm font-bold uppercase flex items-center gap-2 mb-3">
+              <Package className="h-4 w-4" />
+              Calculador de frete
+            </h3>
+            <div className="flex gap-2 mb-2">
+              <input
+                placeholder="00000-000"
+                className="flex-1 border border-[var(--line)] bg-white px-3 py-2 text-sm outline-none focus:border-[var(--action)]"
+              />
+              <button className="bg-[var(--ink)] px-4 py-2 text-label-bold text-white">
+                Calcular
+              </button>
             </div>
+            <p className="text-xs text-[var(--text-muted)] italic">
+              Cálculo em breve — em integração com transportadoras parceiras.
+            </p>
           </div>
         </div>
       </div>
+
+      {/* Description */}
+      {listing.description && (
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-8">
+            <h2 className="font-display text-lg font-bold uppercase border-b-4 border-[var(--action)] inline-block mb-4 pb-1">
+              Descrição do vendedor
+            </h2>
+            <div className="bg-[var(--bg-section)] border-l-4 border-[var(--trust)] p-4">
+              <p className="text-base leading-relaxed text-[var(--ink-soft)] whitespace-pre-line">
+                {listing.description}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <ContactLeadDialog
         listing={listing}
         open={contactOpen}
         onOpenChange={setContactOpen}
+        recentLeadsCount={recentLeadsCount}
       />
+    </div>
+  );
+}
+
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between items-center border-b border-[var(--line)] pb-1">
+      <span className="text-[var(--text-muted)] text-xs">{label}</span>
+      <span className="font-bold text-xs uppercase">{value}</span>
     </div>
   );
 }

@@ -54,7 +54,7 @@ export function WhatsappInput({
           <Loader2 className="h-4 w-4 animate-spin text-[var(--text-muted)]" />
         )}
         {status === "valid" && (
-          <CheckCircle2 className="h-4 w-4 text-[var(--sage)]" />
+          <CheckCircle2 className="h-4 w-4 text-[var(--success)]" />
         )}
         {status === "invalid" && (
           <XCircle className="h-4 w-4 text-red-500" />
@@ -66,7 +66,7 @@ export function WhatsappInput({
         </div>
       )}
       {status === "valid" && isComplete && (
-        <div className="mt-1 text-[11px] text-[var(--sage)]">
+        <div className="mt-1 text-[11px] text-[var(--success)]">
           Número verificado no WhatsApp.
         </div>
       )}

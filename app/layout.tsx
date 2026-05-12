@@ -1,18 +1,18 @@
-﻿import type { Metadata } from "next";
-import { Fraunces, Manrope } from "next/font/google";
+import type { Metadata } from "next";
+import { Montserrat, Inter } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/reforma/site-header";
 
-const fraunces = Fraunces({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  variable: "--font-fraunces",
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-montserrat",
+  weight: ["500", "700", "800", "900"],
 });
 
-const manrope = Manrope({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-manrope",
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${fraunces.variable} ${manrope.variable}`}>
+    <html lang="pt-BR" className={`${montserrat.variable} ${inter.variable}`}>
       <body className="min-h-screen">
         <SiteHeader />
         {children}

@@ -68,26 +68,30 @@ export function PerfilForm({ vendor }: { vendor: Vendor }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-5 md:px-8 py-10 md:py-14">
+    <div className="max-w-2xl mx-auto px-4 py-8 md:py-12">
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-2 text-sm text-[var(--ink-soft)] hover:text-[var(--ink)] mb-6 transition"
+        className="inline-flex items-center gap-2 text-label-bold text-[var(--ink-soft)] hover:text-[var(--action)] mb-6 transition"
       >
         <ArrowLeft className="w-4 h-4" />
         Voltar ao painel
       </Link>
 
-      <div className="text-xs uppercase tracking-[0.25em] text-[var(--terra)] mb-3">Meu perfil</div>
-      <h1 className="font-display text-4xl md:text-5xl leading-tight mb-2">
+      <div className="text-label-bold text-[var(--action)] mb-3">MEU PERFIL</div>
+      <h1 className="font-display text-3xl md:text-4xl font-bold uppercase leading-tight mb-2 text-[var(--ink)]">
         {vendor.onboarding_completed ? "Edite seus dados" : "Complete seu perfil"}
       </h1>
-      <p className="text-[var(--text-muted)] mb-10">
+      <p className="text-sm text-[var(--text-muted)] mb-8">
         Seu WhatsApp é usado para receber os leads dos compradores interessados nos seus anúncios.
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Field label="Nome ou nome do estúdio" error={errors.name?.message}>
-          <input {...register("name")} className="input" placeholder="Mariana Costa / Studio Pilates BH" />
+          <input
+            {...register("name")}
+            className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white"
+            placeholder="Mariana Costa / Studio Pilates BH"
+          />
         </Field>
 
         <Field label="WhatsApp" error={errors.whatsapp?.message}>
@@ -95,46 +99,31 @@ export function PerfilForm({ vendor }: { vendor: Vendor }) {
             value={whatsappValue}
             onChange={(v) => setValue("whatsapp", v)}
             onValidationChange={setWhatsappValid}
-            className="input"
+            className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white"
           />
         </Field>
 
         <div className="grid md:grid-cols-3 gap-5">
           <div className="md:col-span-2">
             <Field label="Cidade" error={errors.city?.message}>
-              <input {...register("city")} className="input" placeholder="São Paulo" />
+              <input {...register("city")} className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white" placeholder="São Paulo" />
             </Field>
           </div>
           <Field label="UF" error={errors.state?.message}>
-            <input {...register("state")} maxLength={2} className="input uppercase" placeholder="SP" />
+            <input {...register("state")} maxLength={2} className="w-full border border-[var(--line)] p-3 text-sm outline-none transition focus:border-[var(--action)] bg-white uppercase" placeholder="SP" />
           </Field>
         </div>
 
-        {error && <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800">{error}</div>}
+        {error && <div className="p-4 bg-red-50 border border-[var(--danger)] text-sm text-[var(--danger)]">{error}</div>}
 
         <button
           type="submit"
           disabled={busy || !whatsappValid}
-          className="w-full bg-[var(--ink)] text-white rounded-full py-3.5 font-medium hover:opacity-90 transition disabled:opacity-40"
+          className="w-full bg-[var(--action)] text-white py-4 font-display font-bold uppercase tracking-wider hover:bg-[var(--action-dark)] transition disabled:opacity-40"
         >
           {busy ? "Salvando…" : "Salvar e continuar"}
         </button>
       </form>
-
-      <style jsx>{`
-        :global(.input) {
-          width: 100%;
-          background: transparent;
-          border-bottom: 1px solid var(--line);
-          outline: none;
-          padding: 0.5rem 0;
-          font-size: 15px;
-          transition: border-color 0.2s;
-        }
-        :global(.input:focus) {
-          border-color: var(--terra);
-        }
-      `}</style>
     </div>
   );
 }
@@ -142,9 +131,9 @@ export function PerfilForm({ vendor }: { vendor: Vendor }) {
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="text-xs uppercase tracking-wider text-[var(--text-muted)] block mb-2">{label}</label>
+      <label className="text-label-bold text-[var(--text-muted)] block mb-2">{label}</label>
       {children}
-      {error && <p className="text-xs text-red-700 mt-1">{error}</p>}
+      {error && <p className="text-xs text-[var(--danger)] mt-1">{error}</p>}
     </div>
   );
 }

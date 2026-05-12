@@ -132,3 +132,18 @@ export async function deleteListingAction(listingId: string) {
   revalidatePath("/admin");
   revalidatePath("/");
 }
+
+export async function toggleFeaturedAction(listingId: string, featured: boolean) {
+  await requireAdmin();
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from("listings")
+    .update({ is_featured: featured })
+    .eq("id", listingId);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/anuncios");
+  revalidatePath("/");
+}
