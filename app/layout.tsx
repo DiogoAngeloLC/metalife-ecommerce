@@ -16,7 +16,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Reforma · Marketplace para Estúdios de Pilates",
+  title: "Classificado Pilates · Marketplace de equipamentos de Pilates",
   description:
     "Reformers, Cadillacs, Wall Units e mais. Equipamentos profissionais usados e seminovos entre estúdios de Pilates.",
 };

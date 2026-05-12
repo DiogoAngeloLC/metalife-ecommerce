@@ -158,7 +158,7 @@ export function ContactLeadDialog({
 
             <p className="pt-2 text-center text-[11px] text-[var(--text-muted)]">
               Ao continuar você concorda em receber uma mensagem do{" "}
-              <strong className="text-[var(--ink-soft)]">Reforma</strong> via
+              <strong className="text-[var(--ink-soft)]">Classificado Pilates</strong> via
               WhatsApp.
             </p>
           </div>

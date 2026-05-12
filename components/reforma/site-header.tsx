@@ -10,14 +10,14 @@ export async function SiteHeader() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 md:px-8">
         <Link href="/" className="group flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--ink)]">
-            <span className="font-display text-lg italic text-white">R</span>
+            <span className="font-display text-sm italic text-white">CP</span>
           </div>
           <div className="flex flex-col leading-none">
             <span className="font-display text-xl tracking-tight text-[var(--ink)]">
-              Reforma
+              Classificado Pilates
             </span>
             <span className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-[var(--text-muted)]">
-              Marketplace · Pilates
+              Marketplace · Equipamentos
             </span>
           </div>
         </Link>

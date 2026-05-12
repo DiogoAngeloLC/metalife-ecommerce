@@ -16,10 +16,10 @@ export async function generateMetadata({ params }: Props) {
     .eq("status", "active")
     .single();
 
-  if (!data) return { title: "Anúncio não encontrado · Reforma" };
+  if (!data) return { title: "Anúncio não encontrado · Classificado Pilates" };
 
   return {
-    title: `${data.title} · Reforma`,
+    title: `${data.title} · Classificado Pilates`,
     description:
       data.description?.slice(0, 160) ??
       `Equipamento de Pilates em ${data.city}, ${data.state}. Anúncio direto do vendedor.`,

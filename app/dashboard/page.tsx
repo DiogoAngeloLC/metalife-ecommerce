@@ -2,7 +2,7 @@ import { requireVendor } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardContent } from "@/components/reforma/dashboard-content";
 
-export const metadata = { title: "Painel · Reforma" };
+export const metadata = { title: "Painel · Classificado Pilates" };
 
 export default async function DashboardPage({
   searchParams,

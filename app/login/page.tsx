@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/lib/supabase/auth";
 import { LoginForm } from "./login-form";
 
 export const metadata = {
-  title: "Entrar · Reforma",
+  title: "Entrar · Classificado Pilates",
 };
 
 export default async function LoginPage({
@@ -20,12 +20,12 @@ export default async function LoginPage({
       <div className="w-full max-w-md">
         <Link href="/" className="flex items-center justify-center gap-3 mb-12 group">
           <div className="w-12 h-12 rounded-full bg-[var(--ink)] flex items-center justify-center">
-            <span className="font-display text-white text-2xl italic">R</span>
+            <span className="font-display text-white text-sm italic">CP</span>
           </div>
           <div className="flex flex-col leading-none">
-            <span className="font-display text-2xl tracking-tight">Reforma</span>
+            <span className="font-display text-2xl tracking-tight">Classificado Pilates</span>
             <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-muted)] mt-0.5">
-              Marketplace · Pilates
+              Marketplace · Equipamentos
             </span>
           </div>
         </Link>
@@ -49,7 +49,7 @@ export default async function LoginPage({
         )}
 
         <p className="mt-10 text-xs text-center text-[var(--text-muted)]">
-          Ao continuar você concorda com os termos do <strong>Reforma</strong>.
+          Ao continuar você concorda com os termos do <strong>Classificado Pilates</strong>.
         </p>
       </div>
     </div>
