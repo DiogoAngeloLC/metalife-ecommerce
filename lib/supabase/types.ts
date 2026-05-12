@@ -5,9 +5,9 @@
 export type ListingStatus = "draft" | "active" | "paused" | "sold" | "pending_review" | "rejected";
 export type ListingCondition = "novo" | "seminovo" | "usado_bom" | "usado_regular";
 export type LeadStatus = "pending" | "validated" | "sent" | "failed";
-export type MessageType = "lead_contact" | "validation" | "marketing";
+export type MessageType = "lead_contact" | "validation" | "marketing" | "lead_to_buyer" | "lead_to_seller" | "listing_approved" | "listing_rejected";
 export type MessageStatus = "queued" | "sent" | "delivered" | "read" | "failed";
-export type RecipientType = "buyer" | "vendor";
+export type RecipientType = "buyer" | "vendor" | "seller";
 
 export type Database = {
   public: {
@@ -232,37 +232,58 @@ export type Database = {
         Row: {
           id: string;
           lead_id: string | null;
+          listing_id: string | null;
+          vendor_id: string | null;
           recipient_type: RecipientType;
           recipient_phone: string;
           message_type: MessageType;
           status: MessageStatus;
+          payload: unknown | null;
           external_id: string | null;
+          evolution_message_id: string | null;
           error_message: string | null;
           sent_at: string | null;
+          delivered_at: string | null;
+          read_at: string | null;
+          failed_at: string | null;
           created_at: string;
         };
         Insert: {
           id?: string;
           lead_id?: string | null;
+          listing_id?: string | null;
+          vendor_id?: string | null;
           recipient_type: RecipientType;
           recipient_phone: string;
           message_type?: MessageType;
           status?: MessageStatus;
+          payload?: unknown | null;
           external_id?: string | null;
+          evolution_message_id?: string | null;
           error_message?: string | null;
           sent_at?: string | null;
+          delivered_at?: string | null;
+          read_at?: string | null;
+          failed_at?: string | null;
           created_at?: string;
         };
         Update: {
           id?: string;
           lead_id?: string | null;
+          listing_id?: string | null;
+          vendor_id?: string | null;
           recipient_type?: RecipientType;
           recipient_phone?: string;
           message_type?: MessageType;
           status?: MessageStatus;
+          payload?: unknown | null;
           external_id?: string | null;
+          evolution_message_id?: string | null;
           error_message?: string | null;
           sent_at?: string | null;
+          delivered_at?: string | null;
+          read_at?: string | null;
+          failed_at?: string | null;
           created_at?: string;
         };
         Relationships: [

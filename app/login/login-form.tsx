@@ -1,10 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
+type AuthMode = "magic" | "password";
+
 export function LoginForm({ next }: { next?: string }) {
+  const [mode, setMode] = useState<AuthMode>("magic");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -16,19 +21,37 @@ export function LoginForm({ next }: { next?: string }) {
 
     try {
       const supabase = createClient();
-      const callback = `${window.location.origin}/auth/callback${
-        next ? `?next=${encodeURIComponent(next)}` : ""
-      }`;
 
-      const { error } = await supabase.auth.signInWithOtp({
-        email: email.trim().toLowerCase(),
-        options: { emailRedirectTo: callback },
-      });
+      if (mode === "magic") {
+        const callback = `${window.location.origin}/auth/callback${
+          next ? `?next=${encodeURIComponent(next)}` : ""
+        }`;
 
-      if (error) {
-        setErrorMsg(error.message);
+        const { error } = await supabase.auth.signInWithOtp({
+          email: email.trim().toLowerCase(),
+          options: { emailRedirectTo: callback },
+        });
+
+        if (error) {
+          setErrorMsg(error.message);
+        } else {
+          setSent(true);
+        }
       } else {
-        setSent(true);
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email.trim().toLowerCase(),
+          password,
+        });
+
+        if (error) {
+          if (error.message === "Invalid login credentials") {
+            setErrorMsg("Email ou senha incorretos.");
+          } else {
+            setErrorMsg(error.message);
+          }
+        } else {
+          window.location.href = next ?? "/dashboard";
+        }
       }
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Erro inesperado");
@@ -70,32 +93,95 @@ export function LoginForm({ next }: { next?: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <label htmlFor="email" className="text-xs uppercase tracking-wider text-[var(--text-muted)] block mb-2">
-          E-mail
-        </label>
-        <input
-          id="email"
-          type="email"
-          required
-          autoFocus
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="voce@email.com"
-          className="w-full bg-transparent border-b border-[var(--line)] focus:border-[var(--terra)] outline-none py-2.5 text-[15px] transition"
-        />
+    <div className="space-y-6">
+      {/* Toggle mode */}
+      <div className="flex bg-[var(--bone)] rounded-full p-1">
+        <button
+          type="button"
+          onClick={() => { setMode("magic"); setErrorMsg(null); }}
+          className={`flex-1 text-sm py-2 rounded-full transition font-medium ${
+            mode === "magic"
+              ? "bg-[var(--ink)] text-white shadow-sm"
+              : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+          }`}
+        >
+          Link mágico
+        </button>
+        <button
+          type="button"
+          onClick={() => { setMode("password"); setErrorMsg(null); }}
+          className={`flex-1 text-sm py-2 rounded-full transition font-medium ${
+            mode === "password"
+              ? "bg-[var(--ink)] text-white shadow-sm"
+              : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+          }`}
+        >
+          Senha
+        </button>
       </div>
 
-      {errorMsg && <p className="text-sm text-red-700">{errorMsg}</p>}
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <label htmlFor="email" className="text-xs uppercase tracking-wider text-[var(--text-muted)] block mb-2">
+            E-mail
+          </label>
+          <input
+            id="email"
+            type="email"
+            required
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="voce@email.com"
+            className="w-full bg-transparent border-b border-[var(--line)] focus:border-[var(--terra)] outline-none py-2.5 text-[15px] transition"
+          />
+        </div>
 
-      <button
-        type="submit"
-        disabled={submitting || !email}
-        className="w-full bg-[var(--ink)] text-white rounded-full py-3.5 font-medium hover:opacity-90 transition disabled:opacity-30 disabled:cursor-not-allowed"
-      >
-        {submitting ? "Enviando link…" : "Receber link de acesso"}
-      </button>
-    </form>
+        {mode === "password" && (
+          <div>
+            <label htmlFor="password" className="text-xs uppercase tracking-wider text-[var(--text-muted)] block mb-2">
+              Senha
+            </label>
+            <input
+              id="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Sua senha"
+              className="w-full bg-transparent border-b border-[var(--line)] focus:border-[var(--terra)] outline-none py-2.5 text-[15px] transition"
+            />
+          </div>
+        )}
+
+        {errorMsg && <p className="text-sm text-red-700">{errorMsg}</p>}
+
+        <button
+          type="submit"
+          disabled={submitting || !email || (mode === "password" && !password)}
+          className="w-full bg-[var(--ink)] text-white rounded-full py-3.5 font-medium hover:opacity-90 transition disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          {submitting
+            ? mode === "magic"
+              ? "Enviando link…"
+              : "Entrando…"
+            : mode === "magic"
+              ? "Receber link de acesso"
+              : "Entrar com senha"}
+        </button>
+      </form>
+
+      {mode === "password" && (
+        <p className="text-xs text-center text-[var(--text-muted)]">
+          Não tem conta?{" "}
+          <Link
+            href={`/cadastro${next ? `?next=${encodeURIComponent(next)}` : ""}`}
+            className="underline hover:text-[var(--terra)]"
+          >
+            Criar conta
+          </Link>
+        </p>
+      )}
+    </div>
   );
 }

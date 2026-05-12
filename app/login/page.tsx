@@ -36,7 +36,7 @@ export default async function LoginPage({
           </div>
           <h1 className="font-display text-4xl leading-tight mb-3">Entre na sua conta</h1>
           <p className="text-[var(--text-muted)] text-sm">
-            Enviamos um link mágico pro seu email. Sem senha, sem complicação.
+            Escolha como prefere acessar sua conta.
           </p>
         </div>
 

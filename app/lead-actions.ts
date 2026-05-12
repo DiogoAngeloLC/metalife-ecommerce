@@ -3,6 +3,15 @@
 import { headers } from "next/headers";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import {
+  dispatchMessage,
+  siteUrl,
+  listingImagePublicUrl,
+} from "@/lib/messages/dispatch";
+import {
+  buildLeadToBuyer,
+  buildLeadToSeller,
+} from "@/lib/messages/templates";
 
 const Schema = z.object({
   listing_id: z.string().uuid(),
@@ -58,21 +67,91 @@ export async function submitLeadAction(
       }
     }
 
-    const { error: insertErr } = await supabase.from("leads").insert({
-      listing_id: parsed.listing_id,
-      name: parsed.name,
-      whatsapp: parsed.whatsapp,
-      email: parsed.email,
-      status: "pending",
-      ip_address: ip,
-      user_agent: userAgent,
-    });
+    const { data: insertedLead, error: insertErr } = await supabase
+      .from("leads")
+      .insert({
+        listing_id: parsed.listing_id,
+        name: parsed.name,
+        whatsapp: parsed.whatsapp,
+        email: parsed.email,
+        status: "pending",
+        ip_address: ip,
+        user_agent: userAgent,
+      })
+      .select("id")
+      .single();
 
-    if (insertErr) {
-      return { success: false, error: `Erro ao registrar: ${insertErr.message}` };
+    if (insertErr || !insertedLead) {
+      return { success: false, error: `Erro ao registrar: ${insertErr?.message ?? "unknown"}` };
     }
 
-    // TODO Prompt 7: disparar Evolution aqui
+    // Dispatch WhatsApp (fire-and-forget — não bloqueia retorno)
+    try {
+      const { data: full } = await supabase
+        .from("listings")
+        .select(`
+          id, title, slug, city, state, price, has_fixed_price, vendor_id,
+          listing_images(storage_path, position),
+          vendors(name, whatsapp)
+        `)
+        .eq("id", parsed.listing_id)
+        .single();
+
+      if (full?.vendors) {
+        const url = siteUrl();
+        const images = (full.listing_images ?? []) as { storage_path: string; position: number }[];
+        const firstImage = images.sort((a, b) => a.position - b.position)[0];
+        const imageUrl = firstImage
+          ? listingImagePublicUrl(firstImage.storage_path)
+          : undefined;
+        const vendor = full.vendors as { name: string | null; whatsapp: string | null };
+
+        // Mensagem para o comprador
+        void dispatchMessage({
+          message_type: "lead_to_buyer",
+          recipient_phone: parsed.whatsapp,
+          recipient_type: "buyer",
+          text: buildLeadToBuyer({
+            buyer_name: parsed.name,
+            listing: full,
+            vendor,
+            site_url: url,
+          }),
+          image_url: imageUrl,
+          related: {
+            lead_id: insertedLead.id,
+            listing_id: full.id,
+            vendor_id: full.vendor_id,
+          },
+        });
+
+        // Mensagem para o vendedor (só se tem WhatsApp)
+        if (vendor.whatsapp) {
+          void dispatchMessage({
+            message_type: "lead_to_seller",
+            recipient_phone: vendor.whatsapp,
+            recipient_type: "seller",
+            text: buildLeadToSeller({
+              vendor_name: vendor.name ?? "Vendedor",
+              buyer: {
+                name: parsed.name,
+                whatsapp: parsed.whatsapp,
+                email: parsed.email,
+              },
+              listing: full,
+              site_url: url,
+            }),
+            related: {
+              lead_id: insertedLead.id,
+              listing_id: full.id,
+              vendor_id: full.vendor_id,
+            },
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Lead dispatch error:", err);
+    }
 
     return { success: true };
   } catch (err) {

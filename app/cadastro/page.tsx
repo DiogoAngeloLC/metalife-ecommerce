@@ -1,0 +1,57 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/supabase/auth";
+import { SignupForm } from "./signup-form";
+
+export const metadata = {
+  title: "Criar conta · Classificado Pilates",
+};
+
+export default async function CadastroPage({
+  searchParams,
+}: {
+  searchParams: { next?: string; error?: string };
+}) {
+  const user = await getCurrentUser();
+  if (user) redirect(searchParams.next ?? "/dashboard");
+
+  return (
+    <div className="min-h-screen bg-[var(--bg)] flex flex-col items-center justify-center p-6">
+      <div className="w-full max-w-md">
+        <Link href="/" className="flex items-center justify-center gap-3 mb-12 group">
+          <div className="w-12 h-12 rounded-full bg-[var(--ink)] flex items-center justify-center">
+            <span className="font-display text-white text-sm italic">CP</span>
+          </div>
+          <div className="flex flex-col leading-none">
+            <span className="font-display text-2xl tracking-tight">Classificado Pilates</span>
+            <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-muted)] mt-0.5">
+              Marketplace · Equipamentos
+            </span>
+          </div>
+        </Link>
+
+        <div className="text-center mb-10">
+          <div className="text-xs uppercase tracking-[0.25em] text-[var(--terra)] mb-3">
+            Nova conta
+          </div>
+          <h1 className="font-display text-4xl leading-tight mb-3">Crie sua conta</h1>
+          <p className="text-[var(--text-muted)] text-sm">
+            Preencha os dados abaixo para começar a anunciar.
+          </p>
+        </div>
+
+        <SignupForm next={searchParams.next} />
+
+        {searchParams.error && (
+          <p className="mt-6 text-sm text-red-700 text-center">
+            Não foi possível criar a conta. Tente novamente.
+          </p>
+        )}
+
+        <p className="mt-10 text-xs text-center text-[var(--text-muted)]">
+          Ao continuar você concorda com os termos do <strong>Classificado Pilates</strong>.
+        </p>
+      </div>
+    </div>
+  );
+}

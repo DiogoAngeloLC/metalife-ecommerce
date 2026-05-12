@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/supabase/auth";
+import { dispatchMessage, siteUrl } from "@/lib/messages/dispatch";
+import { buildListingApproved, buildListingRejected } from "@/lib/messages/templates";
 
 export async function approveListingAction(listingId: string) {
   await requireAdmin();
@@ -23,6 +25,32 @@ export async function approveListingAction(listingId: string) {
     .eq("id", listingId);
 
   if (error) throw new Error(error.message);
+
+  // Dispatch WhatsApp de aprovação (fire-and-forget)
+  try {
+    const { data: full } = await supabase
+      .from("listings")
+      .select("id, title, slug, vendor_id, vendors(name, whatsapp)")
+      .eq("id", listingId)
+      .single();
+
+    const vendor = full?.vendors as { name: string | null; whatsapp: string | null } | null;
+    if (vendor?.whatsapp) {
+      void dispatchMessage({
+        message_type: "listing_approved",
+        recipient_phone: vendor.whatsapp,
+        recipient_type: "vendor",
+        text: buildListingApproved({
+          vendor_name: vendor.name ?? "",
+          listing: full!,
+          site_url: siteUrl(),
+        }),
+        related: { listing_id: full!.id, vendor_id: full!.vendor_id },
+      });
+    }
+  } catch (err) {
+    console.error("Approve dispatch error:", err);
+  }
 
   revalidatePath("/admin/anuncios");
   revalidatePath("/admin");
@@ -50,6 +78,33 @@ export async function rejectListingAction(listingId: string, reason: string) {
     .eq("id", listingId);
 
   if (error) throw new Error(error.message);
+
+  // Dispatch WhatsApp de rejeição (fire-and-forget)
+  try {
+    const { data: full } = await supabase
+      .from("listings")
+      .select("id, title, vendor_id, vendors(name, whatsapp)")
+      .eq("id", listingId)
+      .single();
+
+    const vendor = full?.vendors as { name: string | null; whatsapp: string | null } | null;
+    if (vendor?.whatsapp) {
+      void dispatchMessage({
+        message_type: "listing_rejected",
+        recipient_phone: vendor.whatsapp,
+        recipient_type: "vendor",
+        text: buildListingRejected({
+          vendor_name: vendor.name ?? "",
+          listing: full!,
+          reason: reason.trim(),
+          site_url: siteUrl(),
+        }),
+        related: { listing_id: full!.id, vendor_id: full!.vendor_id },
+      });
+    }
+  } catch (err) {
+    console.error("Reject dispatch error:", err);
+  }
 
   revalidatePath("/admin/anuncios");
   revalidatePath("/admin");
