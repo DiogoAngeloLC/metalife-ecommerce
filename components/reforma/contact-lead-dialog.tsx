@@ -9,13 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import type { ListingWithImages } from "@/lib/listings";
 import { submitLeadAction } from "@/app/lead-actions";
-
-function formatWhatsappInput(v: string): string {
-  const d = v.replace(/\D/g, "").slice(0, 11);
-  if (d.length <= 2) return d;
-  if (d.length <= 7) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
-  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
-}
+import { WhatsappInput } from "@/components/reforma/whatsapp-input";
 
 export function ContactLeadDialog({
   listing,
@@ -29,11 +23,13 @@ export function ContactLeadDialog({
   const [step, setStep] = useState<"form" | "sending" | "success">("form");
   const [form, setForm] = useState({ name: "", whatsapp: "", email: "" });
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [whatsappValid, setWhatsappValid] = useState(true);
 
   const isValid =
     form.name.length > 2 &&
     form.whatsapp.replace(/\D/g, "").length >= 10 &&
-    form.email.includes("@");
+    form.email.includes("@") &&
+    whatsappValid;
 
   const handleOpenChange = (next: boolean) => {
     if (!next) {
@@ -114,20 +110,12 @@ export function ContactLeadDialog({
               <label className="mb-2 block text-xs uppercase tracking-wider text-[var(--text-muted)]">
                 WhatsApp
               </label>
-              <input
+              <WhatsappInput
                 value={form.whatsapp}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    whatsapp: formatWhatsappInput(e.target.value),
-                  })
-                }
-                placeholder="(11) 99999-9999"
+                onChange={(v) => setForm({ ...form, whatsapp: v })}
+                onValidationChange={setWhatsappValid}
                 className="w-full border-0 border-b border-[var(--line)] bg-transparent py-2 text-[15px] outline-none transition focus:border-[var(--terra)]"
               />
-              <div className="mt-1 text-[11px] text-[var(--text-muted)]">
-                Validamos se o número existe antes de enviar.
-              </div>
             </div>
             <div>
               <label className="mb-2 block text-xs uppercase tracking-wider text-[var(--text-muted)]">

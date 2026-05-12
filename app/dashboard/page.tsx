@@ -22,6 +22,7 @@ export default async function DashboardPage({
 
   // Stats
   const activeCount = listings.filter((l) => l.status === "active").length;
+  const pendingCount = listings.filter((l) => l.status === "pending_review").length;
 
   const listingIds = listings.map((l) => l.id);
   let leadsCount = 0;
@@ -37,7 +38,7 @@ export default async function DashboardPage({
     <DashboardContent
       vendor={vendor}
       listings={listings}
-      stats={{ activeCount, leadsCount }}
+      stats={{ activeCount, pendingCount, leadsCount }}
       justPublished={searchParams.published === "1"}
     />
   );

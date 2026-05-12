@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MapPin, Plus, Sparkles } from "lucide-react";
+import { Clock, MapPin, Plus, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Database } from "@/lib/supabase/types";
 import { EquipmentVisual } from "./equipment-visual";
@@ -20,7 +20,7 @@ export function DashboardContent({
 }: {
   vendor: Vendor;
   listings: Listing[];
-  stats: { activeCount: number; leadsCount: number };
+  stats: { activeCount: number; pendingCount: number; leadsCount: number };
   justPublished: boolean;
 }) {
   const [showToast, setShowToast] = useState(justPublished);
@@ -40,7 +40,7 @@ export function DashboardContent({
       {showToast && (
         <div className="fixed top-24 right-6 z-50 bg-[var(--sage)] text-white rounded-2xl px-5 py-3 shadow-lg flex items-center gap-2 anim-in">
           <Sparkles className="w-4 h-4" />
-          Anúncio publicado!
+          Anúncio enviado para análise!
         </div>
       )}
 
@@ -86,8 +86,9 @@ export function DashboardContent({
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-12 max-w-2xl">
+      <div className="grid grid-cols-3 gap-4 mb-12 max-w-3xl">
         <StatCard label="Anúncios ativos" value={stats.activeCount.toString()} color="sage" />
+        <StatCard label="Em análise" value={stats.pendingCount.toString()} color="ink" />
         <StatCard label="Leads recebidos" value={stats.leadsCount.toString()} color="terra" />
       </div>
 
@@ -118,14 +119,12 @@ export function DashboardContent({
   );
 }
 
-function StatCard({ label, value, color }: { label: string; value: string; color: "sage" | "terra" }) {
+function StatCard({ label, value, color }: { label: string; value: string; color: "sage" | "terra" | "ink" }) {
+  const colorMap = { sage: "var(--sage)", terra: "var(--terra)", ink: "var(--ink-soft)" };
   return (
     <div className="bg-[var(--bg-card)] border border-[var(--line)] rounded-2xl p-5">
       <div className="text-xs uppercase tracking-wider text-[var(--text-muted)] mb-3">{label}</div>
-      <div
-        className="font-display text-3xl md:text-4xl"
-        style={{ color: color === "sage" ? "var(--sage)" : "var(--terra)" }}
-      >
+      <div className="font-display text-3xl md:text-4xl" style={{ color: colorMap[color] }}>
         {value}
       </div>
     </div>
@@ -155,6 +154,15 @@ function ListingRow({ listing }: { listing: Listing }) {
             <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[var(--sage)]/20 text-[var(--sage)] font-medium">
               Ativo
             </span>
+          ) : listing.status === "pending_review" ? (
+            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-medium flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              Em análise
+            </span>
+          ) : listing.status === "rejected" ? (
+            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-medium">
+              Rejeitado
+            </span>
           ) : listing.status === "draft" ? (
             <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[var(--bone)] text-[var(--text-muted)] font-medium">
               Rascunho
@@ -170,6 +178,9 @@ function ListingRow({ listing }: { listing: Listing }) {
           </span>
         </div>
         <h3 className="font-display text-lg leading-tight truncate">{listing.title}</h3>
+        {listing.status === "rejected" && listing.rejection_reason && (
+          <p className="text-xs text-red-600 mt-1">Motivo: {listing.rejection_reason}</p>
+        )}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1.5 text-xs text-[var(--ink-soft)]">
           <span className="flex items-center gap-1">
             <MapPin className="w-3 h-3" />

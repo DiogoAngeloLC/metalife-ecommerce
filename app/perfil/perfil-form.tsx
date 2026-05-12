@@ -8,6 +8,7 @@ import { z } from "zod";
 import { ArrowLeft } from "lucide-react";
 import { updateVendorAction } from "./actions";
 import type { Database } from "@/lib/supabase/types";
+import { WhatsappInput } from "@/components/reforma/whatsapp-input";
 
 type Vendor = Database["public"]["Tables"]["vendors"]["Row"];
 
@@ -30,6 +31,7 @@ function formatWhatsapp(v: string): string {
 export function PerfilForm({ vendor }: { vendor: Vendor }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [whatsappValid, setWhatsappValid] = useState(true);
 
   const {
     register,
@@ -89,11 +91,11 @@ export function PerfilForm({ vendor }: { vendor: Vendor }) {
         </Field>
 
         <Field label="WhatsApp" error={errors.whatsapp?.message}>
-          <input
+          <WhatsappInput
             value={whatsappValue}
-            onChange={(e) => setValue("whatsapp", formatWhatsapp(e.target.value))}
+            onChange={(v) => setValue("whatsapp", v)}
+            onValidationChange={setWhatsappValid}
             className="input"
-            placeholder="(11) 99999-9999"
           />
         </Field>
 
@@ -112,7 +114,7 @@ export function PerfilForm({ vendor }: { vendor: Vendor }) {
 
         <button
           type="submit"
-          disabled={busy}
+          disabled={busy || !whatsappValid}
           className="w-full bg-[var(--ink)] text-white rounded-full py-3.5 font-medium hover:opacity-90 transition disabled:opacity-40"
         >
           {busy ? "Salvando…" : "Salvar e continuar"}

@@ -1,10 +1,13 @@
-// Tipos derivados manualmente do schema em supabase/migrations/0001_initial.sql.
+// Tipos derivados manualmente do schema em supabase/migrations/.
 // Em fase posterior, regenerar via:
 //   pnpm dlx supabase gen types typescript --project-id <ID> > lib/supabase/types.ts
 
-export type ListingStatus = "draft" | "active" | "paused" | "sold";
+export type ListingStatus = "draft" | "active" | "paused" | "sold" | "pending_review" | "rejected";
 export type ListingCondition = "novo" | "seminovo" | "usado_bom" | "usado_regular";
 export type LeadStatus = "pending" | "validated" | "sent" | "failed";
+export type MessageType = "lead_contact" | "validation" | "marketing";
+export type MessageStatus = "queued" | "sent" | "delivered" | "read" | "failed";
+export type RecipientType = "buyer" | "vendor";
 
 export type Database = {
   public: {
@@ -62,6 +65,9 @@ export type Database = {
           created_at: string;
           updated_at: string;
           published_at: string | null;
+          rejection_reason: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
         };
         Insert: {
           id?: string;
@@ -82,6 +88,9 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           published_at?: string | null;
+          rejection_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
         };
         Update: {
           id?: string;
@@ -102,6 +111,9 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           published_at?: string | null;
+          rejection_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
         };
         Relationships: [
           {
@@ -156,6 +168,7 @@ export type Database = {
           whatsapp_sent_at: string | null;
           ip_address: string | null;
           user_agent: string | null;
+          error_message: string | null;
           created_at: string;
         };
         Insert: {
@@ -168,6 +181,7 @@ export type Database = {
           whatsapp_sent_at?: string | null;
           ip_address?: string | null;
           user_agent?: string | null;
+          error_message?: string | null;
           created_at?: string;
         };
         Update: {
@@ -180,6 +194,7 @@ export type Database = {
           whatsapp_sent_at?: string | null;
           ip_address?: string | null;
           user_agent?: string | null;
+          error_message?: string | null;
           created_at?: string;
         };
         Relationships: [
@@ -191,6 +206,98 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      app_admins: {
+        Row: {
+          id: string;
+          user_id: string;
+          role: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          role?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          role?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      whatsapp_messages_log: {
+        Row: {
+          id: string;
+          lead_id: string | null;
+          recipient_type: RecipientType;
+          recipient_phone: string;
+          message_type: MessageType;
+          status: MessageStatus;
+          external_id: string | null;
+          error_message: string | null;
+          sent_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          lead_id?: string | null;
+          recipient_type: RecipientType;
+          recipient_phone: string;
+          message_type?: MessageType;
+          status?: MessageStatus;
+          external_id?: string | null;
+          error_message?: string | null;
+          sent_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          lead_id?: string | null;
+          recipient_type?: RecipientType;
+          recipient_phone?: string;
+          message_type?: MessageType;
+          status?: MessageStatus;
+          external_id?: string | null;
+          error_message?: string | null;
+          sent_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_messages_log_lead_id_fkey";
+            columns: ["lead_id"];
+            isOneToOne: false;
+            referencedRelation: "leads";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      whatsapp_validation_cache: {
+        Row: {
+          id: string;
+          phone: string;
+          is_valid: boolean;
+          checked_at: string;
+          raw_response: unknown | null;
+        };
+        Insert: {
+          id?: string;
+          phone: string;
+          is_valid: boolean;
+          checked_at?: string;
+          raw_response?: unknown | null;
+        };
+        Update: {
+          id?: string;
+          phone?: string;
+          is_valid?: boolean;
+          checked_at?: string;
+          raw_response?: unknown | null;
+        };
+        Relationships: [];
       };
     };
     Views: Record<string, never>;

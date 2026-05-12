@@ -33,8 +33,8 @@ export async function createListingAction(
     is_negotiable: parsed.is_negotiable,
     city: parsed.city,
     state: parsed.state,
-    status: "active",
-    published_at: new Date().toISOString(),
+    status: "pending_review",
+    published_at: null,
   });
 
   if (insertErr) throw new Error(`Falha ao criar anúncio: ${insertErr.message}`);
