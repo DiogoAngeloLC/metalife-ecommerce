@@ -39,3 +39,28 @@ export async function requireVendor() {
   if (!vendor) redirect("/login");
   return vendor;
 }
+
+export async function isCurrentUserAdmin(): Promise<boolean> {
+  const user = await getCurrentUser();
+  if (!user) return false;
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("app_admins")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  return !!data;
+}
+
+export async function requireAdmin() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  const supabase = createClient();
+  const { data: admin } = await supabase
+    .from("app_admins")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!admin) redirect("/dashboard");
+  return user;
+}

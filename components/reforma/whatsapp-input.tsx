@@ -24,7 +24,7 @@ export function WhatsappInput({
   className?: string;
   placeholder?: string;
 }) {
-  const { status, check } = useWhatsappValidation();
+  const { status, errorMsg, check } = useWhatsappValidation();
 
   const handleChange = (raw: string) => {
     const formatted = formatWhatsapp(raw);
@@ -60,9 +60,9 @@ export function WhatsappInput({
           <XCircle className="h-4 w-4 text-red-500" />
         )}
       </div>
-      {status === "invalid" && (
+      {status === "invalid" && errorMsg && (
         <div className="mt-1 text-[11px] text-red-600">
-          Este número não foi encontrado no WhatsApp.
+          {errorMsg}
         </div>
       )}
       {status === "valid" && isComplete && (

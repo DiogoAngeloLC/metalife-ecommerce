@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { getCurrentUser } from "@/lib/supabase/auth";
+import { getCurrentUser, isCurrentUserAdmin } from "@/lib/supabase/auth";
 
 export async function SiteHeader() {
   const user = await getCurrentUser();
+  const isAdmin = user ? await isCurrentUserAdmin() : false;
 
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--line)] bg-[var(--bg)]/90 backdrop-blur-sm">
@@ -41,7 +42,37 @@ export async function SiteHeader() {
             Como funciona
           </a>
         </nav>
-        {user ? (
+        {isAdmin ? (
+          <div className="flex items-center gap-3">
+            <Link
+              href="/admin"
+              className="hidden text-sm font-medium text-[var(--terra)] transition hover:text-[var(--terra-dark)] md:inline"
+            >
+              Admin
+            </Link>
+            <Link
+              href="/dashboard"
+              className="hidden text-sm text-[var(--ink-soft)] transition hover:text-[var(--ink)] md:inline"
+            >
+              Vender
+            </Link>
+            <form action="/auth/sign-out" method="POST">
+              <button
+                type="submit"
+                className="text-sm text-[var(--text-muted)] transition hover:text-[var(--terra)]"
+              >
+                Sair
+              </button>
+            </form>
+            <Link
+              href="/dashboard/novo"
+              className="flex items-center gap-2 rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm text-white transition hover:bg-[var(--terra-dark)]"
+            >
+              <Plus className="h-3.5 w-3.5" aria-hidden />
+              Anunciar
+            </Link>
+          </div>
+        ) : user ? (
           <div className="flex items-center gap-3">
             <Link
               href="/dashboard"

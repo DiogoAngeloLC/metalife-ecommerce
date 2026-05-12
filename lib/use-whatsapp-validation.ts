@@ -5,8 +5,17 @@ import { createClient } from "@/lib/supabase/client";
 
 type Status = "idle" | "checking" | "valid" | "invalid";
 
+const errorMessages: Record<string, string> = {
+  not_on_whatsapp: "Este número não tem WhatsApp ativo.",
+  invalid_format: "Formato de número inválido.",
+  service_unavailable: "Serviço de validação indisponível. Tente novamente em instantes.",
+  phone_required: "Informe um número.",
+  internal_error: "Erro ao validar. Tente novamente.",
+};
+
 export function useWhatsappValidation(debounceMs = 800) {
   const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastChecked = useRef<string>("");
 
@@ -16,6 +25,7 @@ export function useWhatsappValidation(debounceMs = 800) {
 
       if (digits.length < 10) {
         setStatus("idle");
+        setErrorMsg(null);
         return;
       }
 
@@ -24,6 +34,7 @@ export function useWhatsappValidation(debounceMs = 800) {
       if (timerRef.current) clearTimeout(timerRef.current);
 
       setStatus("checking");
+      setErrorMsg(null);
 
       timerRef.current = setTimeout(async () => {
         try {
@@ -36,12 +47,16 @@ export function useWhatsappValidation(debounceMs = 800) {
 
           if (data?.valid) {
             setStatus("valid");
+            setErrorMsg(null);
           } else {
             setStatus("invalid");
+            setErrorMsg(
+              errorMessages[data?.reason] ?? "Não foi possível validar este número."
+            );
           }
         } catch {
-          // On error, don't block the user
-          setStatus("valid");
+          setStatus("invalid");
+          setErrorMsg("Erro ao validar. Tente novamente.");
         }
       }, debounceMs);
     },
@@ -54,5 +69,5 @@ export function useWhatsappValidation(debounceMs = 800) {
     };
   }, []);
 
-  return { status, check };
+  return { status, errorMsg, check };
 }
