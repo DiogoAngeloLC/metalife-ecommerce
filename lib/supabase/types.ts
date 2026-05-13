@@ -407,6 +407,45 @@ export type Database = {
         };
         Relationships: [];
       };
+      webhook_logs: {
+        Row: {
+          id: string;
+          url: string;
+          event_type: string;
+          payload: unknown;
+          status_code: number | null;
+          response_body: string | null;
+          error_message: string | null;
+          duration_ms: number | null;
+          lead_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          url: string;
+          event_type?: string;
+          payload: unknown;
+          status_code?: number | null;
+          response_body?: string | null;
+          error_message?: string | null;
+          duration_ms?: number | null;
+          lead_id?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          url?: string;
+          event_type?: string;
+          payload?: unknown;
+          status_code?: number | null;
+          response_body?: string | null;
+          error_message?: string | null;
+          duration_ms?: number | null;
+          lead_id?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
