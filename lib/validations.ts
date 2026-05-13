@@ -35,6 +35,13 @@ export const CreateListingSchema = z.object({
 
 export type CreateListingInput = z.infer<typeof CreateListingSchema>;
 
+/** Mesmos campos do create, com `listing_id` do anúncio a atualizar. */
+export const UpdateListingSchema = CreateListingSchema.omit({ id: true }).extend({
+  listing_id: z.string().uuid(),
+});
+
+export type UpdateListingInput = z.infer<typeof UpdateListingSchema>;
+
 export const UpdateVendorSchema = z.object({
   name: z.string().trim().min(2).max(100),
   whatsapp: z

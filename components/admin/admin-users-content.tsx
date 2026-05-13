@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Shield, ShieldOff, ShieldCheck, MapPin } from "lucide-react";
-import { makeAdminAction, removeAdminAction, toggleVerifiedAction } from "@/app/admin/usuarios/actions";
+import { Shield, ShieldOff, ShieldCheck, MapPin, Mail } from "lucide-react";
+import { makeAdminAction, removeAdminAction, toggleVerifiedAction, inviteAdminByEmailAction } from "@/app/admin/usuarios/actions";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function AdminUsersContent({ vendors }: { vendors: any[] }) {
   const [isPending, startTransition] = useTransition();
   const [filter, setFilter] = useState<"all" | "admin" | "vendor">("all");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteMsg, setInviteMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
   const filtered = vendors.filter((v) => {
     if (filter === "admin") return v.is_admin;
@@ -48,11 +50,68 @@ export function AdminUsersContent({ vendors }: { vendors: any[] }) {
     });
   };
 
+  const sendInvite = () => {
+    setInviteMsg(null);
+    const email = inviteEmail.trim();
+    if (!email) {
+      setInviteMsg({ type: "err", text: "Digite um e-mail." });
+      return;
+    }
+    startTransition(async () => {
+      const result = await inviteAdminByEmailAction(email);
+      if (result.ok) {
+        setInviteMsg({
+          type: "ok",
+          text: "Convite enviado. Após a pessoa aceitar o e-mail e entrar, use «Tornar admin» na lista para liberar o painel.",
+        });
+        setInviteEmail("");
+      } else {
+        setInviteMsg({ type: "err", text: result.message });
+      }
+    });
+  };
+
   return (
     <div className="p-6 md:p-10">
       <div className="mb-6">
         <div className="text-label-bold text-[var(--text-muted)] mb-2">PESSOAS</div>
         <h1 className="font-display text-3xl md:text-4xl font-bold uppercase text-[var(--ink)]">Usuários</h1>
+      </div>
+
+      <div className="mb-8 border border-[var(--line)] bg-white p-5 md:p-6">
+        <div className="text-label-bold text-[var(--text-muted)] mb-2">CONVIDAR ADMINISTRADOR</div>
+        <p className="text-sm text-[var(--text-muted)] mb-4 max-w-2xl">
+          Envia um e-mail de convite (Supabase Auth). Quando a pessoa aceitar e criar a senha, ela aparece nesta lista —
+          então use «Tornar admin» para dar acesso ao painel administrativo.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+          <div className="flex-1 flex items-center gap-2 border border-[var(--line)] bg-[var(--bg-section)] px-3">
+            <Mail className="w-4 h-4 text-[var(--text-muted)] flex-shrink-0" />
+            <input
+              type="email"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              placeholder="email@empresa.com.br"
+              disabled={isPending}
+              className="w-full py-3 text-sm bg-transparent outline-none border-0"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={sendInvite}
+            disabled={isPending}
+            className="text-label-bold uppercase tracking-wider px-6 py-3 bg-[var(--ink)] text-white border border-[var(--ink)] hover:opacity-90 transition disabled:opacity-50"
+          >
+            Enviar convite
+          </button>
+        </div>
+        {inviteMsg && (
+          <p
+            className={`mt-3 text-sm ${inviteMsg.type === "ok" ? "text-[var(--success)]" : "text-[var(--danger)]"}`}
+          >
+            {inviteMsg.text}
+          </p>
+        )}
       </div>
 
       <div className="flex items-center gap-2 mb-6">

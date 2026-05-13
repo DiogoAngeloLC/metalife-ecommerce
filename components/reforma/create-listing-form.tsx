@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,10 +9,30 @@ import { nanoid } from "nanoid";
 import Link from "next/link";
 import { ArrowLeft, Upload, Camera, Sparkle, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { createListingAction } from "@/app/dashboard/novo/actions";
+import { createListingAction, updateListingAction } from "@/app/dashboard/novo/actions";
 import type { Database } from "@/lib/supabase/types";
+import { getListingImageUrl } from "@/lib/storage";
 
 type Vendor = Database["public"]["Tables"]["vendors"]["Row"];
+type ListingRow = Database["public"]["Tables"]["listings"]["Row"];
+
+export type InitialListingForEdit = Pick<
+  ListingRow,
+  | "id"
+  | "title"
+  | "description"
+  | "equipment_type"
+  | "brand"
+  | "year"
+  | "condition"
+  | "has_fixed_price"
+  | "price"
+  | "is_negotiable"
+  | "city"
+  | "state"
+> & {
+  listing_images: { storage_path: string; position: number }[];
+};
 
 const FormSchema = z.object({
   title: z.string().min(3, "Mínimo 3 caracteres").max(120),
@@ -32,42 +52,123 @@ type FormValues = z.infer<typeof FormSchema>;
 
 const MAX_IMAGES = 8;
 
-export function CreateListingForm({ vendor }: { vendor: Vendor }) {
+type ImgSlot =
+  | { kind: "existing"; path: string; preview: string }
+  | { kind: "new"; file: File; preview: string };
+
+function slotsFromListing(listing: InitialListingForEdit): ImgSlot[] {
+  return [...listing.listing_images]
+    .sort((a, b) => a.position - b.position)
+    .map((img) => ({
+      kind: "existing" as const,
+      path: img.storage_path,
+      preview: getListingImageUrl(img.storage_path),
+    }));
+}
+
+export function CreateListingForm({
+  vendor,
+  initialListing,
+}: {
+  vendor: Vendor;
+  initialListing?: InitialListingForEdit;
+}) {
   const router = useRouter();
-  const [files, setFiles] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
+  const isEdit = Boolean(initialListing);
+  const [slots, setSlots] = useState<ImgSlot[]>(() =>
+    initialListing ? slotsFromListing(initialListing) : []
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const defaultValues = useMemo<FormValues>(
+    () =>
+      initialListing
+        ? {
+            title: initialListing.title,
+            equipment_type: initialListing.equipment_type,
+            brand: initialListing.brand ?? "",
+            year: initialListing.year != null ? String(initialListing.year) : "",
+            condition: initialListing.condition as FormValues["condition"],
+            description: initialListing.description ?? "",
+            city: initialListing.city,
+            state: initialListing.state,
+            has_fixed_price: initialListing.has_fixed_price ? "true" : "false",
+            price:
+              initialListing.has_fixed_price && initialListing.price != null
+                ? String(initialListing.price)
+                : "",
+            is_negotiable: initialListing.is_negotiable,
+          }
+        : {
+            has_fixed_price: "true",
+            is_negotiable: true,
+            condition: "seminovo",
+            state: vendor.state ?? "",
+            city: vendor.city ?? "",
+            title: "",
+            equipment_type: "",
+            brand: "",
+            year: "",
+            description: "",
+            price: "",
+          },
+    [initialListing, vendor.state, vendor.city]
+  );
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      has_fixed_price: "true",
-      is_negotiable: true,
-      condition: "seminovo",
-      state: vendor.state ?? "",
-      city: vendor.city ?? "",
-    },
+    defaultValues,
   });
+
+  useEffect(() => {
+    if (!initialListing) return;
+    reset({
+      title: initialListing.title,
+      equipment_type: initialListing.equipment_type,
+      brand: initialListing.brand ?? "",
+      year: initialListing.year != null ? String(initialListing.year) : "",
+      condition: initialListing.condition as FormValues["condition"],
+      description: initialListing.description ?? "",
+      city: initialListing.city,
+      state: initialListing.state,
+      has_fixed_price: initialListing.has_fixed_price ? "true" : "false",
+      price:
+        initialListing.has_fixed_price && initialListing.price != null
+          ? String(initialListing.price)
+          : "",
+      is_negotiable: initialListing.is_negotiable,
+    });
+    setSlots(slotsFromListing(initialListing));
+  }, [initialListing, reset]);
 
   const hasFixedPrice = watch("has_fixed_price") === "true";
 
   const onFiles = (selected: FileList | null) => {
     if (!selected) return;
-    const next = Array.from(selected).slice(0, MAX_IMAGES - files.length);
-    setFiles((prev) => [...prev, ...next]);
-    setPreviews((prev) => [...prev, ...next.map((f) => URL.createObjectURL(f))]);
+    const next = Array.from(selected).slice(0, MAX_IMAGES - slots.length);
+    setSlots((prev) => [
+      ...prev,
+      ...next.map((file) => ({
+        kind: "new" as const,
+        file,
+        preview: URL.createObjectURL(file),
+      })),
+    ]);
   };
 
-  const removeFile = (idx: number) => {
-    URL.revokeObjectURL(previews[idx]);
-    setFiles((prev) => prev.filter((_, i) => i !== idx));
-    setPreviews((prev) => prev.filter((_, i) => i !== idx));
+  const removeSlot = (idx: number) => {
+    setSlots((prev) => {
+      const s = prev[idx];
+      if (s?.kind === "new") URL.revokeObjectURL(s.preview);
+      return prev.filter((_, i) => i !== idx);
+    });
   };
 
   const onSubmit = async (data: FormValues) => {
@@ -76,11 +177,16 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
 
     try {
       const supabase = createClient();
-      const listingId = crypto.randomUUID();
+      const listingId = initialListing?.id ?? crypto.randomUUID();
 
       const imagePaths: string[] = [];
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
+      for (let i = 0; i < slots.length; i++) {
+        const slot = slots[i];
+        if (slot.kind === "existing") {
+          imagePaths.push(slot.path);
+          continue;
+        }
+        const file = slot.file;
         const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
         const path = `${vendor.id}/${listingId}/${i}-${nanoid(8)}.${ext}`;
 
@@ -92,26 +198,47 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
         imagePaths.push(path);
       }
 
-      await createListingAction({
-        id: listingId,
-        title: data.title,
-        description: data.description || "",
-        equipment_type: data.equipment_type,
-        brand: data.brand || "",
-        year: data.year ? parseInt(data.year, 10) : undefined,
-        condition: data.condition,
-        has_fixed_price: data.has_fixed_price === "true",
-        price:
-          data.has_fixed_price === "true" && data.price
-            ? parseFloat(data.price.replace(/\D/g, "")) / 100
-            : undefined,
-        is_negotiable: data.is_negotiable,
-        city: data.city,
-        state: data.state,
-        imagePaths,
-      });
+      let priceNum: number | undefined;
+      if (data.has_fixed_price === "true" && data.price !== "" && data.price != null) {
+        const n = Number(String(data.price).replace(",", "."));
+        priceNum = Number.isFinite(n) ? n : undefined;
+      }
 
-      router.push("/dashboard?published=1");
+      if (isEdit && initialListing) {
+        await updateListingAction({
+          listing_id: initialListing.id,
+          title: data.title,
+          description: data.description || "",
+          equipment_type: data.equipment_type,
+          brand: data.brand || "",
+          year: data.year ? parseInt(data.year, 10) : undefined,
+          condition: data.condition,
+          has_fixed_price: data.has_fixed_price === "true",
+          price: data.has_fixed_price === "true" ? priceNum : undefined,
+          is_negotiable: data.is_negotiable,
+          city: data.city,
+          state: data.state,
+          imagePaths,
+        });
+        router.push("/dashboard?updated=1");
+      } else {
+        await createListingAction({
+          id: listingId,
+          title: data.title,
+          description: data.description || "",
+          equipment_type: data.equipment_type,
+          brand: data.brand || "",
+          year: data.year ? parseInt(data.year, 10) : undefined,
+          condition: data.condition,
+          has_fixed_price: data.has_fixed_price === "true",
+          price: data.has_fixed_price === "true" ? priceNum : undefined,
+          is_negotiable: data.is_negotiable,
+          city: data.city,
+          state: data.state,
+          imagePaths,
+        });
+        router.push("/dashboard?published=1");
+      }
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro inesperado");
@@ -129,21 +256,24 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
         Voltar ao painel
       </Link>
 
-      <div className="text-label-bold text-[var(--action)] mb-3">NOVO ANÚNCIO</div>
+      <div className="text-label-bold text-[var(--action)] mb-3">{isEdit ? "EDITAR ANÚNCIO" : "NOVO ANÚNCIO"}</div>
       <h1 className="font-display text-3xl md:text-4xl font-bold uppercase leading-tight mb-2 text-[var(--ink)]">
-        Conte sobre seu equipamento.
+        {isEdit ? "Atualize as informações do anúncio." : "Conte sobre seu equipamento."}
       </h1>
-      <p className="text-sm text-[var(--text-muted)] mb-8">Quanto mais detalhe, mais qualificado o comprador chega.</p>
+      <p className="text-sm text-[var(--text-muted)] mb-8">
+        {isEdit
+          ? "Ao salvar, o anúncio volta para análise da equipe e some do catálogo até ser aprovado novamente."
+          : "Quanto mais detalhe, mais qualificado o comprador chega."}
+      </p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        {/* FOTOS */}
         <section>
           <h2 className="font-display text-lg font-bold uppercase mb-1">Fotos</h2>
           <p className="text-xs text-[var(--text-muted)] mb-4">
             Adicione até {MAX_IMAGES} fotos. A primeira será a principal.
           </p>
           <div className="grid grid-cols-4 gap-2">
-            {previews.length < MAX_IMAGES && (
+            {slots.length < MAX_IMAGES && (
               <label className="aspect-square border-2 border-dashed border-[var(--line)] hover:border-[var(--action)] transition flex flex-col items-center justify-center cursor-pointer group">
                 <input
                   type="file"
@@ -153,15 +283,17 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
                   onChange={(e) => onFiles(e.target.files)}
                 />
                 <Upload className="w-6 h-6 text-[var(--text-muted)] group-hover:text-[var(--action)] mb-1.5 transition" />
-                <span className="text-[10px] font-bold uppercase text-[var(--text-muted)] group-hover:text-[var(--action)] transition">Adicionar</span>
+                <span className="text-[10px] font-bold uppercase text-[var(--text-muted)] group-hover:text-[var(--action)] transition">
+                  Adicionar
+                </span>
               </label>
             )}
-            {previews.map((src, i) => (
-              <div key={i} className="relative aspect-square overflow-hidden group border border-[var(--line)]">
-                <img src={src} alt="" className="w-full h-full object-cover" />
+            {slots.map((slot, i) => (
+              <div key={`${slot.kind}-${i}-${slot.kind === "existing" ? slot.path : slot.preview}`} className="relative aspect-square overflow-hidden group border border-[var(--line)]">
+                <img src={slot.preview} alt="" className="w-full h-full object-cover" />
                 <button
                   type="button"
-                  onClick={() => removeFile(i)}
+                  onClick={() => removeSlot(i)}
                   className="absolute top-1.5 right-1.5 w-7 h-7 bg-black/60 text-white opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
                   aria-label="Remover"
                 >
@@ -174,7 +306,9 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
                 )}
               </div>
             ))}
-            {Array.from({ length: Math.max(0, MAX_IMAGES - previews.length - 1) }).slice(0, 3 - previews.length).map((_, i) => (
+            {Array.from({
+              length: Math.max(0, Math.min(3, MAX_IMAGES - slots.length - 1)),
+            }).map((_, i) => (
               <div key={`ph-${i}`} className="aspect-square bg-[var(--bg-section)] flex items-center justify-center border border-[var(--line)]">
                 <Camera className="w-5 h-5 text-[var(--text-muted)]" />
               </div>
@@ -182,7 +316,6 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
           </div>
         </section>
 
-        {/* INFO */}
         <section className="space-y-5">
           <h2 className="font-display text-lg font-bold uppercase">Informações</h2>
 
@@ -235,7 +368,6 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
           </Field>
         </section>
 
-        {/* LOCALIZAÇÃO */}
         <section className="space-y-5">
           <h2 className="font-display text-lg font-bold uppercase">Onde está o equipamento</h2>
           <div className="grid md:grid-cols-3 gap-5">
@@ -255,7 +387,6 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
           </div>
         </section>
 
-        {/* PREÇO */}
         <section className="space-y-5">
           <h2 className="font-display text-lg font-bold uppercase">Valor</h2>
           <div className="flex gap-3">
@@ -288,11 +419,7 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
               </Field>
               <div className="flex items-end">
                 <label className="flex items-center gap-3 cursor-pointer pb-2">
-                  <input
-                    type="checkbox"
-                    {...register("is_negotiable")}
-                    className="w-4 h-4 accent-[var(--action)]"
-                  />
+                  <input type="checkbox" {...register("is_negotiable")} className="w-4 h-4 accent-[var(--action)]" />
                   <span className="text-sm">Aceito propostas / negociável</span>
                 </label>
               </div>
@@ -301,9 +428,7 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
         </section>
 
         {error && (
-          <div className="p-4 bg-red-50 border border-[var(--danger)] text-sm text-[var(--danger)]">
-            {error}
-          </div>
+          <div className="p-4 bg-red-50 border border-[var(--danger)] text-sm text-[var(--danger)]">{error}</div>
         )}
 
         <div className="border-t border-[var(--line)] pt-6 flex flex-col md:flex-row gap-3 justify-end">
@@ -313,7 +438,12 @@ export function CreateListingForm({ vendor }: { vendor: Vendor }) {
             className="bg-[var(--action)] text-white px-8 py-4 hover:bg-[var(--action-dark)] transition flex items-center justify-center gap-2 font-display font-bold uppercase tracking-wider disabled:opacity-40"
           >
             {busy ? (
-              <>Publicando…</>
+              <>Enviando…</>
+            ) : isEdit ? (
+              <>
+                <Sparkle className="w-4 h-4" />
+                Salvar e enviar para análise
+              </>
             ) : (
               <>
                 <Sparkle className="w-4 h-4" />

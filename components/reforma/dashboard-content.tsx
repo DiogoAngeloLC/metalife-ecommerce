@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, MapPin, Plus, Sparkles } from "lucide-react";
+import { Clock, MapPin, Plus, Sparkles, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Database } from "@/lib/supabase/types";
 import { EquipmentVisual } from "./equipment-visual";
 import { getListingImageUrl } from "@/lib/storage";
-import { listingAccent } from "@/lib/listings";
+import { isListingEditableByVendor, listingAccent } from "@/lib/listings";
 
 type Vendor = Database["public"]["Tables"]["vendors"]["Row"];
 type Listing = Database["public"]["Tables"]["listings"]["Row"] & {
@@ -18,13 +18,16 @@ export function DashboardContent({
   listings,
   stats,
   justPublished,
+  justUpdated,
 }: {
   vendor: Vendor;
   listings: Listing[];
   stats: { activeCount: number; pendingCount: number; leadsCount: number };
   justPublished: boolean;
+  justUpdated: boolean;
 }) {
   const [showToast, setShowToast] = useState(justPublished);
+  const [showUpdatedToast, setShowUpdatedToast] = useState(justUpdated);
 
   useEffect(() => {
     if (justPublished) {
@@ -32,6 +35,13 @@ export function DashboardContent({
       return () => clearTimeout(t);
     }
   }, [justPublished]);
+
+  useEffect(() => {
+    if (justUpdated) {
+      const t = setTimeout(() => setShowUpdatedToast(false), 4500);
+      return () => clearTimeout(t);
+    }
+  }, [justUpdated]);
 
   const incomplete = !vendor.onboarding_completed;
   const greetingName = vendor.name?.split(" ")[0] ?? "anunciante";
@@ -42,6 +52,17 @@ export function DashboardContent({
         <div className="fixed top-24 right-6 z-50 bg-[var(--success)] text-white px-5 py-3 shadow-lg flex items-center gap-2 text-label-bold">
           <Sparkles className="w-4 h-4" />
           Anúncio enviado para análise!
+        </div>
+      )}
+
+      {showUpdatedToast && (
+        <div
+          className={`fixed right-6 z-50 bg-[var(--trust)] text-white px-5 py-3 shadow-lg flex items-center gap-2 text-label-bold ${
+            showToast ? "top-40" : "top-24"
+          }`}
+        >
+          <Sparkles className="w-4 h-4" />
+          Alterações salvas — anúncio em análise novamente.
         </div>
       )}
 
@@ -172,6 +193,10 @@ function ListingRow({ listing }: { listing: Listing }) {
             <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-[var(--bg-section)] text-[var(--text-muted)] font-bold border border-[var(--line)]">
               Rascunho
             </span>
+          ) : listing.status === "paused" ? (
+            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-[var(--bg-section)] text-[var(--ink-soft)] font-bold border border-[var(--line)]">
+              Pausado
+            </span>
           ) : (
             <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-[var(--bg-section)] text-[var(--text-muted)] font-bold border border-[var(--line)]">
               {listing.status}
@@ -193,6 +218,17 @@ function ListingRow({ listing }: { listing: Listing }) {
           </span>
         </div>
       </div>
+      {isListingEditableByVendor(listing.status) && (
+        <div className="flex-shrink-0 flex md:flex-col gap-2 md:justify-center">
+          <Link
+            href={`/dashboard/editar/${listing.id}`}
+            className="inline-flex items-center justify-center gap-2 text-[10px] uppercase tracking-wider font-bold px-4 py-2 border border-[var(--ink)] text-[var(--ink)] hover:bg-[var(--ink)] hover:text-white transition"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+            Editar
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

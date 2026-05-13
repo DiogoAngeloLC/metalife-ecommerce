@@ -1,6 +1,20 @@
 import type { Database } from "@/lib/supabase/types";
 
 export type Listing = Database["public"]["Tables"]["listings"]["Row"];
+export type ListingStatus = Listing["status"];
+
+/** Anúncios que o vendedor pode editar; ao salvar voltam para `pending_review`. */
+export const VENDOR_EDITABLE_LISTING_STATUSES = [
+  "active",
+  "pending_review",
+  "paused",
+  "draft",
+  "rejected",
+] as const satisfies readonly ListingStatus[];
+
+export function isListingEditableByVendor(status: ListingStatus): boolean {
+  return (VENDOR_EDITABLE_LISTING_STATUSES as readonly ListingStatus[]).includes(status);
+}
 export type ListingImage = Database["public"]["Tables"]["listing_images"]["Row"];
 
 export type ListingWithImages = Listing & {

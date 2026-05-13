@@ -7,7 +7,7 @@ export const metadata = { title: "Painel · Classificado Pilates" };
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: { published?: string };
+  searchParams: { published?: string; updated?: string };
 }) {
   const vendor = await requireVendor();
   const supabase = createClient();
@@ -40,6 +40,7 @@ export default async function DashboardPage({
       listings={listings}
       stats={{ activeCount, pendingCount, leadsCount }}
       justPublished={searchParams.published === "1"}
+      justUpdated={searchParams.updated === "1"}
     />
   );
 }
