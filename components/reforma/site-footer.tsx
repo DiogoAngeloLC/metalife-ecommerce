@@ -14,19 +14,20 @@ export function SiteFooter() {
         </div>
         <div className="flex flex-col gap-2">
           <h4 className="text-label-bold text-white">Compradores</h4>
-          <FooterLink href="/#como-funciona">Como funciona</FooterLink>
-          <FooterLink href="/">Catálogo completo</FooterLink>
+          <FooterLink href="/catalogo">Catálogo</FooterLink>
+          <FooterLink href="/catalogo?categoria=reformer">Reformers</FooterLink>
+          <FooterLink href="/catalogo?ordem=recentes">Novidades</FooterLink>
         </div>
         <div className="flex flex-col gap-2">
           <h4 className="text-label-bold text-white">Vendedores</h4>
-          <FooterLink href="/login?next=/dashboard/novo">Anunciar equipamento</FooterLink>
-          <FooterLink href="/dashboard">Painel do vendedor</FooterLink>
+          <FooterLink href="/login?next=/dashboard/novo">Como anunciar</FooterLink>
+          <FooterLink href="/dashboard">Dashboard</FooterLink>
+          <FooterLink href="/cadastro">Cadastre-se</FooterLink>
         </div>
         <div className="flex flex-col gap-2">
-          <h4 className="text-label-bold text-white">Suporte</h4>
-          <p className="text-sm text-[var(--on-dark-soft)] opacity-80">
-            Seg-Sex 08:00 - 18:00
-          </p>
+          <h4 className="text-label-bold text-white">Institucional</h4>
+          <FooterLink href="/politica-de-privacidade">Política de Privacidade</FooterLink>
+          <FooterLink href="/termos-de-uso">Termos de Uso</FooterLink>
         </div>
       </div>
       <div className="mx-auto max-w-[1200px] border-t border-white/10 px-4 py-4">
