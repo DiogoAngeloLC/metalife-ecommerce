@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { CheckCircle2, Loader2, XCircle } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Loader2, XCircle } from "lucide-react";
 import { useWhatsappValidation } from "@/lib/use-whatsapp-validation";
 
 function formatWhatsapp(v: string): string {
@@ -24,7 +24,7 @@ export function WhatsappInput({
   className?: string;
   placeholder?: string;
 }) {
-  const { status, errorMsg, check } = useWhatsappValidation();
+  const { status, errorMsg, warnMsg, check } = useWhatsappValidation();
 
   const handleChange = (raw: string) => {
     const formatted = formatWhatsapp(raw);
@@ -56,6 +56,9 @@ export function WhatsappInput({
         {status === "valid" && (
           <CheckCircle2 className="h-4 w-4 text-[var(--success)]" />
         )}
+        {status === "unavailable" && (
+          <AlertTriangle className="h-4 w-4 text-[var(--warning)]" aria-hidden />
+        )}
         {status === "invalid" && (
           <XCircle className="h-4 w-4 text-red-500" />
         )}
@@ -69,6 +72,9 @@ export function WhatsappInput({
         <div className="mt-1 text-[11px] text-[var(--success)]">
           Número verificado no WhatsApp.
         </div>
+      )}
+      {status === "unavailable" && warnMsg && (
+        <div className="mt-1 text-[11px] text-[var(--warning)]">{warnMsg}</div>
       )}
     </div>
   );

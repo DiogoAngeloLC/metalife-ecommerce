@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-type Status = "idle" | "checking" | "valid" | "invalid";
+type Status = "idle" | "checking" | "valid" | "invalid" | "unavailable";
 
 const errorMessages: Record<string, string> = {
   not_on_whatsapp: "Este número não tem WhatsApp ativo.",
@@ -13,9 +13,14 @@ const errorMessages: Record<string, string> = {
   internal_error: "Erro ao validar. Tente novamente.",
 };
 
+/** Quando a API Evolution não está configurada ou fora do ar, ainda permitimos o envio do lead. */
+const UNAVAILABLE_HINT =
+  "Não foi possível confirmar o WhatsApp agora. Confira DDD e número — você pode enviar mesmo assim.";
+
 export function useWhatsappValidation(debounceMs = 800) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [warnMsg, setWarnMsg] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastChecked = useRef<string>("");
 
@@ -26,6 +31,8 @@ export function useWhatsappValidation(debounceMs = 800) {
       if (digits.length < 10) {
         setStatus("idle");
         setErrorMsg(null);
+        setWarnMsg(null);
+        lastChecked.current = "";
         return;
       }
 
@@ -35,28 +42,53 @@ export function useWhatsappValidation(debounceMs = 800) {
 
       setStatus("checking");
       setErrorMsg(null);
+      setWarnMsg(null);
 
       timerRef.current = setTimeout(async () => {
         try {
           const supabase = createClient();
-          const { data } = await supabase.functions.invoke("check-whatsapp", {
+          const { data, error } = await supabase.functions.invoke("check-whatsapp", {
             body: { phone: digits },
           });
 
           lastChecked.current = digits;
 
+          if (error) {
+            setStatus("unavailable");
+            setErrorMsg(null);
+            setWarnMsg(UNAVAILABLE_HINT);
+            return;
+          }
+
           if (data?.valid) {
             setStatus("valid");
             setErrorMsg(null);
-          } else {
-            setStatus("invalid");
-            setErrorMsg(
-              errorMessages[data?.reason] ?? "Não foi possível validar este número."
-            );
+            setWarnMsg(null);
+            return;
           }
-        } catch {
+
+          const reason = data?.reason as string | undefined;
+          if (
+            reason === "service_unavailable" ||
+            reason === "internal_error"
+          ) {
+            setStatus("unavailable");
+            setErrorMsg(null);
+            setWarnMsg(UNAVAILABLE_HINT);
+            return;
+          }
+
           setStatus("invalid");
-          setErrorMsg("Erro ao validar. Tente novamente.");
+          setWarnMsg(null);
+          setErrorMsg(
+            (reason && errorMessages[reason as keyof typeof errorMessages]) ??
+              "Não foi possível validar este número."
+          );
+        } catch {
+          lastChecked.current = digits;
+          setStatus("unavailable");
+          setErrorMsg(null);
+          setWarnMsg(UNAVAILABLE_HINT);
         }
       }, debounceMs);
     },
@@ -69,5 +101,5 @@ export function useWhatsappValidation(debounceMs = 800) {
     };
   }, []);
 
-  return { status, errorMsg, check };
+  return { status, errorMsg, warnMsg, check };
 }

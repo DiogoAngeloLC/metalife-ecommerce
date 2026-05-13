@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronRight, Clock, ShieldCheck, MessageSquare } from "lucide-react";
+import { ChevronRight, Clock, ShieldCheck } from "lucide-react";
 import type { ListingWithImages } from "@/lib/listings";
 import { conditionLabel, daysSince, listingAccent } from "@/lib/listings";
 import { getListingImageUrl } from "@/lib/storage";
@@ -138,7 +138,7 @@ export function ListingDetailView({
               )}
             </div>
 
-            {/* CTAs */}
+            {/* CTA */}
             <div className="flex flex-col gap-2">
               <button
                 type="button"
@@ -146,16 +146,6 @@ export function ListingDetailView({
                 className="w-full bg-[var(--action)] py-4 font-display text-base font-extrabold uppercase tracking-widest text-white transition hover:bg-[var(--action-dark)] active:scale-[0.98]"
               >
                 Ver contato
-              </button>
-              <button
-                type="button"
-                disabled
-                className="w-full border border-[var(--line)] py-4 font-display text-base font-bold uppercase tracking-wide text-[var(--ink)] transition hover:bg-[var(--bg-section)]"
-              >
-                <span className="flex items-center justify-center gap-2">
-                  <MessageSquare className="h-4 w-4" />
-                  Mensagem
-                </span>
               </button>
             </div>
 
