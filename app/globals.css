@@ -16,15 +16,17 @@
     scrollbar-width: none;
   }
   .font-display {
-    font-family: var(--font-montserrat), system-ui, sans-serif;
+    font-family: var(--font-display, var(--font-montserrat)), system-ui, sans-serif;
+    font-weight: var(--font-weight-display, 900);
     letter-spacing: -0.02em;
   }
   .font-display-tight {
-    font-family: var(--font-montserrat), system-ui, sans-serif;
+    font-family: var(--font-display, var(--font-montserrat)), system-ui, sans-serif;
+    font-weight: var(--font-weight-display, 900);
     letter-spacing: -0.04em;
   }
   .text-label-bold {
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-body, var(--font-inter)), system-ui, sans-serif;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.05em;
@@ -182,9 +184,10 @@
     @apply antialiased;
     background: var(--bg);
     color: var(--ink);
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-body, var(--font-inter)), system-ui, sans-serif;
+    font-weight: var(--font-weight-body, 400);
   }
   html {
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-body, var(--font-inter)), system-ui, sans-serif;
   }
 }
