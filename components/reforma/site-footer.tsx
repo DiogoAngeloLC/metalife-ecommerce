@@ -5,11 +5,10 @@ export function SiteFooter() {
     <footer className="bg-[var(--bg-dark)] border-t-4 border-[var(--action)]">
       <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-12 px-4 py-12 md:grid-cols-4">
         <div className="flex flex-col gap-3">
-          <span className="font-display text-lg font-bold italic text-white">
-            CLASSIFICADO PILATES
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logos/logo-stacked-white.svg" alt="Classificado Pilates" className="h-10 w-auto self-start" />
           <p className="text-sm text-[var(--on-dark-soft)] opacity-80">
-            O maior marketplace de equipamentos de Pilates do Brasil. Compra e venda entre estúdios profissionais.
+            Marketplace de equipamentos de Pilates. Conectando quem vende e quem precisa.
           </p>
         </div>
         <div className="flex flex-col gap-2">

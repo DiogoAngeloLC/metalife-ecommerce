@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Shield, Plus } from "lucide-react";
 import { getCurrentUser, isCurrentUserAdmin } from "@/lib/supabase/auth";
 
@@ -11,8 +12,23 @@ export async function SiteHeader() {
       <div className="mx-auto flex max-w-[1200px] items-center justify-between px-4 py-3">
         {/* Logo */}
         <div className="flex items-center gap-8">
-          <Link href="/" className="font-display text-2xl font-black italic tracking-tighter text-[var(--action)]">
-            CLASSIFICADO PILATES
+          <Link href="/" className="flex-shrink-0">
+            <Image
+              src="/logos/logo-full.svg"
+              alt="Classificado Pilates"
+              width={220}
+              height={32}
+              className="hidden md:block h-8 w-auto"
+              priority
+            />
+            <Image
+              src="/logos/logo-symbol.svg"
+              alt="Classificado Pilates"
+              width={32}
+              height={32}
+              className="block md:hidden h-7 w-auto"
+              priority
+            />
           </Link>
           <nav className="hidden items-center gap-1 md:flex">
             <Link href="/catalogo" className="px-2 py-1 text-sm font-medium text-[var(--ink-soft)] hover:bg-[var(--bg-section)] transition-colors">

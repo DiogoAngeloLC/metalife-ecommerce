@@ -24,9 +24,8 @@ export function AdminSidebar() {
     <aside className="w-64 min-h-screen bg-[var(--bg-dark)] text-white flex flex-col flex-shrink-0">
       <div className="p-6 border-b border-white/10">
         <Link href="/" className="flex items-center gap-3 group">
-          <span className="font-display text-lg font-black italic uppercase text-[var(--action)]">
-            CP
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logos/logo-symbol-white.svg" alt="" className="h-8 w-auto" />
           <div className="flex flex-col leading-none">
             <span className="font-display text-base font-bold uppercase tracking-tight">Classificado</span>
             <span className="text-[10px] uppercase tracking-[0.2em] text-white/40 mt-0.5">Admin</span>

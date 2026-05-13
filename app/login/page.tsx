@@ -18,10 +18,9 @@ export default async function LoginPage({
   return (
     <div className="min-h-screen bg-[var(--bg)] flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
-        <Link href="/" className="flex items-center justify-center gap-3 mb-12 group">
-          <span className="font-display text-2xl font-black italic uppercase text-[var(--action)]">
-            CLASSIFICADO PILATES
-          </span>
+        <Link href="/" className="flex items-center justify-center mb-12">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logos/logo-stacked.svg" alt="Classificado Pilates" className="h-14 w-auto" />
         </Link>
 
         <div className="text-center mb-8">
