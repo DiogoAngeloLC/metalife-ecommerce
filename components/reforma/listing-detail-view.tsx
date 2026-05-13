@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronRight, Clock, ShieldCheck, Package, MessageSquare } from "lucide-react";
+import { ChevronRight, Clock, ShieldCheck, MessageSquare } from "lucide-react";
 import type { ListingWithImages } from "@/lib/listings";
 import { conditionLabel, daysSince, listingAccent } from "@/lib/listings";
 import { getListingImageUrl } from "@/lib/storage";
@@ -171,25 +171,6 @@ export function ListingDetailView({
             </div>
           )}
 
-          {/* Shipping calculator placeholder */}
-          <div className="border border-[var(--line)] bg-[var(--bg-section)] p-4">
-            <h3 className="font-display text-sm font-bold uppercase flex items-center gap-2 mb-3">
-              <Package className="h-4 w-4" />
-              Calculador de frete
-            </h3>
-            <div className="flex gap-2 mb-2">
-              <input
-                placeholder="00000-000"
-                className="flex-1 border border-[var(--line)] bg-white px-3 py-2 text-sm outline-none focus:border-[var(--action)]"
-              />
-              <button className="bg-[var(--ink)] px-4 py-2 text-label-bold text-white">
-                Calcular
-              </button>
-            </div>
-            <p className="text-xs text-[var(--text-muted)] italic">
-              Cálculo em breve — em integração com transportadoras parceiras.
-            </p>
-          </div>
         </div>
       </div>
 

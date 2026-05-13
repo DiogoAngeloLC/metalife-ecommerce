@@ -163,7 +163,7 @@ export function ContactLeadDialog({
               </button>
 
               <p className="text-center text-xs text-[var(--text-muted)]">
-                Ao clicar em revelar, você concorda com nossos termos de proteção ao comprador.
+                Ao enviar, você concorda com nossos <a href="/termos-de-uso" target="_blank" rel="noopener noreferrer" className="underline hover:text-[var(--action)]">Termos de Uso</a>.
               </p>
             </div>
           </>

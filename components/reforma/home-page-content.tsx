@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { MapPin, Search, ShieldCheck, Truck, Award } from "lucide-react";
+import { MapPin, Search, ShieldCheck, MessageCircle, Smartphone } from "lucide-react";
 import {
   EQUIPMENT_FILTERS,
   filterListings,
@@ -17,9 +17,11 @@ import { SiteFooter } from "@/components/reforma/site-footer";
 export function HomePageContent({
   listings,
   stats,
+  hero,
 }: {
   listings: (ListingWithImages & { is_featured?: boolean; recentLeadsCount?: number })[];
   stats: { listings: number; cities: number; vendors: number };
+  hero?: { image_url: string | null; eyebrow: string; title: string; subtitle: string };
 }) {
   const [filter, setFilter] = useState<string>("todos");
   const [search, setSearch] = useState("");
@@ -33,18 +35,21 @@ export function HomePageContent({
     <div>
       {/* HERO */}
       <section className="relative bg-[var(--bg-dark)] overflow-hidden">
+        {hero?.image_url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={hero.image_url} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-dark)]/90 to-transparent z-[1]" />
         <div className="relative z-10 mx-auto max-w-[1200px] px-4 py-16 md:py-24">
           <div className="max-w-2xl">
             <div className="inline-block bg-[var(--action)] text-white px-3 py-1 text-label-bold uppercase mb-4">
-              Marketplace Profissional
+              {hero?.eyebrow ?? "Marketplace de equipamentos profissionais"}
             </div>
             <h1 className="font-display text-4xl font-black italic uppercase leading-tight text-white md:text-6xl">
-              Equipamentos profissionais{" "}
-              <span className="text-[var(--action)]">semi-novos</span> com curadoria de qualidade
+              {hero?.title ?? "O encontro entre quem vende e quem precisa."}
             </h1>
             <p className="mt-6 max-w-md text-base text-[var(--on-dark-soft)]">
-              O maior marketplace de Pilates do Brasil. Reformers, Cadillacs, Chairs e acessórios direto de estúdios profissionais.
+              {hero?.subtitle ?? "Reformers, Cadillacs, Chairs e acessórios. Anúncios verificados, contato direto pelo WhatsApp."}
             </p>
             <div className="mt-8 flex gap-3">
               <Link
@@ -140,18 +145,18 @@ export function HomePageContent({
         <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-4 px-4 py-8 md:grid-cols-3">
           <TrustBadge
             icon={<ShieldCheck className="h-8 w-8 text-[var(--action)]" />}
-            title="Compra protegida"
-            desc="Vendedores verificados e curadoria antes da publicação."
+            title="Anúncios verificados"
+            desc="Curadoria aprova cada anúncio antes de publicar."
           />
           <TrustBadge
-            icon={<Truck className="h-8 w-8 text-[var(--action)]" />}
-            title="Frete especializado"
-            desc="Transportadoras parceiras para carga pesada e sensível."
+            icon={<MessageCircle className="h-8 w-8 text-[var(--action)]" />}
+            title="Contato direto"
+            desc="Sem intermediação, fale direto com o vendedor."
           />
           <TrustBadge
-            icon={<Award className="h-8 w-8 text-[var(--action)]" />}
-            title="Equipamentos certificados"
-            desc="Todos os anúncios passam por curadoria de qualidade."
+            icon={<Smartphone className="h-8 w-8 text-[var(--action)]" />}
+            title="Tudo pelo WhatsApp"
+            desc="Receba o contato em segundos no seu celular."
           />
         </div>
       </section>

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { HomePageContent } from "@/components/reforma/home-page-content";
+import { getHeroSettings } from "@/lib/content";
 import type { ListingWithImages } from "@/lib/listings";
 
 export const dynamic = "force-dynamic";
@@ -7,12 +8,15 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const supabase = createClient();
 
-  const { data: listingsRaw } = await supabase
-    .from("listings")
-    .select("*, listing_images(storage_path, position)")
-    .eq("status", "active")
-    .order("published_at", { ascending: false })
-    .limit(48);
+  const [heroSettings, { data: listingsRaw }] = await Promise.all([
+    getHeroSettings(),
+    supabase
+      .from("listings")
+      .select("*, listing_images(storage_path, position)")
+      .eq("status", "active")
+      .order("published_at", { ascending: false })
+      .limit(48),
+  ]);
 
   const listings = (listingsRaw ?? []) as ListingWithImages[];
 
@@ -37,6 +41,7 @@ export default async function HomePage() {
         cities: totalCities,
         vendors: totalVendors ?? 0,
       }}
+      hero={heroSettings}
     />
   );
 }
