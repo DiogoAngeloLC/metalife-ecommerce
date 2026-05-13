@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Newspaper, Users, MessageCircle, LogOut, ArrowUpRight, Wifi, FileText, AlertOctagon } from "lucide-react";
+import { LayoutDashboard, Newspaper, Users, MessageCircle, LogOut, ArrowUpRight, Wifi, FileText, AlertOctagon, Image, Megaphone } from "lucide-react";
 
 const NAV = [
   { href: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true },
@@ -12,6 +12,9 @@ const NAV = [
   { href: "/admin/conexao", label: "Conexão", icon: Wifi },
   { href: "/admin/logs/mensagens", label: "Mensagens", icon: FileText },
   { href: "/admin/logs/erros", label: "Erros", icon: AlertOctagon },
+  { href: "/admin/aparencia", label: "Aparência", icon: Image },
+  { href: "/admin/paginas", label: "Páginas", icon: FileText },
+  { href: "/admin/banners", label: "Banners", icon: Megaphone },
 ];
 
 export function AdminSidebar() {
