@@ -326,9 +326,95 @@ export type Database = {
         };
         Relationships: [];
       };
+      site_settings: {
+        Row: {
+          key: string;
+          value: unknown;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        Insert: {
+          key: string;
+          value?: unknown;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          key?: string;
+          value?: unknown;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [];
+      };
+      legal_pages: {
+        Row: {
+          slug: string;
+          title: string;
+          content_md: string;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        Insert: {
+          slug: string;
+          title: string;
+          content_md?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          slug?: string;
+          title?: string;
+          content_md?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [];
+      };
+      ad_banners: {
+        Row: {
+          id: string;
+          slot_key: string;
+          image_url: string;
+          link_url: string | null;
+          alt_text: string;
+          active: boolean;
+          sort_order: number;
+          created_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          slot_key: string;
+          image_url: string;
+          link_url?: string | null;
+          alt_text?: string;
+          active?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          created_by?: string | null;
+        };
+        Update: {
+          id?: string;
+          slot_key?: string;
+          image_url?: string;
+          link_url?: string | null;
+          alt_text?: string;
+          active?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          created_by?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      is_admin: {
+        Args: { user_id: string };
+        Returns: boolean;
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };
