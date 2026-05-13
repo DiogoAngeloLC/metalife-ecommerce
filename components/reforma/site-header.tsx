@@ -15,13 +15,13 @@ export async function SiteHeader() {
             CLASSIFICADO PILATES
           </Link>
           <nav className="hidden items-center gap-1 md:flex">
-            <Link href="/" className="px-2 py-1 text-sm font-medium text-[var(--ink-soft)] hover:bg-[var(--bg-section)] transition-colors">
+            <Link href="/catalogo" className="px-2 py-1 text-sm font-medium text-[var(--ink-soft)] hover:bg-[var(--bg-section)] transition-colors">
               Catálogo
             </Link>
-            <Link href="/?filter=reformer" className="px-2 py-1 text-sm font-medium text-[var(--ink-soft)] hover:bg-[var(--bg-section)] transition-colors">
+            <Link href="/catalogo?categoria=reformer" className="px-2 py-1 text-sm font-medium text-[var(--ink-soft)] hover:bg-[var(--bg-section)] transition-colors">
               Reformers
             </Link>
-            <Link href="/?filter=todos" className="px-2 py-1 text-sm font-medium text-[var(--ink-soft)] hover:bg-[var(--bg-section)] transition-colors">
+            <Link href="/catalogo?ordem=recentes" className="px-2 py-1 text-sm font-medium text-[var(--ink-soft)] hover:bg-[var(--bg-section)] transition-colors">
               Novidades
             </Link>
           </nav>
