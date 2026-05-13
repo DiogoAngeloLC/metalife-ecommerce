@@ -11,6 +11,7 @@ import { getListingImageUrl } from "@/lib/storage";
 import { EquipmentVisual } from "@/components/reforma/equipment-visual";
 import { AdSlot } from "@/components/reforma/ad-slot";
 import { SiteFooter } from "@/components/reforma/site-footer";
+import type { FooterConfig } from "@/lib/site-config";
 
 const CATEGORIES = [
   { value: "", label: "Todos" },
@@ -43,10 +44,12 @@ export function CatalogContent({
   listings,
   banners,
   filters,
+  footer,
 }: {
   listings: ListingWithImages[];
   banners: Banner[];
   filters: { categoria?: string; ordem?: string; busca?: string; estado?: string };
+  footer: FooterConfig;
 }) {
   const router = useRouter();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -237,7 +240,7 @@ export function CatalogContent({
         </div>
       </div>
 
-      <SiteFooter />
+      <SiteFooter footer={footer} />
     </div>
   );
 }

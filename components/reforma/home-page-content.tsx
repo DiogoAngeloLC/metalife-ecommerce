@@ -14,14 +14,18 @@ import { getListingImageUrl } from "@/lib/storage";
 import { EquipmentVisual } from "@/components/reforma/equipment-visual";
 import { SiteFooter } from "@/components/reforma/site-footer";
 
+import type { FooterConfig } from "@/lib/site-config";
+
 export function HomePageContent({
   listings,
   stats,
   hero,
+  footer,
 }: {
   listings: (ListingWithImages & { is_featured?: boolean; recentLeadsCount?: number })[];
   stats: { listings: number; cities: number; vendors: number };
   hero?: { image_url: string | null; eyebrow: string; title: string; subtitle: string };
+  footer: FooterConfig;
 }) {
   const [filter, setFilter] = useState<string>("todos");
   const [search, setSearch] = useState("");
@@ -161,7 +165,7 @@ export function HomePageContent({
         </div>
       </section>
 
-      <SiteFooter />
+      <SiteFooter footer={footer} />
     </div>
   );
 }

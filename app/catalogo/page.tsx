@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { CatalogContent } from "@/components/reforma/catalog-content";
 import { getActiveBanners } from "@/lib/content";
+import { getFooterConfig } from "@/lib/site-config";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -14,7 +15,10 @@ export default async function CatalogPage({
   searchParams: { categoria?: string; ordem?: string; busca?: string };
 }) {
   const supabase = createClient();
-  const banners = await getActiveBanners("catalog_sidebar");
+  const [banners, footer] = await Promise.all([
+    getActiveBanners("catalog_sidebar"),
+    getFooterConfig(),
+  ]);
 
   const orderCol = searchParams.ordem === "preco_asc" || searchParams.ordem === "preco_desc"
     ? "price"
@@ -44,6 +48,7 @@ export default async function CatalogPage({
       listings={listings ?? []}
       banners={banners}
       filters={searchParams}
+      footer={footer}
     />
   );
 }
