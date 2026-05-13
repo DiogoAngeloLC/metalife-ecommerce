@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, MapPin, Plus, Sparkles, Pencil } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Clock, MapPin, Plus, Sparkles, Pencil, Archive } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { withdrawListingToDraftAction } from "@/app/dashboard/novo/actions";
+import { useEffect, useState, useTransition } from "react";
 import type { Database } from "@/lib/supabase/types";
 import { EquipmentVisual } from "./equipment-visual";
 import { getListingImageUrl } from "@/lib/storage";
-import { isListingEditableByVendor, listingAccent } from "@/lib/listings";
+import { isListingEditableByVendor, listingAccent, canVendorWithdrawListingToDraft } from "@/lib/listings";
 
 type Vendor = Database["public"]["Tables"]["vendors"]["Row"];
 type Listing = Database["public"]["Tables"]["listings"]["Row"] & {
@@ -157,9 +159,29 @@ function StatCard({ label, value, variant }: { label: string; value: string; var
 }
 
 function ListingRow({ listing }: { listing: Listing }) {
+  const router = useRouter();
+  const [rowPending, startRowTransition] = useTransition();
   const firstImage = listing.listing_images
     ?.sort((a, b) => a.position - b.position)[0]?.storage_path;
   const accent = listingAccent(listing.id);
+
+  const withdrawToDraft = () => {
+    if (
+      !confirm(
+        "Guardar como rascunho? O anúncio sai do catálogo e deixa de aparecer para a equipe. Pode editar e enviar de novo quando quiser."
+      )
+    ) {
+      return;
+    }
+    startRowTransition(async () => {
+      try {
+        await withdrawListingToDraftAction(listing.id);
+        router.refresh();
+      } catch (err) {
+        alert(err instanceof Error ? err.message : "Erro");
+      }
+    });
+  };
 
   return (
     <div className="bg-white border border-[var(--line)] p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-4 hover:border-[var(--action)] transition">
@@ -227,6 +249,17 @@ function ListingRow({ listing }: { listing: Listing }) {
             <Pencil className="w-3.5 h-3.5" />
             Editar
           </Link>
+          {canVendorWithdrawListingToDraft(listing.status) && (
+            <button
+              type="button"
+              onClick={withdrawToDraft}
+              disabled={rowPending}
+              className="inline-flex items-center justify-center gap-2 text-[10px] uppercase tracking-wider font-bold px-4 py-2 border border-[var(--line)] text-[var(--ink-soft)] hover:border-[var(--action)] hover:text-[var(--action)] transition disabled:opacity-50"
+            >
+              <Archive className="w-3.5 h-3.5" />
+              Rascunho
+            </button>
+          )}
         </div>
       )}
     </div>

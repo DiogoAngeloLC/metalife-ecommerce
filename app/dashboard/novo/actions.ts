@@ -9,7 +9,7 @@ import {
   type CreateListingInput,
   type UpdateListingInput,
 } from "@/lib/validations";
-import { isListingEditableByVendor } from "@/lib/listings";
+import { isListingEditableByVendor, canVendorWithdrawListingToDraft } from "@/lib/listings";
 
 export async function createListingAction(
   input: CreateListingInput
@@ -154,4 +154,49 @@ export async function updateListingAction(
   }
 
   return { slug };
+}
+
+export async function withdrawListingToDraftAction(listingId: string): Promise<void> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) throw new Error("Não autenticado");
+
+  const { data: existing, error: fetchErr } = await supabase
+    .from("listings")
+    .select("id, vendor_id, status, slug")
+    .eq("id", listingId)
+    .single();
+
+  if (fetchErr || !existing) {
+    throw new Error("Anúncio não encontrado.");
+  }
+  if (existing.vendor_id !== user.id) {
+    throw new Error("Você não pode alterar este anúncio.");
+  }
+  if (!canVendorWithdrawListingToDraft(existing.status)) {
+    throw new Error("Este anúncio não pode ser guardado como rascunho.");
+  }
+
+  const { error: updateErr } = await supabase
+    .from("listings")
+    .update({
+      status: "draft",
+      published_at: null,
+      reviewed_at: null,
+      reviewed_by: null,
+      rejection_reason: null,
+      is_featured: false,
+    })
+    .eq("id", listingId)
+    .eq("vendor_id", user.id);
+
+  if (updateErr) throw new Error(`Falha ao atualizar: ${updateErr.message}`);
+
+  revalidatePath("/");
+  revalidatePath("/dashboard");
+  revalidatePath("/catalogo");
+  revalidatePath(`/${existing.slug}`);
 }

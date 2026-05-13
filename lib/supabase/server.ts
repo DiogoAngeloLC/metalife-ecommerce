@@ -3,6 +3,14 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import type { Database } from "./types";
 
+/** Cliente só com anon key — para operações Auth que enviam e-mail sem sessão (ex.: redefinição de senha). */
+export function createAnonClient() {
+  return createSupabaseClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+
 export function createClient() {
   const cookieStore = cookies();
 

@@ -15,6 +15,18 @@ export const VENDOR_EDITABLE_LISTING_STATUSES = [
 export function isListingEditableByVendor(status: ListingStatus): boolean {
   return (VENDOR_EDITABLE_LISTING_STATUSES as readonly ListingStatus[]).includes(status);
 }
+
+/** Vendedor pode «tirar do ar» mantendo dados — passa a `draft` (fora do catálogo e da curadoria admin). */
+export const VENDOR_WITHDRAWABLE_TO_DRAFT_STATUSES = [
+  "active",
+  "paused",
+  "pending_review",
+  "rejected",
+] as const satisfies readonly ListingStatus[];
+
+export function canVendorWithdrawListingToDraft(status: ListingStatus): boolean {
+  return (VENDOR_WITHDRAWABLE_TO_DRAFT_STATUSES as readonly ListingStatus[]).includes(status);
+}
 export type ListingImage = Database["public"]["Tables"]["listing_images"]["Row"];
 
 export type ListingWithImages = Listing & {

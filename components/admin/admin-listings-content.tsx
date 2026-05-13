@@ -70,7 +70,7 @@ export function AdminListingsContent({
   };
 
   const handleUnpublish = (id: string) => {
-    if (!confirm("Despublicar este anúncio? Sairá da home.")) return;
+    if (!confirm("Despublicar? O anúncio fica pausado e sai do catálogo. Pode republicá-lo na aba «Pausados».")) return;
     startTransition(async () => {
       await unpublishListingAction(id);
     });
@@ -201,6 +201,16 @@ export function AdminListingsContent({
                         <X className="w-3 h-3" /> Recusar
                       </button>
                     </>
+                  )}
+
+                  {(l.status === "paused" || l.status === "rejected") && (
+                    <button
+                      onClick={() => handleApprove(l.id)}
+                      disabled={isPending}
+                      className="text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 bg-[var(--success)] text-white hover:opacity-90 flex items-center gap-1 transition disabled:opacity-50"
+                    >
+                      <Check className="w-3 h-3" /> Republicar
+                    </button>
                   )}
 
                   {l.status === "active" && (

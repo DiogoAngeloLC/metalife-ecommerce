@@ -18,6 +18,7 @@ export default async function AdminListingsPage({
   let queryBuilder = supabase
     .from("listings")
     .select("*, listing_images(storage_path, position), vendors(name, whatsapp, city)")
+    .neq("status", "draft")
     .order("created_at", { ascending: false })
     .limit(100);
 

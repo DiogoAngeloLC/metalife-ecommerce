@@ -52,6 +52,7 @@ export async function approveListingAction(listingId: string) {
   revalidatePath("/admin/anuncios");
   revalidatePath("/admin");
   revalidatePath("/");
+  revalidatePath("/catalogo");
   revalidatePath("/dashboard");
 }
 
@@ -102,6 +103,8 @@ export async function rejectListingAction(listingId: string, reason: string) {
 
   revalidatePath("/admin/anuncios");
   revalidatePath("/admin");
+  revalidatePath("/");
+  revalidatePath("/catalogo");
   revalidatePath("/dashboard");
 }
 
@@ -111,7 +114,7 @@ export async function unpublishListingAction(listingId: string) {
 
   const { error } = await supabase
     .from("listings")
-    .update({ status: "paused" })
+    .update({ status: "paused", published_at: null })
     .eq("id", listingId);
 
   if (error) throw new Error(error.message);
@@ -119,6 +122,8 @@ export async function unpublishListingAction(listingId: string) {
   revalidatePath("/admin/anuncios");
   revalidatePath("/admin");
   revalidatePath("/");
+  revalidatePath("/catalogo");
+  revalidatePath("/dashboard");
 }
 
 export async function deleteListingAction(listingId: string) {
@@ -131,6 +136,8 @@ export async function deleteListingAction(listingId: string) {
   revalidatePath("/admin/anuncios");
   revalidatePath("/admin");
   revalidatePath("/");
+  revalidatePath("/catalogo");
+  revalidatePath("/dashboard");
 }
 
 export async function toggleFeaturedAction(listingId: string, featured: boolean) {
@@ -145,5 +152,7 @@ export async function toggleFeaturedAction(listingId: string, featured: boolean)
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin/anuncios");
+  revalidatePath("/admin");
   revalidatePath("/");
+  revalidatePath("/catalogo");
 }

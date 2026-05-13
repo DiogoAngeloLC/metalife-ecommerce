@@ -16,7 +16,7 @@ export default async function AdminOverviewPage() {
   ] = await Promise.all([
     supabase.from("listings").select("*", { count: "exact", head: true }).eq("status", "pending_review"),
     supabase.from("listings").select("*", { count: "exact", head: true }).eq("status", "active"),
-    supabase.from("listings").select("*", { count: "exact", head: true }),
+    supabase.from("listings").select("*", { count: "exact", head: true }).neq("status", "draft"),
     supabase.from("vendors").select("*", { count: "exact", head: true }),
     supabase.from("leads").select("*", { count: "exact", head: true }),
     supabase.from("leads").select("*", { count: "exact", head: true }).gt("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()),
@@ -25,7 +25,7 @@ export default async function AdminOverviewPage() {
   const stats = [
     { label: "Aguardando aprovação", value: pendingCount ?? 0, variant: "action" as const, href: "/admin/anuncios?status=pending_review" },
     { label: "Anúncios ativos", value: activeCount ?? 0, variant: "success" as const, href: "/admin/anuncios?status=active" },
-    { label: "Total de anúncios", value: totalListings ?? 0, variant: "muted" as const },
+    { label: "Total (exc. rascunhos)", value: totalListings ?? 0, variant: "muted" as const },
     { label: "Vendedores cadastrados", value: totalVendors ?? 0, variant: "muted" as const, href: "/admin/usuarios" },
     { label: "Leads (total)", value: totalLeads ?? 0, variant: "muted" as const, href: "/admin/leads" },
     { label: "Leads (últimas 24h)", value: leadsToday ?? 0, variant: "trust" as const },
