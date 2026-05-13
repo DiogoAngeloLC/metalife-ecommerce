@@ -9,17 +9,27 @@ import { getListingImageUrl } from "@/lib/storage";
 import { formatBRL } from "@/lib/format";
 import { EquipmentVisual } from "@/components/reforma/equipment-visual";
 import { ContactLeadDialog } from "@/components/reforma/contact-lead-dialog";
+import { AdSlot } from "@/components/reforma/ad-slot";
+
+type Banner = {
+  id: string;
+  image_url: string;
+  link_url: string | null;
+  alt_text: string;
+};
 
 export function ListingDetailView({
   listing,
   vendorName,
   vendorVerified,
   recentLeadsCount,
+  banners = [],
 }: {
   listing: ListingWithImages & { is_featured?: boolean };
   vendorName?: string | null;
   vendorVerified?: boolean;
   recentLeadsCount?: number;
+  banners?: Banner[];
 }) {
   const [contactOpen, setContactOpen] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -187,6 +197,13 @@ export function ListingDetailView({
               </p>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Banner ad slot */}
+      {banners.length > 0 && (
+        <div className="mt-8 py-6">
+          <AdSlot banners={banners} orientation="horizontal" />
         </div>
       )}
 

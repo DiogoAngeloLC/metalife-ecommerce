@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ListingDetailView } from "@/components/reforma/listing-detail-view";
+import { getActiveBanners } from "@/lib/content";
 import type { ListingWithImages } from "@/lib/listings";
 
 export const dynamic = "force-dynamic";
@@ -38,8 +39,8 @@ export default async function ListingPage({ params }: Props) {
 
   if (!listing) notFound();
 
-  // Fetch vendor info + recent leads count in parallel
-  const [{ data: vendor }, { count: recentLeadsCount }] = await Promise.all([
+  // Fetch vendor info, recent leads count, and banners in parallel
+  const [{ data: vendor }, { count: recentLeadsCount }, banners] = await Promise.all([
     supabase
       .from("vendors")
       .select("name, is_verified")
@@ -50,6 +51,7 @@ export default async function ListingPage({ params }: Props) {
       .select("*", { count: "exact", head: true })
       .eq("listing_id", listing.id)
       .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()),
+    getActiveBanners("listing_footer"),
   ]);
 
   return (
@@ -58,6 +60,7 @@ export default async function ListingPage({ params }: Props) {
       vendorName={vendor?.name}
       vendorVerified={vendor?.is_verified ?? false}
       recentLeadsCount={recentLeadsCount ?? 0}
+      banners={banners}
     />
   );
 }
