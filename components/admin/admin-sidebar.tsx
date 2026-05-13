@@ -7,11 +7,11 @@ import {
   Newspaper,
   Users,
   MessageCircle,
-  LogOut,
   ArrowUpRight,
   Wifi,
   FileText,
   AlertOctagon,
+  Bell,
   Image,
   Megaphone,
   BookOpen,
@@ -30,6 +30,7 @@ const NAV_SECTIONS = [
       { href: "/admin/anuncios", label: "Anúncios", icon: Newspaper },
       { href: "/admin/usuarios", label: "Usuários", icon: Users },
       { href: "/admin/leads", label: "Leads", icon: MessageCircle },
+      { href: "/admin/notificacoes", label: "Notificações", icon: Bell },
     ],
   },
   {
@@ -112,7 +113,7 @@ export function AdminSidebar({ brand }: { brand: Brand }) {
         ))}
       </nav>
 
-      <div className="p-3 border-t border-white/10 space-y-1">
+      <div className="p-3 border-t border-white/10">
         <Link
           href="/dashboard"
           className="flex items-center gap-3 px-3 py-2.5 text-sm text-white/60 hover:bg-white/5 hover:text-white transition"
@@ -120,15 +121,6 @@ export function AdminSidebar({ brand }: { brand: Brand }) {
           <ArrowUpRight className="w-4 h-4" />
           Atuar como vendedor
         </Link>
-        <form action="/auth/sign-out" method="POST">
-          <button
-            type="submit"
-            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-white/60 hover:bg-white/5 hover:text-white transition"
-          >
-            <LogOut className="w-4 h-4" />
-            Sair
-          </button>
-        </form>
       </div>
     </aside>
   );
