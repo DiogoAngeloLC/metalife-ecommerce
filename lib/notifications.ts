@@ -1,5 +1,3 @@
-"use server";
-
 import crypto from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 import { dispatchMessage, siteUrl } from "@/lib/messages/dispatch";

@@ -12,6 +12,8 @@ import {
   buildLeadToBuyer,
   buildLeadToSeller,
 } from "@/lib/messages/templates";
+import { dispatchLeadNotifications } from "@/lib/notifications";
+import { formatBRL } from "@/lib/format";
 
 const Schema = z.object({
   listing_id: z.string().uuid(),
@@ -157,6 +159,20 @@ export async function submitLeadAction(
             },
           });
         }
+
+        // Admin notifications (webhook + WhatsApp admin)
+        void dispatchLeadNotifications({
+          lead_id: insertedLead.id,
+          lead_name: parsed.name,
+          lead_whatsapp: parsed.whatsapp,
+          lead_email: parsed.email,
+          listing_id: full.id,
+          listing_title: full.title,
+          listing_city: full.city,
+          listing_state: full.state,
+          listing_price: formatBRL(full.price) ?? "Sob consulta",
+          admin_url: `${url}/admin/leads`,
+        });
       }
     } catch (err) {
       console.error("Lead dispatch error:", err);
