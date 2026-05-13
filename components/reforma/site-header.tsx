@@ -1,49 +1,54 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Shield, Plus } from "lucide-react";
 import { getCurrentUser, isCurrentUserAdmin } from "@/lib/supabase/auth";
+import { getMenuItems, getBrand } from "@/lib/site-config";
 
 export async function SiteHeader() {
   const user = await getCurrentUser();
   const isAdmin = user ? await isCurrentUserAdmin() : false;
+  const [menu, brand] = await Promise.all([getMenuItems(), getBrand()]);
 
   return (
-    <header className="sticky top-0 z-50 border-b-2 border-[var(--line)] bg-white">
+    <header className="sticky top-0 z-50 border-b-2 border-[var(--line)] bg-[var(--bg-elevated)]">
       <div className="mx-auto flex max-w-[1200px] items-center justify-between px-4 py-3">
-        {/* Logo */}
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex-shrink-0">
-            <Image
-              src="/logos/logo-full.svg"
-              alt="Classificado Pilates"
-              width={220}
-              height={32}
-              className="hidden md:block h-8 w-auto"
-              priority
-            />
-            <Image
-              src="/logos/logo-symbol.svg"
-              alt="Classificado Pilates"
-              width={32}
-              height={32}
-              className="block md:hidden h-7 w-auto"
-              priority
-            />
+          <Link href="/" className="flex-shrink-0 flex items-center gap-3">
+            {brand.logo_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={brand.logo_url}
+                alt={brand.name}
+                className="h-7 w-auto max-w-[200px] object-contain object-left md:h-8 md:max-w-[220px]"
+              />
+            ) : (
+              <span className="font-display text-lg font-black italic text-[var(--action)] tracking-tight md:text-2xl">
+                {brand.name.toUpperCase()}
+              </span>
+            )}
           </Link>
           <nav className="hidden items-center gap-1 md:flex">
-            <Link href="/catalogo" className="px-2 py-1 text-sm font-medium text-[var(--ink-soft)] hover:bg-[var(--bg-section)] transition-colors">
-              Catálogo
-            </Link>
-            <Link href="/catalogo?categoria=reformer" className="px-2 py-1 text-sm font-medium text-[var(--ink-soft)] hover:bg-[var(--bg-section)] transition-colors">
-              Reformers
-            </Link>
-            <Link href="/catalogo?ordem=recentes" className="px-2 py-1 text-sm font-medium text-[var(--ink-soft)] hover:bg-[var(--bg-section)] transition-colors">
-              Novidades
-            </Link>
+            {menu.map((item) => {
+              const openNew = item.external || item.href.startsWith("http");
+              const className = "px-2 py-1 text-sm font-medium text-[var(--ink-soft)] hover:bg-[var(--bg-section)] transition-colors";
+              return openNew ? (
+                <a
+                  key={`${item.order}-${item.href}-${item.label}`}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link key={`${item.order}-${item.href}-${item.label}`} href={item.href} className={className}>
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-3">
           {isAdmin && (
             <Link
