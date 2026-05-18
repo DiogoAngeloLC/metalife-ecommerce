@@ -30,11 +30,11 @@ Não há framework de testes configurado.
 ## Key Conventions
 
 ### Fonts
-- **Fraunces** (`--font-fraunces`, classe `.font-display`) — headers/display
-- **Manrope** (`--font-manrope`) — body text
+- **Montserrat** (`--font-montserrat`) — headers/display
+- **Inter** (`--font-inter`) — body text
 
 ### Color System
-Duas cores de acento: `sage` (verde) e `terracota` (vermelho quente). Variáveis CSS definidas em `app/globals.css` com suporte a dark mode via classe.
+Design system industrial com cores mapeadas via CSS custom properties em `app/globals.css`. Suporte a dark mode via classe. Tokens definidos em `tailwind.config.ts`.
 
 ### Component Organization
 - `components/ui/` — Primitivos reutilizáveis (button, dialog, input, label)
