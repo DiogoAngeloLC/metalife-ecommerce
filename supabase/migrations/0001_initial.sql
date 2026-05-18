@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS public.vendors (
   updated_at            timestamptz NOT NULL DEFAULT now()
 );
 
+DROP TRIGGER IF EXISTS vendors_set_updated_at ON public.vendors;
 CREATE TRIGGER vendors_set_updated_at
   BEFORE UPDATE ON public.vendors
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
@@ -83,6 +84,7 @@ CREATE TABLE IF NOT EXISTS public.listings (
   )
 );
 
+DROP TRIGGER IF EXISTS listings_set_updated_at ON public.listings;
 CREATE TRIGGER listings_set_updated_at
   BEFORE UPDATE ON public.listings
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
@@ -138,11 +140,13 @@ ALTER TABLE public.leads          ENABLE ROW LEVEL SECURITY;
 
 -- ---------- vendors ----------
 -- Vendor lê/edita o próprio perfil
+DROP POLICY IF EXISTS "Vendor reads own profile" ON public.vendors;
 CREATE POLICY "Vendor reads own profile"
   ON public.vendors FOR SELECT
   TO authenticated
   USING (id = auth.uid());
 
+DROP POLICY IF EXISTS "Vendor updates own profile" ON public.vendors;
 CREATE POLICY "Vendor updates own profile"
   ON public.vendors FOR UPDATE
   TO authenticated
@@ -154,27 +158,32 @@ CREATE POLICY "Vendor updates own profile"
 
 -- ---------- listings ----------
 -- Público vê apenas anúncios ativos
+DROP POLICY IF EXISTS "Public sees active listings" ON public.listings;
 CREATE POLICY "Public sees active listings"
   ON public.listings FOR SELECT
   USING (status = 'active');
 
 -- Vendor vê os próprios em qualquer status
+DROP POLICY IF EXISTS "Vendor sees own listings" ON public.listings;
 CREATE POLICY "Vendor sees own listings"
   ON public.listings FOR SELECT
   TO authenticated
   USING (vendor_id = auth.uid());
 
+DROP POLICY IF EXISTS "Vendor creates own listings" ON public.listings;
 CREATE POLICY "Vendor creates own listings"
   ON public.listings FOR INSERT
   TO authenticated
   WITH CHECK (vendor_id = auth.uid());
 
+DROP POLICY IF EXISTS "Vendor updates own listings" ON public.listings;
 CREATE POLICY "Vendor updates own listings"
   ON public.listings FOR UPDATE
   TO authenticated
   USING (vendor_id = auth.uid())
   WITH CHECK (vendor_id = auth.uid());
 
+DROP POLICY IF EXISTS "Vendor deletes own listings" ON public.listings;
 CREATE POLICY "Vendor deletes own listings"
   ON public.listings FOR DELETE
   TO authenticated
@@ -182,6 +191,7 @@ CREATE POLICY "Vendor deletes own listings"
 
 -- ---------- listing_images ----------
 -- Público vê imagens de anúncios ativos
+DROP POLICY IF EXISTS "Public sees images of active listings" ON public.listing_images;
 CREATE POLICY "Public sees images of active listings"
   ON public.listing_images FOR SELECT
   USING (
@@ -192,6 +202,7 @@ CREATE POLICY "Public sees images of active listings"
   );
 
 -- Vendor vê/edita imagens dos próprios listings
+DROP POLICY IF EXISTS "Vendor manages images of own listings" ON public.listing_images;
 CREATE POLICY "Vendor manages images of own listings"
   ON public.listing_images FOR ALL
   TO authenticated
@@ -210,6 +221,7 @@ CREATE POLICY "Vendor manages images of own listings"
 
 -- ---------- leads ----------
 -- Qualquer um (anônimo) pode submeter lead em listing ativo
+DROP POLICY IF EXISTS "Anyone submits leads to active listings" ON public.leads;
 CREATE POLICY "Anyone submits leads to active listings"
   ON public.leads FOR INSERT
   WITH CHECK (
@@ -220,6 +232,7 @@ CREATE POLICY "Anyone submits leads to active listings"
   );
 
 -- Vendor lê leads dos próprios listings
+DROP POLICY IF EXISTS "Vendor reads own leads" ON public.leads;
 CREATE POLICY "Vendor reads own leads"
   ON public.leads FOR SELECT
   TO authenticated

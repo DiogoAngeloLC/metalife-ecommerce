@@ -2,7 +2,7 @@
 -- Curadoria, admin e logs de WhatsApp
 
 -- 1. Atualizar CHECK constraint de status em listings para incluir pending_review e rejected
-ALTER TABLE listings DROP CONSTRAINT listings_status_check;
+ALTER TABLE listings DROP CONSTRAINT IF EXISTS listings_status_check;
 ALTER TABLE listings ADD CONSTRAINT listings_status_check
   CHECK (status = ANY (ARRAY['draft','active','paused','sold','pending_review','rejected']));
 
@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS app_admins (
 
 ALTER TABLE app_admins ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Admins can read admin list" ON app_admins;
 CREATE POLICY "Admins can read admin list"
   ON app_admins FOR SELECT
   USING (auth.uid() IN (SELECT user_id FROM app_admins));
@@ -42,12 +43,13 @@ CREATE TABLE IF NOT EXISTS whatsapp_messages_log (
 
 ALTER TABLE whatsapp_messages_log ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Admins can read whatsapp logs" ON whatsapp_messages_log;
 CREATE POLICY "Admins can read whatsapp logs"
   ON whatsapp_messages_log FOR SELECT
   USING (auth.uid() IN (SELECT user_id FROM app_admins));
 
-CREATE INDEX idx_wml_lead ON whatsapp_messages_log(lead_id);
-CREATE INDEX idx_wml_status ON whatsapp_messages_log(status);
+CREATE INDEX IF NOT EXISTS idx_wml_lead ON whatsapp_messages_log(lead_id);
+CREATE INDEX IF NOT EXISTS idx_wml_status ON whatsapp_messages_log(status);
 
 -- 5. Cache de validação WhatsApp
 CREATE TABLE IF NOT EXISTS whatsapp_validation_cache (
@@ -60,7 +62,7 @@ CREATE TABLE IF NOT EXISTS whatsapp_validation_cache (
 
 ALTER TABLE whatsapp_validation_cache ENABLE ROW LEVEL SECURITY;
 
-CREATE UNIQUE INDEX idx_wvc_phone ON whatsapp_validation_cache(phone);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_wvc_phone ON whatsapp_validation_cache(phone);
 
 -- 6. Campo error_message em leads
 ALTER TABLE leads

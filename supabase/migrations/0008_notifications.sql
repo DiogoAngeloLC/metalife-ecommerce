@@ -28,10 +28,11 @@ CREATE TABLE IF NOT EXISTS public.webhook_logs (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_webhook_logs_created ON public.webhook_logs(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_webhook_logs_created ON public.webhook_logs(created_at DESC);
 
 ALTER TABLE public.webhook_logs ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "webhook_logs_admin_read" ON public.webhook_logs;
 CREATE POLICY "webhook_logs_admin_read" ON public.webhook_logs
   FOR SELECT USING (public.is_admin(auth.uid()));
 

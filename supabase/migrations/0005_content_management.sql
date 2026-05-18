@@ -14,9 +14,11 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
 
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "site_settings_public_read" ON public.site_settings;
 CREATE POLICY "site_settings_public_read" ON public.site_settings
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "site_settings_admin_write" ON public.site_settings;
 CREATE POLICY "site_settings_admin_write" ON public.site_settings
   FOR ALL USING (public.is_admin(auth.uid()))
   WITH CHECK (public.is_admin(auth.uid()));
@@ -32,9 +34,11 @@ CREATE TABLE IF NOT EXISTS public.legal_pages (
 
 ALTER TABLE public.legal_pages ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "legal_pages_public_read" ON public.legal_pages;
 CREATE POLICY "legal_pages_public_read" ON public.legal_pages
   FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "legal_pages_admin_write" ON public.legal_pages;
 CREATE POLICY "legal_pages_admin_write" ON public.legal_pages
   FOR ALL USING (public.is_admin(auth.uid()))
   WITH CHECK (public.is_admin(auth.uid()));
@@ -52,13 +56,15 @@ CREATE TABLE IF NOT EXISTS public.ad_banners (
   created_by uuid REFERENCES auth.users(id)
 );
 
-CREATE INDEX idx_ad_banners_slot ON public.ad_banners(slot_key) WHERE active = true;
+CREATE INDEX IF NOT EXISTS idx_ad_banners_slot ON public.ad_banners(slot_key) WHERE active = true;
 
 ALTER TABLE public.ad_banners ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "ad_banners_public_read" ON public.ad_banners;
 CREATE POLICY "ad_banners_public_read" ON public.ad_banners
   FOR SELECT USING (active = true);
 
+DROP POLICY IF EXISTS "ad_banners_admin_all" ON public.ad_banners;
 CREATE POLICY "ad_banners_admin_all" ON public.ad_banners
   FOR ALL USING (public.is_admin(auth.uid()))
   WITH CHECK (public.is_admin(auth.uid()));
@@ -132,9 +138,11 @@ VALUES (
 )
 ON CONFLICT (id) DO NOTHING;
 
+DROP POLICY IF EXISTS "site_assets_public_read" ON storage.objects;
 CREATE POLICY "site_assets_public_read" ON storage.objects
   FOR SELECT USING (bucket_id = 'site-assets');
 
+DROP POLICY IF EXISTS "site_assets_admin_write" ON storage.objects;
 CREATE POLICY "site_assets_admin_write" ON storage.objects
   FOR ALL USING (
     bucket_id = 'site-assets' AND public.is_admin(auth.uid())
