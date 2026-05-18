@@ -36,4 +36,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
+# Supabase CLI
+supabase/.temp/
+supabase/.branches/
+
+# Claude Code (dev local)
+.claude/
+
+# Produção (extra safety)
+.env.production
+.env.production.local
