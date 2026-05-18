@@ -1,8 +1,22 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("ok", { status: 200 });
+
+  // Authenticate webhook caller via Evolution API key (header or query param)
+  const expectedKey = Deno.env.get("EVOLUTION_API_KEY");
+  if (expectedKey) {
+    const authHeader =
+      req.headers.get("apikey") ??
+      req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+    const url = new URL(req.url);
+    const queryKey = url.searchParams.get("apikey");
+
+    if (authHeader !== expectedKey && queryKey !== expectedKey) {
+      console.warn("Webhook authentication failed");
+      return new Response("Unauthorized", { status: 401 });
+    }
+  }
 
   try {
     const body = await req.json();

@@ -575,7 +575,7 @@ curl -X POST "https://wa.classificadopilates.com.br/webhook/set/classificado-pil
   -d '{
     "webhook": {
       "enabled": true,
-      "url": "https://<REF_SUPABASE>.supabase.co/functions/v1/whatsapp-webhook",
+      "url": "https://<REF_SUPABASE>.supabase.co/functions/v1/whatsapp-webhook?apikey=<EVOLUTION_API_KEY>",
       "webhookByEvents": false,
       "events": ["MESSAGES_UPDATE", "CONNECTION_UPDATE", "QRCODE_UPDATED"]
     }
