@@ -1,3 +1,9 @@
+-- DEPENDÊNCIA: as policies neste arquivo usam public.is_admin(auth.uid())
+-- que é definida em 0006_is_admin_function.sql.
+-- Em deploy from scratch, 0005 roda ANTES de 0006 (ordem alfabética).
+-- A migration 0006 recria todas as policies com DROP/CREATE para resolver isso.
+-- Se aplicando manualmente, rode 0006 LOGO APÓS 0005.
+
 -- 1. site_settings (key-value pra configs editáveis)
 CREATE TABLE IF NOT EXISTS public.site_settings (
   key text PRIMARY KEY,
