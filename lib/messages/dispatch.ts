@@ -39,10 +39,13 @@ export async function dispatchMessage(input: DispatchInput): Promise<void> {
 }
 
 export function siteUrl(): string {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    "https://classificado-pilates.vercel.app"
-  );
+  const url = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!url) {
+    throw new Error(
+      "NEXT_PUBLIC_SITE_URL não configurada. Defina a URL absoluta do site (ex: https://seu-dominio.com.br)."
+    );
+  }
+  return url.replace(/\/$/, "");
 }
 
 export function listingImagePublicUrl(storagePath: string): string {
