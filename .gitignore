@@ -46,3 +46,7 @@ supabase/.branches/
 # Produção (extra safety)
 .env.production
 .env.production.local
+
+# Dados locais / exportações (nunca commitar credenciais ou tabelas de preço)
+tmp/
+*.csv

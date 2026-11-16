@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/reforma/site-footer";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Política de Privacidade · Classificado Pilates" };
+export const metadata = { title: "Política de Privacidade · Metalife Pilates" };
 
 export default async function PrivacyPage() {
   const page = await getLegalPage("politica-de-privacidade");

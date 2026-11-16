@@ -8,7 +8,7 @@ import { useEffect, useState, useTransition } from "react";
 import type { Database } from "@/lib/supabase/types";
 import { EquipmentVisual } from "./equipment-visual";
 import { getListingImageUrl } from "@/lib/storage";
-import { isListingEditableByVendor, listingAccent, canVendorWithdrawListingToDraft } from "@/lib/listings";
+import { isListingEditableByVendor, canVendorWithdrawListingToDraft } from "@/lib/listings";
 
 type Vendor = Database["public"]["Tables"]["vendors"]["Row"];
 type Listing = Database["public"]["Tables"]["listings"]["Row"] & {
@@ -46,7 +46,7 @@ export function DashboardContent({
   }, [justUpdated]);
 
   const incomplete = !vendor.onboarding_completed;
-  const greetingName = vendor.name?.split(" ")[0] ?? "anunciante";
+  const greetingName = vendor.name?.split(" ")[0] ?? "cliente";
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 py-8 md:py-12">
@@ -163,7 +163,6 @@ function ListingRow({ listing }: { listing: Listing }) {
   const [rowPending, startRowTransition] = useTransition();
   const firstImage = listing.listing_images
     ?.sort((a, b) => a.position - b.position)[0]?.storage_path;
-  const accent = listingAccent(listing.id);
 
   const withdrawToDraft = () => {
     if (
@@ -193,7 +192,11 @@ function ListingRow({ listing }: { listing: Listing }) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <EquipmentVisual equipment={listing.equipment_type} accent={accent} className="w-full h-full" />
+          <EquipmentVisual
+            equipment={listing.equipment_type}
+            title={listing.title}
+            className="w-full h-full"
+          />
         )}
       </div>
       <div className="flex-1 min-w-0">

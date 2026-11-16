@@ -1,7 +1,7 @@
 {
   "name": "classificado-pilates",
   "version": "1.0.0",
-  "description": "Marketplace de equipamentos de Pilates usados e seminovos",
+  "description": "Loja Oficial Metalife Pilates — equipamentos de Pilates",
   "private": true,
   "license": "UNLICENSED",
   "engines": {
@@ -13,7 +13,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "smoke:official-store": "node --env-file=.env.local scripts/smoke-official-store.mjs",
+    "import:catalog": "pnpm dlx tsx --env-file=.env.local scripts/sanitize-and-import-catalog.ts",
+    "import:catalog:dry": "pnpm dlx tsx --env-file=.env.local scripts/sanitize-and-import-catalog.ts --dry-run",
+    "sync:images": "pnpm dlx tsx --env-file=.env.local scripts/sync-product-images.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

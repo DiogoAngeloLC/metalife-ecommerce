@@ -8,6 +8,25 @@ export type LeadStatus = "pending" | "validated" | "sent" | "failed";
 export type MessageType = "lead_contact" | "validation" | "marketing" | "lead_to_buyer" | "lead_to_seller" | "listing_approved" | "listing_rejected";
 export type MessageStatus = "queued" | "sent" | "delivered" | "read" | "failed";
 export type RecipientType = "buyer" | "vendor" | "seller";
+export type OrderStatus =
+  | "pending_payment"
+  | "paid"
+  | "preparing"
+  | "shipped"
+  | "delivered"
+  | "canceled"
+  | "refunded";
+export type PaymentMethod = "pix" | "credit_card" | "boleto";
+
+export type ShippingAddress = {
+  cep?: string;
+  street?: string;
+  number?: string;
+  complement?: string | null;
+  neighborhood?: string;
+  city?: string;
+  state?: string;
+};
 
 export type Database = {
   public: {
@@ -21,6 +40,7 @@ export type Database = {
           state: string | null;
           onboarding_completed: boolean;
           is_verified: boolean;
+          is_official: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -32,6 +52,7 @@ export type Database = {
           state?: string | null;
           onboarding_completed?: boolean;
           is_verified?: boolean;
+          is_official?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -43,6 +64,7 @@ export type Database = {
           state?: string | null;
           onboarding_completed?: boolean;
           is_verified?: boolean;
+          is_official?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -446,11 +468,288 @@ export type Database = {
         };
         Relationships: [];
       };
+      listing_variants: {
+        Row: {
+          id: string;
+          listing_id: string;
+          sku: string | null;
+          structure_color: string | null;
+          upholstery_color: string | null;
+          str_code: string | null;
+          stf_code: string | null;
+          protheus_code: string | null;
+          price_cents: number;
+          stock_qty: number;
+          is_made_to_order: boolean;
+          production_days: number;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          listing_id: string;
+          sku?: string | null;
+          structure_color?: string | null;
+          upholstery_color?: string | null;
+          str_code?: string | null;
+          stf_code?: string | null;
+          protheus_code?: string | null;
+          price_cents: number;
+          stock_qty?: number;
+          is_made_to_order?: boolean;
+          production_days?: number;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          listing_id?: string;
+          sku?: string | null;
+          structure_color?: string | null;
+          upholstery_color?: string | null;
+          str_code?: string | null;
+          stf_code?: string | null;
+          protheus_code?: string | null;
+          price_cents?: number;
+          stock_qty?: number;
+          is_made_to_order?: boolean;
+          production_days?: number;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "listing_variants_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      shipping_rules: {
+        Row: {
+          id: string;
+          uf: string;
+          name: string;
+          price_cents: number;
+          estimated_days: number | null;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          uf: string;
+          name: string;
+          price_cents: number;
+          estimated_days?: number | null;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          uf?: string;
+          name?: string;
+          price_cents?: number;
+          estimated_days?: number | null;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      orders: {
+        Row: {
+          id: string;
+          order_number: string;
+          buyer_id: string | null;
+          vendor_id: string;
+          buyer_name: string;
+          buyer_email: string;
+          buyer_phone: string;
+          buyer_document: string;
+          buyer_company_name: string | null;
+          buyer_state_registration: string | null;
+          shipping_address: ShippingAddress;
+          subtotal_cents: number;
+          shipping_cents: number;
+          discount_cents: number;
+          total_cents: number;
+          status: OrderStatus;
+          payment_method: PaymentMethod | null;
+          payment_provider: string | null;
+          external_payment_id: string | null;
+          payment_payload: unknown | null;
+          tracking_code: string | null;
+          access_token: string;
+          opt_in: boolean;
+          accepted_terms_at: string;
+          ip_address: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_number?: string;
+          buyer_id?: string | null;
+          vendor_id: string;
+          buyer_name: string;
+          buyer_email: string;
+          buyer_phone: string;
+          buyer_document: string;
+          buyer_company_name?: string | null;
+          buyer_state_registration?: string | null;
+          shipping_address?: ShippingAddress;
+          subtotal_cents: number;
+          shipping_cents?: number;
+          discount_cents?: number;
+          total_cents: number;
+          status?: OrderStatus;
+          payment_method?: PaymentMethod | null;
+          payment_provider?: string | null;
+          external_payment_id?: string | null;
+          payment_payload?: unknown | null;
+          tracking_code?: string | null;
+          access_token?: string;
+          opt_in: boolean;
+          accepted_terms_at: string;
+          ip_address?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_number?: string;
+          buyer_id?: string | null;
+          vendor_id?: string;
+          buyer_name?: string;
+          buyer_email?: string;
+          buyer_phone?: string;
+          buyer_document?: string;
+          buyer_company_name?: string | null;
+          buyer_state_registration?: string | null;
+          shipping_address?: ShippingAddress;
+          subtotal_cents?: number;
+          shipping_cents?: number;
+          discount_cents?: number;
+          total_cents?: number;
+          status?: OrderStatus;
+          payment_method?: PaymentMethod | null;
+          payment_provider?: string | null;
+          external_payment_id?: string | null;
+          payment_payload?: unknown | null;
+          tracking_code?: string | null;
+          access_token?: string;
+          opt_in?: boolean;
+          accepted_terms_at?: string;
+          ip_address?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "orders_vendor_id_fkey";
+            columns: ["vendor_id"];
+            isOneToOne: false;
+            referencedRelation: "vendors";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      order_items: {
+        Row: {
+          id: string;
+          order_id: string;
+          listing_id: string;
+          variant_id: string | null;
+          title_snapshot: string;
+          variant_snapshot: unknown | null;
+          protheus_code_snapshot: string | null;
+          str_code_snapshot: string | null;
+          stf_code_snapshot: string | null;
+          unit_price_cents: number;
+          quantity: number;
+          total_cents: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_id: string;
+          listing_id: string;
+          variant_id?: string | null;
+          title_snapshot: string;
+          variant_snapshot?: unknown | null;
+          protheus_code_snapshot?: string | null;
+          str_code_snapshot?: string | null;
+          stf_code_snapshot?: string | null;
+          unit_price_cents: number;
+          quantity: number;
+          total_cents: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_id?: string;
+          listing_id?: string;
+          variant_id?: string | null;
+          title_snapshot?: string;
+          variant_snapshot?: unknown | null;
+          protheus_code_snapshot?: string | null;
+          str_code_snapshot?: string | null;
+          stf_code_snapshot?: string | null;
+          unit_price_cents?: number;
+          quantity?: number;
+          total_cents?: number;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "order_items_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "listings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "order_items_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "listing_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: {
       is_admin: {
         Args: { user_id: string };
+        Returns: boolean;
+      };
+      get_order_confirmation: {
+        Args: { p_order_number: string; p_access_token?: string | null };
+        Returns: unknown;
+      };
+      attach_order_payment: {
+        Args: {
+          p_order_id: string;
+          p_status: string;
+          p_external_payment_id?: string | null;
+          p_payment_provider?: string | null;
+          p_payment_payload?: unknown | null;
+        };
         Returns: boolean;
       };
     };

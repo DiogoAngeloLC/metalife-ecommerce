@@ -212,7 +212,7 @@ export function ContactLeadDialog({
             )}
 
             <p className="text-xs text-[var(--text-muted)]">
-              Mencione que viu o anúncio no <strong>Classificado Pilates</strong> para condições especiais.
+              Mencione que viu o anúncio na <strong>Metalife Pilates</strong> para condições especiais.
             </p>
 
             {!vendorInfo && (

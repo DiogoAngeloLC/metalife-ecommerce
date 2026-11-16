@@ -37,11 +37,21 @@ export const EQUIPMENT_FILTERS = [
   "todos",
   "reformer",
   "cadillac",
-  "wall unit",
+  "wall-unit",
   "chair",
   "barrel",
-  "acessórios",
+  "acessorios",
 ] as const;
+
+export const EQUIPMENT_FILTER_LABELS: Record<string, string> = {
+  todos: "Todos",
+  reformer: "Reformer",
+  cadillac: "Cadillac",
+  "wall-unit": "Wall Unit",
+  chair: "Chair",
+  barrel: "Barrel",
+  acessorios: "Acessórios",
+};
 
 export type EquipmentFilter = (typeof EQUIPMENT_FILTERS)[number];
 
@@ -65,7 +75,17 @@ export function filterListings(
 ): ListingWithImages[] {
   return listings.filter((l) => {
     if (filter !== "todos") {
-      if (!l.equipment_type.toLowerCase().includes(filter.toLowerCase())) {
+      const type = l.equipment_type
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+      const needle = filter
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+      if (type !== needle && !type.includes(needle)) {
         return false;
       }
     }

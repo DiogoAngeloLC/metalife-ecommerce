@@ -159,7 +159,7 @@ export function LoginForm({ next }: { next?: string }) {
         <button
           type="submit"
           disabled={submitting || !email || (mode === "password" && !password)}
-          className="w-full bg-[var(--action)] text-white py-4 font-display font-bold uppercase tracking-wider hover:bg-[var(--action-dark)] transition disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full rounded-md bg-primary text-white py-4 font-display font-bold uppercase tracking-wider hover:bg-[var(--action-dark)] transition disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-[var(--disabled)]"
         >
           {submitting
             ? mode === "magic"

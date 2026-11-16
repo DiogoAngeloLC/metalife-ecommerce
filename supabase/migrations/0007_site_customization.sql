@@ -3,9 +3,9 @@
 INSERT INTO public.site_settings (key, value) VALUES
   ('theme', '{
     "colors": {
-      "action": "#e11d48",
-      "action_dark": "#be123c",
-      "trust": "#2563eb",
+      "action": "#008591",
+      "action_dark": "#006f79",
+      "trust": "#008591",
       "ink": "#0f172a",
       "ink_soft": "#475569",
       "muted": "#64748b",
@@ -26,24 +26,24 @@ INSERT INTO public.site_settings (key, value) VALUES
       "scale": "1.0"
     },
     "shape": {
-      "radius_base": "4px",
-      "radius_card": "0px"
+      "radius_base": "6px",
+      "radius_card": "6px"
     }
   }'::jsonb),
 
   ('brand', '{
-    "name": "Classificado Pilates",
+    "name": "Metalife Pilates",
     "tagline": "Marketplace de equipamentos",
-    "logo_url": null,
-    "logo_dark_url": null,
-    "favicon_url": null,
+    "logo_url": "/images/logo-metalife-verde.png",
+    "logo_dark_url": "/images/logo-metalife-white.png",
+    "favicon_url": "/icon.png",
     "og_image_url": null
   }'::jsonb),
 
   ('footer', '{
-    "description": "O maior marketplace de equipamentos de Pilates da América Latina. Conexão direta entre vendedores e compradores.",
+    "description": "Marketplace de equipamentos de Pilates da Metalife. Conexão direta entre vendedores e compradores.",
     "company": {
-      "name": "Classificado Pilates",
+      "name": "Metalife Pilates",
       "cnpj": null,
       "email": null,
       "phone": null,

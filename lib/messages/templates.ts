@@ -32,7 +32,7 @@ export function buildLeadToBuyer(args: {
 
   return `Olá, ${firstName}! 👋
 
-Aqui é o *Classificado Pilates*, marketplace de equipamentos de Pilates.
+Aqui é a *Loja Oficial Metalife Pilates*.
 
 Você demonstrou interesse em:
 *${listing.title}*
@@ -86,7 +86,7 @@ export function buildListingApproved(args: {
 
 *${args.listing.title}*
 
-Já está visível no Classificado Pilates e pode receber interessados a qualquer momento.
+Já está visível na Loja Oficial Metalife Pilates.
 
 Ver anúncio: ${args.site_url}/${args.listing.slug}
 

@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/reforma/site-footer";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Termos de Uso · Classificado Pilates" };
+export const metadata = { title: "Termos de Uso · Metalife Pilates" };
 
 export default async function TermsPage() {
   const page = await getLegalPage("termos-de-uso");

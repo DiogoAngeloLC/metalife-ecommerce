@@ -24,7 +24,23 @@ interface DispatchInput {
  * erro de rede ou da Evolution NÃO propaga — fica logado em
  * whatsapp_messages_log com status='failed'.
  */
+function evolutionConfigured(): boolean {
+  const url = process.env.EVOLUTION_API_URL?.trim();
+  const key = process.env.EVOLUTION_API_KEY?.trim();
+  return Boolean(
+    url &&
+      key &&
+      !url.includes("your-domain") &&
+      key !== "your-evolution-api-key-here"
+  );
+}
+
 export async function dispatchMessage(input: DispatchInput): Promise<void> {
+  // Evolution desabilitada por padrão na Loja Oficial até haver número oficial
+  if (!evolutionConfigured()) {
+    return;
+  }
+
   try {
     const supabase = createClient();
     const { error } = await supabase.functions.invoke("dispatch-whatsapp", {

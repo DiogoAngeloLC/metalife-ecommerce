@@ -18,9 +18,11 @@ export async function getHeroSettings(): Promise<HeroSettings> {
   const value = (data?.value ?? {}) as Partial<HeroSettings>;
   return {
     image_url: value.image_url ?? null,
-    eyebrow: value.eyebrow ?? "Marketplace de equipamentos profissionais",
-    title: value.title ?? "O encontro entre quem vende e quem precisa.",
-    subtitle: value.subtitle ?? "Reformers, Cadillacs, Chairs e acessórios.",
+    eyebrow: value.eyebrow ?? "Loja Oficial Metalife",
+    title: value.title ?? "Equipamentos oficiais direto da fábrica.",
+    subtitle:
+      value.subtitle ??
+      "Equipamentos oficiais direto da fábrica Metalife. Personalize estrutura e estofado e compre online com entrega em todo o Brasil.",
   };
 }
 

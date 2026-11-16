@@ -8,7 +8,18 @@ export const dynamic = "force-dynamic";
 
 type Props = { params: { slug: string } };
 
+/** Evita que /icon.png, *.css, *.js etc. caiam no handler dinâmico de produto. */
+const STATIC_FILE_SLUG = /\.(?:png|jpe?g|gif|webp|ico|svg|css|js|map|txt|xml|woff2?|ttf|eot)$/i;
+
+function assertProductSlug(slug: string) {
+  if (!slug || STATIC_FILE_SLUG.test(slug) || slug.includes(".")) {
+    notFound();
+  }
+}
+
 export async function generateMetadata({ params }: Props) {
+  assertProductSlug(params.slug);
+
   const supabase = createClient();
   const { data } = await supabase
     .from("listings")
@@ -17,17 +28,19 @@ export async function generateMetadata({ params }: Props) {
     .eq("status", "active")
     .single();
 
-  if (!data) return { title: "Anúncio não encontrado · Classificado Pilates" };
+  if (!data) return { title: "Produto não encontrado · Metalife Pilates" };
 
   return {
-    title: `${data.title} · Classificado Pilates`,
+    title: `${data.title} · Loja Oficial Metalife Pilates`,
     description:
       data.description?.slice(0, 160) ??
-      `Equipamento de Pilates em ${data.city}, ${data.state}. Anúncio direto do vendedor.`,
+      `Equipamento de Pilates Metalife — ${data.city}, ${data.state}. Loja Oficial.`,
   };
 }
 
 export default async function ListingPage({ params }: Props) {
+  assertProductSlug(params.slug);
+
   const supabase = createClient();
 
   const { data: listing } = await supabase
@@ -39,28 +52,28 @@ export default async function ListingPage({ params }: Props) {
 
   if (!listing) notFound();
 
-  // Fetch vendor info, recent leads count, and banners in parallel
-  const [{ data: vendor }, { count: recentLeadsCount }, banners] = await Promise.all([
+  const [{ data: vendor }, { data: variants }, banners] = await Promise.all([
     supabase
       .from("vendors")
       .select("name, is_verified")
       .eq("id", listing.vendor_id)
       .single(),
     supabase
-      .from("leads")
-      .select("*", { count: "exact", head: true })
+      .from("listing_variants")
+      .select("*")
       .eq("listing_id", listing.id)
-      .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()),
+      .eq("active", true)
+      .order("created_at", { ascending: true }),
     getActiveBanners("listing_footer"),
   ]);
 
   return (
     <ListingDetailView
       listing={listing as ListingWithImages & { is_featured?: boolean }}
-      vendorName={vendor?.name}
-      vendorVerified={vendor?.is_verified ?? false}
-      recentLeadsCount={recentLeadsCount ?? 0}
+      vendorName={vendor?.name ?? "Metalife Pilates"}
+      vendorVerified={vendor?.is_verified ?? true}
       banners={banners}
+      variants={variants ?? []}
     />
   );
 }

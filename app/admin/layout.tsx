@@ -2,7 +2,10 @@ import { requireAdmin } from "@/lib/supabase/auth";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { getBrand } from "@/lib/site-config";
 
-export const metadata = { title: "Admin · Classificado Pilates" };
+export async function generateMetadata() {
+  const brand = await getBrand();
+  return { title: `Admin · ${brand.name}` };
+}
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   await requireAdmin();

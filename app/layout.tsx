@@ -10,6 +10,9 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/reforma/site-header";
+import { ConditionalSiteHeader } from "@/components/reforma/conditional-site-header";
+import { CartProvider } from "@/lib/cart/cart-context";
+import { CartDrawer } from "@/components/cart/cart-drawer";
 import { ThemeStyles } from "@/components/theme/theme-styles";
 import { getBrand } from "@/lib/site-config";
 
@@ -84,8 +87,13 @@ export default function RootLayout({
     <html lang="pt-BR" className={fontVars}>
       <body className="min-h-screen">
         <ThemeStyles />
-        <SiteHeader />
-        {children}
+        <CartProvider>
+          <ConditionalSiteHeader>
+            <SiteHeader />
+          </ConditionalSiteHeader>
+          {children}
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

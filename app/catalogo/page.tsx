@@ -5,8 +5,8 @@ import { getFooterConfig } from "@/lib/site-config";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Catálogo · Classificado Pilates",
-  description: "Todos os equipamentos de Pilates disponíveis no marketplace.",
+  title: "Catálogo · Loja Oficial Metalife Pilates",
+  description: "Catálogo oficial de equipamentos Metalife Pilates.",
 };
 
 export default async function CatalogPage({

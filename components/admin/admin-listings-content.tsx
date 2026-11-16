@@ -173,6 +173,12 @@ export function AdminListingsContent({
                 </div>
 
                 <div className="flex flex-wrap md:flex-col gap-2 md:items-end self-stretch md:self-center">
+                  <Link
+                    href={`/admin/anuncios/${l.id}`}
+                    className="text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 bg-primary text-white hover:opacity-90 transition"
+                  >
+                    Variantes STR/STF
+                  </Link>
                   {l.status === "active" && (
                     <Link
                       href={`/${l.slug}`}

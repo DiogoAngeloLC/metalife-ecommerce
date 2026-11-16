@@ -1,46 +1,76 @@
 ﻿import { cn } from "@/lib/utils";
 
-type ListingAccent = "sage" | "terracota";
-
-const colors: Record<
-  ListingAccent,
-  { from: string; via: string; to: string }
-> = {
-  sage: { from: "#A8B5A0", via: "#7A8B6F", to: "#5C6B53" },
-  terracota: { from: "#D4926D", via: "#B85C3F", to: "#9D4D33" },
+const LINE_LABELS: Record<string, string> = {
+  reformer: "Reformer",
+  cadillac: "Cadillac",
+  "wall-unit": "Wall Unit",
+  "wall unit": "Wall Unit",
+  chair: "Chair",
+  barrel: "Barrel",
+  acessorios: "Acessórios",
+  acessórios: "Acessórios",
 };
 
-const noiseSvg =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
+function lineLabel(equipment: string, title?: string | null): string {
+  const key = equipment.trim().toLowerCase();
+  if (LINE_LABELS[key]) return LINE_LABELS[key];
 
+  const hay = `${title ?? ""} ${equipment}`.toLowerCase();
+  if (hay.includes("infinity")) return "Infinity 2025";
+  if (hay.includes("w23") || hay.includes("eco")) return "W23 ECO";
+  if (hay.includes("classic") || hay.includes("classica") || hay.includes("clássica")) {
+    return "Classic";
+  }
+  if (hay.includes("reformer")) return "Reformer";
+  if (hay.includes("cadillac")) return "Cadillac";
+  if (hay.includes("wall")) return "Wall Unit";
+  if (hay.includes("chair") || hay.includes("wunda")) return "Chair";
+  if (hay.includes("barrel")) return "Barrel";
+  return equipment.charAt(0).toUpperCase() + equipment.slice(1);
+}
+
+/**
+ * Placeholder Metalife (#008591) para cards sem foto em listing_images.
+ */
 export function EquipmentVisual({
   equipment,
-  accent = "sage",
+  title,
   className,
 }: {
   equipment: string;
-  accent?: ListingAccent;
+  title?: string | null;
+  /** @deprecated Mantido por compatibilidade — identidade visual é sempre Metalife teal. */
+  accent?: string;
   className?: string;
 }) {
-  const c = colors[accent] ?? colors.sage;
+  const label = lineLabel(equipment, title);
+  const initial = label.charAt(0).toUpperCase();
+
   return (
     <div className={cn("relative overflow-hidden", className)}>
       <div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(135deg, ${c.from} 0%, ${c.via} 60%, ${c.to} 100%)`,
+          background:
+            "linear-gradient(145deg, #008591 0%, #006f79 55%, #0f172a 100%)",
         }}
       />
       <div
-        className="absolute inset-0 opacity-20"
-        style={{ backgroundImage: noiseSvg }}
+        className="absolute inset-0 opacity-[0.12]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 20% 20%, #ffffff 0%, transparent 45%), radial-gradient(circle at 80% 80%, #00c2d1 0%, transparent 40%)",
+        }}
       />
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-        <div className="font-display text-3xl font-light tracking-wide opacity-80 md:text-5xl mb-1">
-          {equipment.charAt(0)}
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
+        <div className="mb-2 font-display text-4xl font-black tracking-tight opacity-90 md:text-5xl">
+          {initial}
         </div>
-        <div className="text-[10px] uppercase tracking-[0.25em] opacity-60 md:text-xs">
-          {equipment}
+        <div className="text-[10px] font-bold uppercase tracking-[0.28em] text-white/80 md:text-xs">
+          Metalife Pilates
+        </div>
+        <div className="mt-2 max-w-[90%] truncate text-[11px] font-semibold uppercase tracking-wider text-white/70 md:text-xs">
+          {label}
         </div>
       </div>
     </div>

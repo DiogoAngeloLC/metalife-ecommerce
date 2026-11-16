@@ -26,7 +26,7 @@ export default async function AdminOverviewPage() {
     { label: "Aguardando aprovação", value: pendingCount ?? 0, variant: "action" as const, href: "/admin/anuncios?status=pending_review" },
     { label: "Anúncios ativos", value: activeCount ?? 0, variant: "success" as const, href: "/admin/anuncios?status=active" },
     { label: "Total (exc. rascunhos)", value: totalListings ?? 0, variant: "muted" as const },
-    { label: "Vendedores cadastrados", value: totalVendors ?? 0, variant: "muted" as const, href: "/admin/usuarios" },
+    { label: "Usuários cadastrados", value: totalVendors ?? 0, variant: "muted" as const, href: "/admin/usuarios" },
     { label: "Leads (total)", value: totalLeads ?? 0, variant: "muted" as const, href: "/admin/leads" },
     { label: "Leads (últimas 24h)", value: leadsToday ?? 0, variant: "trust" as const },
   ];

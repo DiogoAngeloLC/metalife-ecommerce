@@ -3,9 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MapPin, Search, ChevronRight, SlidersHorizontal, X } from "lucide-react";
+import { Search, ChevronRight, SlidersHorizontal, X } from "lucide-react";
 import type { ListingWithImages } from "@/lib/listings";
-import { listingAccent } from "@/lib/listings";
 import { formatBRL } from "@/lib/format";
 import { getListingImageUrl } from "@/lib/storage";
 import { EquipmentVisual } from "@/components/reforma/equipment-visual";
@@ -17,9 +16,10 @@ const CATEGORIES = [
   { value: "", label: "Todos" },
   { value: "reformer", label: "Reformer" },
   { value: "cadillac", label: "Cadillac" },
+  { value: "wall-unit", label: "Wall Unit" },
   { value: "chair", label: "Chair" },
   { value: "barrel", label: "Barrel" },
-  { value: "acessórios", label: "Acessórios" },
+  { value: "acessorios", label: "Acessórios" },
 ];
 
 const SORT_OPTIONS = [
@@ -246,9 +246,8 @@ export function CatalogContent({
 }
 
 function CatalogCard({ listing }: { listing: ListingWithImages }) {
-  const sortedImages = [...listing.listing_images].sort((a, b) => a.position - b.position);
+  const sortedImages = [...(listing.listing_images ?? [])].sort((a, b) => a.position - b.position);
   const firstImage = sortedImages[0]?.storage_path;
-  const accent = listingAccent(listing.id);
 
   return (
     <Link
@@ -257,6 +256,7 @@ function CatalogCard({ listing }: { listing: ListingWithImages }) {
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bg-section)]">
         {firstImage ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={getListingImageUrl(firstImage)}
             alt={listing.title}
@@ -265,7 +265,7 @@ function CatalogCard({ listing }: { listing: ListingWithImages }) {
         ) : (
           <EquipmentVisual
             equipment={listing.equipment_type}
-            accent={accent}
+            title={listing.title}
             className="w-full h-full"
           />
         )}
@@ -291,18 +291,12 @@ function CatalogCard({ listing }: { listing: ListingWithImages }) {
             </span>
           ) : (
             <span className="font-display text-lg font-bold text-[var(--action)]">
-              A combinar
+              Sob consulta
             </span>
           )}
         </div>
-        <div className="mt-2 flex items-center gap-1 text-[var(--text-muted)]">
-          <MapPin className="h-3 w-3" />
-          <span className="text-[10px] font-bold uppercase tracking-wider">
-            {listing.city}, {listing.state}
-          </span>
-        </div>
         <div className="mt-3 w-full bg-[var(--ink)] py-2 text-center text-[10px] font-bold uppercase tracking-widest text-white transition-colors group-hover:bg-[var(--action)]">
-          Ver oferta
+          Ver produto
         </div>
       </div>
     </Link>

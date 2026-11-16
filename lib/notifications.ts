@@ -256,7 +256,7 @@ function sampleContext(): LeadNotificationContext {
 }
 
 function defaultWhatsAppTemplate(): string {
-  return `🔔 *Novo Lead — Classificado Pilates*
+  return `🔔 *Novo Lead — Loja Oficial Metalife Pilates*
 
 *{{lead_name}}* demonstrou interesse em:
 _{{listing_title}}_

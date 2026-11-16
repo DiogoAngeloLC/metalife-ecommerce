@@ -22,26 +22,38 @@ export default async function HomePage() {
 
   const listings = (listingsRaw ?? []) as ListingWithImages[];
 
-  // Stats reais
-  const [{ count: totalListings }, { data: citiesData }, { count: totalVendors }] =
+  const [{ count: totalProducts }, { data: typeRows }, { data: activeIds }] =
     await Promise.all([
-      supabase.from("listings").select("*", { count: "exact", head: true }).eq("status", "active"),
-      supabase.from("listings").select("city").eq("status", "active"),
       supabase
-        .from("vendors")
+        .from("listings")
         .select("*", { count: "exact", head: true })
-        .eq("onboarding_completed", true),
+        .eq("status", "active"),
+      supabase.from("listings").select("equipment_type").eq("status", "active"),
+      supabase.from("listings").select("id").eq("status", "active"),
     ]);
 
-  const totalCities = new Set(citiesData?.map((l) => l.city) ?? []).size;
+  const ids = (activeIds ?? []).map((r) => r.id);
+  let totalVariants = 0;
+  if (ids.length > 0) {
+    const { count } = await supabase
+      .from("listing_variants")
+      .select("*", { count: "exact", head: true })
+      .in("listing_id", ids)
+      .eq("active", true);
+    totalVariants = count ?? 0;
+  }
+
+  const totalLines = new Set(
+    (typeRows ?? []).map((l) => (l.equipment_type ?? "").toLowerCase()).filter(Boolean)
+  ).size;
 
   return (
     <HomePageContent
       listings={listings}
       stats={{
-        listings: totalListings ?? 0,
-        cities: totalCities,
-        vendors: totalVendors ?? 0,
+        products: totalProducts ?? listings.length,
+        lines: totalLines,
+        variants: totalVariants,
       }}
       hero={heroSettings}
       footer={footer}

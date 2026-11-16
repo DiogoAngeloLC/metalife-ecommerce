@@ -97,9 +97,9 @@ export async function getMenuItems(): Promise<MenuItem[]> {
 
 const DEFAULT_THEME: ThemeTokens = {
   colors: {
-    action: "#e11d48",
-    action_dark: "#be123c",
-    trust: "#2563eb",
+    action: "#008591",
+    action_dark: "#006f79",
+    trust: "#008591",
     ink: "#0f172a",
     ink_soft: "#475569",
     muted: "#64748b",
@@ -119,22 +119,23 @@ const DEFAULT_THEME: ThemeTokens = {
     weight_body: "400",
     scale: "1.0",
   },
-  shape: { radius_base: "4px", radius_card: "0px" },
+  shape: { radius_base: "6px", radius_card: "6px" },
 };
 
 const DEFAULT_BRAND: Brand = {
-  name: "Classificado Pilates",
-  tagline: "Marketplace de equipamentos",
-  logo_url: null,
-  logo_dark_url: null,
-  favicon_url: null,
+  name: "Metalife Pilates",
+  tagline: "Loja Oficial de equipamentos de Pilates",
+  logo_url: "/images/logo-metalife-verde.png",
+  logo_dark_url: "/images/logo-metalife-white.png",
+  favicon_url: "/icon.png",
   og_image_url: null,
 };
 
 const DEFAULT_FOOTER: FooterConfig = {
-  description: "Marketplace de equipamentos de Pilates.",
+  description:
+    "Loja Oficial Metalife Pilates — equipamentos originais com atendimento especializado.",
   company: {
-    name: "Classificado Pilates",
+    name: "Metalife Pilates",
     cnpj: null,
     email: null,
     phone: null,
@@ -142,19 +143,19 @@ const DEFAULT_FOOTER: FooterConfig = {
   },
   columns: [
     {
-      title: "Compradores",
+      title: "Loja",
       links: [
         { label: "Catálogo", href: "/catalogo" },
-        { label: "Reformers", href: "/catalogo?categoria=reformer" },
-        { label: "Novidades", href: "/catalogo?ordem=recentes" },
+        { label: "Carrinho", href: "/checkout" },
+        { label: "Meus Pedidos", href: "/minha-conta/pedidos" },
       ],
     },
     {
-      title: "Vendedores",
+      title: "Linhas",
       links: [
-        { label: "Como anunciar", href: "/dashboard/novo" },
-        { label: "Painel", href: "/dashboard" },
-        { label: "Cadastre-se", href: "/cadastro" },
+        { label: "Reformers", href: "/catalogo?categoria=reformer" },
+        { label: "Cadillacs", href: "/catalogo?categoria=cadillac" },
+        { label: "Chairs", href: "/catalogo?categoria=chair" },
       ],
     },
     {
@@ -192,9 +193,16 @@ export function generateThemeCss(tokens: ThemeTokens): string {
 
   const muted = c.muted ?? "#64748b";
 
+  const action = c.action ?? "#008591";
+
   return `:root{
 ${colorLines}
   --text-muted: ${muted};
+  --brand-primary: ${action};
+  --primary: ${action};
+  --primary-foreground: #ffffff;
+  --action-bg: rgba(0, 133, 145, 0.1);
+  --action-light: rgba(0, 133, 145, 0.2);
   --font-display: var(--font-${t.font_display});
   --font-body: var(--font-${t.font_body});
   --font-weight-display: ${t.weight_display};
@@ -202,6 +210,7 @@ ${colorLines}
   --font-scale: ${t.scale};
   --radius-base: ${s.radius_base};
   --radius-card: ${s.radius_card};
+  --radius: ${s.radius_base};
 }
 body { font-size: calc(1rem * ${t.scale}); }`;
 }

@@ -73,8 +73,8 @@ CREATE POLICY "ad_banners_admin_all" ON public.ad_banners
 INSERT INTO public.site_settings (key, value) VALUES
   ('hero', '{
     "image_url": null,
-    "eyebrow": "Marketplace de equipamentos profissionais",
-    "title": "O encontro entre quem vende e quem precisa.",
+    "eyebrow": "Metalife Pilates",
+    "title": "Equipamentos de Pilates com a qualidade Metalife.",
     "subtitle": "Reformers, Cadillacs, Chairs e acessórios. Anúncios verificados, contato direto pelo WhatsApp."
   }'::jsonb)
 ON CONFLICT (key) DO NOTHING;

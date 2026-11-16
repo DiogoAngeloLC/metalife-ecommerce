@@ -19,6 +19,7 @@ import {
   Sparkles,
   Layers,
   Menu,
+  Package,
 } from "lucide-react";
 import type { Brand } from "@/lib/site-config";
 
@@ -28,6 +29,7 @@ const NAV_SECTIONS = [
     items: [
       { href: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true },
       { href: "/admin/anuncios", label: "Anúncios", icon: Newspaper },
+      { href: "/admin/pedidos", label: "Pedidos", icon: Package },
       { href: "/admin/usuarios", label: "Usuários", icon: Users },
       { href: "/admin/leads", label: "Leads", icon: MessageCircle },
       { href: "/admin/notificacoes", label: "Notificações", icon: Bell },
@@ -67,25 +69,25 @@ export function AdminSidebar({ brand }: { brand: Brand }) {
 
   const isActive = (item: NavItem) => (item.exact ? pathname === item.href : pathname.startsWith(item.href));
 
+  const logoDark = brand.logo_dark_url ?? "/images/logo-metalife-white.png";
+
   return (
-    <aside className="w-64 min-h-screen bg-[var(--bg-dark)] text-white flex flex-col flex-shrink-0">
-      <div className="p-6 border-b border-white/10">
+    <aside className="w-64 min-h-screen bg-slate-900 text-white flex flex-col flex-shrink-0 border-r border-[var(--sidebar-border-muted)]">
+      <div className="p-6 border-b border-[var(--sidebar-border-muted)]">
         <Link href="/" className="flex items-center gap-3 group">
-          {brand.logo_dark_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={brand.logo_dark_url} alt="" className="h-8 w-auto max-w-[140px] object-contain" />
-          ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src="/logos/logo-symbol-white.svg" alt="" className="h-8 w-auto" />
-          )}
-          <div className="flex flex-col leading-none min-w-0">
-            <span className="font-display text-sm font-bold uppercase tracking-tight truncate">{brand.name}</span>
-            <span className="text-[10px] uppercase tracking-[0.2em] text-white/40 mt-0.5">Admin</span>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={logoDark}
+            alt={brand.name}
+            className="h-8 w-auto max-w-[160px] object-contain"
+          />
         </Link>
+        <div className="mt-3 text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
+          Admin
+        </div>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
+      <nav className="flex-1 px-3 py-4 space-y-6 overflow-y-auto scrollbar-metalife">
         {NAV_SECTIONS.map((section) => (
           <div key={section.title}>
             <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-widest text-white/50">{section.title}</div>
@@ -97,10 +99,10 @@ export function AdminSidebar({ brand }: { brand: Brand }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2.5 transition text-sm font-medium ${
+                    className={`flex items-center gap-3 rounded-md px-3 py-2.5 transition text-sm font-medium ${
                       active
-                        ? "bg-white/10 text-white border-l-2 border-[var(--action)]"
-                        : "text-white/60 hover:bg-white/5 hover:text-white border-l-2 border-transparent"
+                        ? "bg-primary text-white"
+                        : "text-white/50 hover:bg-white/5 hover:text-white"
                     }`}
                   >
                     <Icon className="w-4 h-4 shrink-0" />

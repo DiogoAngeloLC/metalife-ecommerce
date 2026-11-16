@@ -21,6 +21,18 @@ export async function createListingAction(
 
   if (!user) throw new Error("Não autenticado");
 
+  // Loja Oficial: apenas admins criam produtos
+  const { data: adminRow } = await supabase
+    .from("app_admins")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!adminRow) {
+    throw new Error(
+      "Cadastro de produtos externo desativado. Use o painel Admin da Loja Oficial Metalife."
+    );
+  }
+
   const parsed = CreateListingSchema.parse(input);
   const slug = generateSlug(parsed.title);
 
