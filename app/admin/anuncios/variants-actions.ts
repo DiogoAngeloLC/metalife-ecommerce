@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireAdmin } from "@/lib/supabase/auth";
-import { createServiceClient } from "@/lib/supabase/server";
+import { adminServiceDb } from "@/lib/admin/service-db";
+import { syncListingPriceFromVariants } from "@/lib/admin/catalog";
 import type { Database } from "@/lib/supabase/types";
 
 type VariantRow = Database["public"]["Tables"]["listing_variants"]["Row"];
@@ -24,8 +24,7 @@ export async function createVariantAction(
   listingId: string,
   input: VariantInput
 ): Promise<{ ok: true; variant: VariantRow } | { ok: false; error: string }> {
-  await requireAdmin();
-  const supabase = createServiceClient();
+  const { supabase } = await adminServiceDb();
 
   const { data, error } = await supabase
     .from("listing_variants")
@@ -38,8 +37,11 @@ export async function createVariantAction(
 
   if (error || !data) return { ok: false, error: error?.message ?? "Falha ao criar" };
 
+  await syncListingPriceFromVariants(supabase, listingId);
   revalidatePath(`/admin/anuncios/${listingId}`);
   revalidatePath("/admin/anuncios");
+  revalidatePath("/");
+  revalidatePath("/catalogo");
   return { ok: true, variant: data };
 }
 
@@ -47,8 +49,7 @@ export async function updateVariantAction(
   variantId: string,
   input: VariantInput
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  await requireAdmin();
-  const supabase = createServiceClient();
+  const { supabase } = await adminServiceDb();
 
   const { data: existing } = await supabase
     .from("listing_variants")
@@ -64,17 +65,19 @@ export async function updateVariantAction(
   if (error) return { ok: false, error: error.message };
 
   if (existing?.listing_id) {
+    await syncListingPriceFromVariants(supabase, existing.listing_id);
     revalidatePath(`/admin/anuncios/${existing.listing_id}`);
   }
   revalidatePath("/admin/anuncios");
+  revalidatePath("/");
+  revalidatePath("/catalogo");
   return { ok: true };
 }
 
 export async function deleteVariantAction(
   variantId: string
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  await requireAdmin();
-  const supabase = createServiceClient();
+  const { supabase } = await adminServiceDb();
 
   const { data: existing } = await supabase
     .from("listing_variants")
@@ -90,10 +93,82 @@ export async function deleteVariantAction(
   if (error) return { ok: false, error: error.message };
 
   if (existing?.listing_id) {
+    await syncListingPriceFromVariants(supabase, existing.listing_id);
     revalidatePath(`/admin/anuncios/${existing.listing_id}`);
   }
   revalidatePath("/admin/anuncios");
+  revalidatePath("/");
+  revalidatePath("/catalogo");
   return { ok: true };
+}
+
+export async function duplicateVariantAction(
+  variantId: string
+): Promise<{ ok: true; variant: VariantRow } | { ok: false; error: string }> {
+  const { supabase } = await adminServiceDb();
+  const { data: source, error } = await supabase
+    .from("listing_variants")
+    .select("*")
+    .eq("id", variantId)
+    .single();
+  if (error || !source) return { ok: false, error: error?.message ?? "Variante não encontrada" };
+
+  const { data, error: iErr } = await supabase
+    .from("listing_variants")
+    .insert({
+      listing_id: source.listing_id,
+      sku: source.sku ? `${source.sku}-COPY` : null,
+      structure_color: source.structure_color,
+      upholstery_color: source.upholstery_color,
+      str_code: source.str_code,
+      stf_code: source.stf_code,
+      protheus_code: source.protheus_code,
+      price_cents: source.price_cents,
+      stock_qty: source.stock_qty,
+      is_made_to_order: source.is_made_to_order,
+      production_days: source.production_days,
+      active: source.active,
+    })
+    .select("*")
+    .single();
+
+  if (iErr || !data) return { ok: false, error: iErr?.message ?? "Falha ao duplicar" };
+  await syncListingPriceFromVariants(supabase, source.listing_id);
+  revalidatePath(`/admin/anuncios/${source.listing_id}`);
+  return { ok: true, variant: data };
+}
+
+export async function bulkUpdateVariantsAction(
+  listingId: string,
+  input: { price_cents?: number | null; production_days?: number | null }
+): Promise<{ ok: true; updated: number } | { ok: false; error: string }> {
+  const { supabase } = await adminServiceDb();
+  const patch: Database["public"]["Tables"]["listing_variants"]["Update"] = {
+    updated_at: new Date().toISOString(),
+  };
+  if (input.price_cents != null && input.price_cents >= 0) {
+    patch.price_cents = input.price_cents;
+  }
+  if (input.production_days != null && input.production_days >= 0) {
+    patch.production_days = input.production_days;
+  }
+  if (patch.price_cents == null && patch.production_days == null) {
+    return { ok: false, error: "Informe preço e/ou prazo para aplicar em lote" };
+  }
+
+  const { data, error } = await supabase
+    .from("listing_variants")
+    .update(patch)
+    .eq("listing_id", listingId)
+    .select("id");
+
+  if (error) return { ok: false, error: error.message };
+  await syncListingPriceFromVariants(supabase, listingId);
+  revalidatePath(`/admin/anuncios/${listingId}`);
+  revalidatePath("/admin/anuncios");
+  revalidatePath("/");
+  revalidatePath("/catalogo");
+  return { ok: true, updated: data?.length ?? 0 };
 }
 
 function parseCsvLine(line: string): string[] {
@@ -150,8 +225,7 @@ export async function importVariantsCsvAction(
   listingId: string,
   csvText: string
 ): Promise<ImportVariantsResult> {
-  await requireAdmin();
-  const supabase = createServiceClient();
+  const { supabase } = await adminServiceDb();
 
   const text = csvText.replace(/^\uFEFF/, "").trim();
   if (!text) return { ok: false, error: "Arquivo CSV vazio" };
@@ -264,8 +338,11 @@ export async function importVariantsCsvAction(
     }
   }
 
+  await syncListingPriceFromVariants(supabase, listingId);
   revalidatePath(`/admin/anuncios/${listingId}`);
   revalidatePath("/admin/anuncios");
+  revalidatePath("/");
+  revalidatePath("/catalogo");
 
   return { ok: true, inserted, updated, skipped, errors, variants };
 }

@@ -20,6 +20,7 @@ import {
   Layers,
   Menu,
   Package,
+  Truck,
 } from "lucide-react";
 import type { Brand } from "@/lib/site-config";
 
@@ -30,6 +31,7 @@ const NAV_SECTIONS = [
       { href: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true },
       { href: "/admin/anuncios", label: "Anúncios", icon: Newspaper },
       { href: "/admin/pedidos", label: "Pedidos", icon: Package },
+      { href: "/admin/frete", label: "Frete e Entrega", icon: Truck },
       { href: "/admin/usuarios", label: "Usuários", icon: Users },
       { href: "/admin/leads", label: "Leads", icon: MessageCircle },
       { href: "/admin/notificacoes", label: "Notificações", icon: Bell },

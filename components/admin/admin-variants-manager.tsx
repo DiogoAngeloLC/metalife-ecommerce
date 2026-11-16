@@ -1,10 +1,12 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import {
   createVariantAction,
   updateVariantAction,
   deleteVariantAction,
+  duplicateVariantAction,
+  bulkUpdateVariantsAction,
   importVariantsCsvAction,
 } from "@/app/admin/anuncios/variants-actions";
 import type { Database } from "@/lib/supabase/types";
@@ -67,7 +69,13 @@ export function AdminVariantsManager({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [importSummary, setImportSummary] = useState<string | null>(null);
+  const [bulkPrice, setBulkPrice] = useState("");
+  const [bulkDays, setBulkDays] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setVariants(initialVariants);
+  }, [initialVariants]);
 
   const resetForm = () => {
     setForm(emptyForm());
@@ -149,6 +157,49 @@ export function AdminVariantsManager({
     });
   };
 
+  const duplicate = (id: string) => {
+    startTransition(async () => {
+      const r = await duplicateVariantAction(id);
+      if (!r.ok) {
+        setError(r.error);
+        return;
+      }
+      setVariants((prev) => [...prev, r.variant]);
+    });
+  };
+
+  const applyBulk = () => {
+    setError(null);
+    const price_cents = bulkPrice.trim() ? reaisToCents(bulkPrice) : null;
+    const production_days = bulkDays.trim()
+      ? Math.max(0, parseInt(bulkDays, 10) || 0)
+      : null;
+    if (price_cents == null && production_days == null) {
+      setError("Informe preço e/ou prazo para aplicar em lote");
+      return;
+    }
+    startTransition(async () => {
+      const r = await bulkUpdateVariantsAction(listingId, {
+        price_cents,
+        production_days,
+      });
+      if (!r.ok) {
+        setError(r.error);
+        return;
+      }
+      setVariants((prev) =>
+        prev.map((v) => ({
+          ...v,
+          ...(price_cents != null ? { price_cents } : {}),
+          ...(production_days != null ? { production_days } : {}),
+        }))
+      );
+      setImportSummary(`Atualização em lote: ${r.updated} variante(s).`);
+      setBulkPrice("");
+      setBulkDays("");
+    });
+  };
+
   const onImportCsv = (file: File | null) => {
     if (!file) return;
     setError(null);
@@ -206,6 +257,43 @@ export function AdminVariantsManager({
         </p>
       )}
 
+      {variants.length > 0 && (
+        <div className="flex flex-wrap items-end gap-3 rounded-md border border-[var(--line)] bg-[var(--bg-section)] p-3">
+          <div>
+            <label className="text-label-bold mb-1 block text-[var(--text-muted)]">
+              Novo preço (R$) — lote
+            </label>
+            <input
+              className={inputClass}
+              value={bulkPrice}
+              onChange={(e) => setBulkPrice(e.target.value)}
+              placeholder="Ex: 18990,00"
+            />
+          </div>
+          <div>
+            <label className="text-label-bold mb-1 block text-[var(--text-muted)]">
+              Prazo (dias úteis) — lote
+            </label>
+            <input
+              type="number"
+              min={0}
+              className={inputClass}
+              value={bulkDays}
+              onChange={(e) => setBulkDays(e.target.value)}
+              placeholder="15"
+            />
+          </div>
+          <button
+            type="button"
+            disabled={pending}
+            onClick={applyBulk}
+            className="rounded-md bg-[var(--ink)] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white disabled:opacity-50"
+          >
+            Aplicar a todas
+          </button>
+        </div>
+      )}
+
       {variants.length === 0 ? (
         <p className="text-sm text-[var(--text-muted)]">
           Nenhuma variação cadastrada. Sem variações, o preço base do produto é usado.
@@ -215,6 +303,7 @@ export function AdminVariantsManager({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--line)] text-left text-label-bold text-[var(--text-muted)]">
+                <th className="py-2 pr-3">SKU</th>
                 <th className="py-2 pr-3">STR / Estrutura</th>
                 <th className="py-2 pr-3">STF / Estofado</th>
                 <th className="py-2 pr-3">Protheus</th>
@@ -228,6 +317,7 @@ export function AdminVariantsManager({
             <tbody>
               {variants.map((v) => (
                 <tr key={v.id} className="border-b border-[var(--line)]">
+                  <td className="py-2.5 pr-3 font-mono text-xs">{v.sku || "—"}</td>
                   <td className="py-2.5 pr-3">
                     <div>{v.structure_color || "—"}</div>
                     <div className="font-mono text-xs text-[var(--text-muted)]">
@@ -241,7 +331,7 @@ export function AdminVariantsManager({
                     </div>
                   </td>
                   <td className="py-2.5 pr-3 font-mono text-xs">
-                    {v.protheus_code || v.sku || "—"}
+                    {v.protheus_code || "—"}
                   </td>
                   <td className="py-2.5 pr-3 font-semibold">
                     {formatCentsBRL(v.price_cents)}
@@ -263,9 +353,16 @@ export function AdminVariantsManager({
                     <button
                       type="button"
                       onClick={() => startEdit(v)}
-                      className="text-xs font-bold uppercase text-primary mr-3"
+                      className="mr-3 text-xs font-bold uppercase text-primary"
                     >
                       Editar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => duplicate(v.id)}
+                      className="mr-3 text-xs font-bold uppercase text-[var(--ink-soft)]"
+                    >
+                      Duplicar
                     </button>
                     <button
                       type="button"
