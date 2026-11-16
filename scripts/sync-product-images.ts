@@ -214,9 +214,14 @@ function requireEnv(name: string): string {
   return v;
 }
 
+/** Aceita service_role legada (JWT eyJ…) ou sb_secret_ do novo formato Supabase. */
 function isValidServiceRole(key: string | undefined): boolean {
   const k = key?.trim() ?? "";
-  return k.length > 40 && k.startsWith("eyJ") && !k.includes("COLE_AQUI");
+  if (!k || k.length < 20) return false;
+  if (k.includes("COLE_AQUI") || k.includes("placeholder") || k.includes("eyJ...")) {
+    return false;
+  }
+  return k.startsWith("sb_secret_") || k.startsWith("eyJ");
 }
 
 function stripHtml(s: string): string {

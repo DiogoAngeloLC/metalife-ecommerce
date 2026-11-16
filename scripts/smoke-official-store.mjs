@@ -222,7 +222,71 @@ async function main() {
   console.log("   OK", out);
   console.log(csv.slice(0, 200).replace(/\r/g, "\\r"));
 
-  console.log("6) Cleanup…");
+  console.log("6) Validando RPC get_order_confirmation (token LGPD)…");
+  const { data: orderAuth, error: tokenErr } = await sb
+    .from("orders")
+    .select("order_number, access_token")
+    .eq("id", order.id)
+    .single();
+  if (tokenErr || !orderAuth?.access_token) {
+    throw new Error(`access_token: ${tokenErr?.message ?? "ausente"}`);
+  }
+
+  // Cliente anon — simula a página pública de confirmação
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  if (!anonKey) throw new Error("NEXT_PUBLIC_SUPABASE_ANON_KEY ausente");
+  const anon = createClient(url, anonKey, { auth: { persistSession: false } });
+
+  const { data: withToken, error: withErr } = await anon.rpc("get_order_confirmation", {
+    p_order_number: orderAuth.order_number,
+    p_access_token: orderAuth.access_token,
+  });
+  if (withErr) throw new Error(`RPC com token: ${withErr.message}`);
+  if (!withToken) throw new Error("RPC com token retornou vazio");
+  console.log("   OK com token — pedido", orderAuth.order_number);
+
+  const { data: withoutToken, error: withoutErr } = await anon.rpc(
+    "get_order_confirmation",
+    {
+      p_order_number: orderAuth.order_number,
+      p_access_token: null,
+    }
+  );
+  // Sem token a RPC deve negar acesso (null / erro) — a página trata como 404
+  if (withoutToken) {
+    throw new Error("RPC sem token NÃO deveria retornar dados do pedido");
+  }
+  console.log(
+    "   OK sem token — acesso negado",
+    withoutErr ? `(${withoutErr.message})` : "(null)"
+  );
+
+  const site = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(
+    /\/$/,
+    ""
+  );
+  try {
+    const okPage = await fetch(
+      `${site}/checkout/pedido/${orderAuth.order_number}?token=${orderAuth.access_token}`,
+      { redirect: "manual" }
+    );
+    const badPage = await fetch(`${site}/checkout/pedido/${orderAuth.order_number}`, {
+      redirect: "manual",
+    });
+    console.log(`   HTTP com token: ${okPage.status}`);
+    console.log(`   HTTP sem token: ${badPage.status}`);
+    if (okPage.status !== 200) {
+      throw new Error(`página com token deveria ser 200, veio ${okPage.status}`);
+    }
+    if (badPage.status !== 404) {
+      throw new Error(`página sem token deveria ser 404, veio ${badPage.status}`);
+    }
+  } catch (err) {
+    if (String(err.message || err).includes("deveria")) throw err;
+    console.warn("   AVISO: não foi possível validar HTTP local:", err.message || err);
+  }
+
+  console.log("7) Cleanup…");
   await sb.from("order_items").delete().eq("order_id", order.id);
   await sb.from("orders").delete().eq("id", order.id);
   await sb.from("listing_variants").delete().eq("id", variantId);
